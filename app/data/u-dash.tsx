@@ -1,27 +1,32 @@
-export const tickets = [
+import { Tickets } from "../components/u-tickets/types";
+
+export const tickets: Tickets[] = [
   {
     id: 1,
     title: "Login Issue",
     status: "Open",
-    created_at: "2023-10-01",
+    created_at: "2024-10-01",
     description:
       "User is unable to login with correct credentials. The issue seems to be related to the authentication service. The user has tried resetting the password multiple times, but the issue persists. The support team is currently looking into the logs to identify the root cause of the problem.",
+    location: "New York",
   },
   {
     id: 2,
     title: "Payment Failure",
     status: "Closed",
-    created_at: "2023-09-25",
+    created_at: "2024-09-25",
     description:
       "Payment gateway is not processing transactions. The issue was resolved by updating the payment gateway API. The problem was identified as a misconfiguration in the API settings, which was corrected by the technical team. All pending transactions have been reprocessed successfully.",
+    location: "San Francisco",
   },
   {
     id: 3,
     title: "Bug in Dashboard",
     status: "In Progress",
-    created_at: "2023-09-30",
+    created_at: "2024-09-30",
     description:
       "Dashboard is not displaying the correct data for user statistics. The development team is currently investigating the issue. Initial analysis suggests that there might be a problem with the data aggregation logic. A fix is being developed and will be deployed in the next release cycle.",
+    location: "Chicago",
   },
 ];
 
