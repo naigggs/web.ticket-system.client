@@ -36,7 +36,6 @@ export default function UserLayout({
       >
         <SidebarProvider>
           <AppSidebar />
-
           <SidebarInset>
             <Header />
             {children}
