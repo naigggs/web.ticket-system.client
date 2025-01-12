@@ -2,11 +2,10 @@
 
 import React, { useState } from "react";
 import { Search } from "lucide-react";
-import { tickets } from "@/app/data/a-dash";
+import { tickets, Ticket } from "@/app/data/a-dash";
 import { Input } from "@/components/ui/input";
 import { TicketCard } from "@/app/components/a-dashboard/TicketCard";
 import { TicketModal } from "@/app/components/a-dashboard/TicketModal";
-import { Ticket } from "@/app/data/a-dash";
 
 export default function AdminDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -46,13 +45,41 @@ export default function AdminDashboard() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        <TicketCard title="To Do" tickets={filteredTickets.filter((ticket) => ticket.status === "todo")} status="todo" onTicketClick={handleTicketClick} />
-        <TicketCard title="In Progress" tickets={filteredTickets.filter((ticket) => ticket.status === "inprogress")} status="inprogress" onTicketClick={handleTicketClick} />
-        <TicketCard title="On Hold" tickets={filteredTickets.filter((ticket) => ticket.status === "onhold")} status="onhold" onTicketClick={handleTicketClick} />
-        <TicketCard title="Done" tickets={filteredTickets.filter((ticket) => ticket.status === "done")} status="done" onTicketClick={handleTicketClick} />
+        <TicketCard
+          title="To Do"
+          tickets={filteredTickets.filter((ticket) => ticket.status === "todo")}
+          status="todo"
+          onTicketClick={handleTicketClick}
+        />
+        <TicketCard
+          title="In Progress"
+          tickets={filteredTickets.filter(
+            (ticket) => ticket.status === "inprogress"
+          )}
+          status="inprogress"
+          onTicketClick={handleTicketClick}
+        />
+        <TicketCard
+          title="On Hold"
+          tickets={filteredTickets.filter(
+            (ticket) => ticket.status === "onhold"
+          )}
+          status="onhold"
+          onTicketClick={handleTicketClick}
+        />
+        <TicketCard
+          title="Done"
+          tickets={filteredTickets.filter((ticket) => ticket.status === "done")}
+          status="done"
+          onTicketClick={handleTicketClick}
+        />
       </div>
 
-      <TicketModal isOpen={isModalOpen} onClose={closeModal} ticket={selectedTicket} />
+      <TicketModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        ticket={selectedTicket}
+      />
     </div>
   );
 }
