@@ -12,11 +12,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { TicketDatePickerProps } from "./types";
+import { AnnouncementDatePickerProps } from "./types";
 
 export function AnnouncementDatePicker({
   onDateChange,
-}: Readonly<TicketDatePickerProps>) {
+}: Readonly<AnnouncementDatePickerProps>) {
   const [date, setDate] = useState<Date | null>(null);
   console.log(date)
 
