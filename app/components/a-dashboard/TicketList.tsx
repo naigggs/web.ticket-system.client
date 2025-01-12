@@ -16,10 +16,9 @@ interface Ticket {
 interface TicketListProps {
   ticket: Ticket;
   onTicketClick: (ticket: Ticket) => void;
-  status: string;
 }
 
-const TicketList: React.FC<TicketListProps> = ({ ticket, onTicketClick, status }) => {
+const TicketList: React.FC<TicketListProps> = ({ ticket, onTicketClick }) => {
   return (
     <div>
       <li
@@ -35,8 +34,8 @@ const TicketList: React.FC<TicketListProps> = ({ ticket, onTicketClick, status }
           </div>
           <Badge
             className={`${getBadgeColor(
-              status
-            )} h-6 px-2 flex items-center justify-center rounded-md whitespace-nowrap text-[10px] uppercase font-bold shrink-0 pointer-events-none`}
+              ticket.status
+            )} h-6 px-2 flex items-center justify-center rounded-full whitespace-nowrap text-[10px] uppercase font-bold shrink-0 pointer-events-none`}
           >
             {ticket.status}
           </Badge>
