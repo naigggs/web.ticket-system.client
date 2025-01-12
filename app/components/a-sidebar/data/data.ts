@@ -41,7 +41,7 @@ export const data = {
     },
     {
       title: "Surveys",
-      url: "#",
+      url: "/a-surveys",
       icon: NotebookPen,
       isActive: true,
     },
