@@ -32,14 +32,14 @@ export const TaskCard = ({
 
   return (
     <Card className="flex flex-col h-auto">
-      <CardHeader className="flex flex-row justify-between items-center">
-        <CardTitle className="text-xl md:text-2xl font-semibold flex-1">
-          {title}
-        </CardTitle>
-        <Button variant="ghost" size="icon">
-          <ChevronRight className="h-6 w-6" />
-        </Button>
-      </CardHeader>
+      <div className="flex flex-row justify-between">
+        <div>
+          <h2 className="text-2xl font-semibold mb-2">Submitted Tickets</h2>
+        </div>
+        <div>
+          <ChevronRight className="h-7 w-auto text-black mt-0.5 hover:bg-gray-100 rounded-full " />
+        </div>
+      </div>
       <CardContent className="flex-1 overflow-y-auto scrollbar-thin">
         <ul className="space-y-2">
           {currentTickets.map((ticket) => (
