@@ -39,8 +39,8 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
               <span className="text-xl font-semibold text-gray-900">{ticket.title}</span>
               <Badge
                 className={`${getBadgeColor(
-                  status
-                )} h-6 px-2 flex items-center justify-center rounded-md whitespace-nowrap text-[10px] uppercase font-bold shrink-0 pointer-events-none`}
+                  ticket.status
+                )} h-6 px-2 flex items-center justify-center rounded-full whitespace-nowrap text-[10px] uppercase font-bold shrink-0 pointer-events-none`}
               >
                 {ticket.status}
               </Badge>
@@ -54,16 +54,6 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
           </DialogHeader>
           <Separator />
           <div className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">ID</label>
-                <p className="bg-gray-100 p-2 rounded mt-1">{ticket.id}</p>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Status</label>
-                <p className="bg-gray-100 p-2 rounded mt-1 uppercase">{ticket.status}</p>
-              </div>
-            </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Category *</label>
               <p className="bg-gray-100 p-2 rounded mt-1">Infrastructure Issues</p>
@@ -124,8 +114,8 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
             <span>{ticket.title}</span>
             <Badge
               className={`${getBadgeColor(
-                status
-              )} h-6 px-2 flex items-center justify-center rounded-md whitespace-nowrap text-[10px] uppercase font-bold shrink-0 pointer-events-none`}
+                ticket.status
+              )} h-6 px-2 flex items-center justify-center rounded-full whitespace-nowrap text-[10px] uppercase font-bold shrink-0 pointer-events-none`}
             >
               {ticket.status}
             </Badge>
