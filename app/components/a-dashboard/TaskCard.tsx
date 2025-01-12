@@ -32,7 +32,7 @@ export const TaskCard = ({
 
   return (
     <Card className="flex flex-col h-auto">
-      <div className="flex flex-row justify-between">
+      <div className="flex flex-row justify-between p-4">
         <div>
           <h2 className="text-2xl font-semibold mb-2">Submitted Tickets</h2>
         </div>
