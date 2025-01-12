@@ -1,4 +1,4 @@
-import AnnouncementsTable from "@/app/components/u-announcements/ticket-table";
+import AnnouncementsTable from "@/app/components/u-announcements/announcement-table";
 import React from "react";
 
 export default function AnnouncementPage() {
