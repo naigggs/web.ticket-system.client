@@ -21,9 +21,9 @@ export default function Header() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-    {/* <div className="flex justify-end w-[100%]">
-      <Bell className="w-6 h-6 hover:bg-gray-200 hover:rounded-full p-1"/>
-    </div> */}
+    <div className="flex justify-end w-[100%]">
+      <Bell className="w-7 h-7 hover:bg-gray-100 hover:rounded-md p-1 text-gray-700"/>
+    </div>
     </header>
   );
 }
