@@ -40,7 +40,7 @@ export const data = {
     },
     {
       title: "Surveys",
-      url: "#",
+      url: "/u-surveys",
       icon: NotebookPen,
       isActive: true,
     },
