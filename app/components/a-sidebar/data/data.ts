@@ -3,7 +3,8 @@ import {
   SquareTerminal,
   TicketPlus,
   RadioTower,
-  NotebookPen
+  NotebookPen,
+  UserRoundCog
 } from "lucide-react";
 
 export const data = {
@@ -27,9 +28,9 @@ export const data = {
       isActive: true,
     },
     {
-      title: "Submit Ticket",
-      url: "#",
-      icon: TicketPlus,
+      title: "Manage Accounts",
+      url: "/a-accounts",
+      icon: UserRoundCog,
       isActive: true,
     },
     {
