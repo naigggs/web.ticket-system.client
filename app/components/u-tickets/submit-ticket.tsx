@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import {
   Select,
   SelectContent,
@@ -12,6 +13,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -23,6 +34,8 @@ type ContentType = "first" | "second" | null;
 export default function SubmitTicket() {
   const [contentType, setContentType] = useState<ContentType>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [open, setOpen] = useState(false);
+  const isDesktop = useMediaQuery("(min-width: 768px)");
 
   const handleButtonClick = (type: ContentType) => {
     setContentType(type);
@@ -36,8 +49,8 @@ export default function SubmitTicket() {
     switch (contentType) {
       case "first":
         return (
-          <div className="container mx-auto">
-            <h2 className="text-lg font-semibold">
+          <div className={`container mx-auto ${!isDesktop ? "mt-6 mb-6" : ""}`}>
+            <h2 className={`text-lg font-semibold`}>
               Report Problems or Concerns
             </h2>
             <div className="mt-4 space-y-5">
@@ -92,8 +105,8 @@ export default function SubmitTicket() {
         );
       case "second":
         return (
-          <div className="container mx-auto">
-            <h2 className="text-lg font-semibold">
+          <div className={`container mx-auto ${!isDesktop ? "mt-6 mb-6" : ""}`}>
+            <h2 className={`text-lg font-semibold`}>
               Report Problems or Concerns
             </h2>
             <div className="mt-4 space-y-5">
@@ -148,11 +161,11 @@ export default function SubmitTicket() {
         );
       default:
         return (
-          <div className="container mx-auto">
-            <h2 className="text-lg font-semibold">Submit a Ticket</h2>
+          <div className={`container mx-auto ${!isDesktop ? "mt-6 mb-6" : ""}`}>
+            <h2 className={`text-lg font-semibold`}>Submit a Ticket</h2>
             <p className="mb-4 text-sm text-gray-800">
               What kind of assistance do you need? Let us know how we can
-              support you, whether it’s resolving an issue, answering your
+              support you, whether it&apos;s resolving an issue, answering your
               questions, or providing guidance.
             </p>
             <div className="flex justify-center gap-4">
@@ -168,13 +181,25 @@ export default function SubmitTicket() {
     }
   };
 
+  if (isDesktop)
+    return (
+      <Dialog onOpenChange={(open) => open && resetContent()}>
+        <DialogTrigger asChild>
+          <Button className="w-full">Submit Ticket</Button>
+        </DialogTrigger>
+        <DialogTitle></DialogTitle>
+        <DialogContent className="max-w-[700px]">
+          {renderContent()}
+        </DialogContent>
+      </Dialog>
+    );
+
   return (
-    <Dialog onOpenChange={(open) => open && resetContent()}>
-      <DialogTrigger asChild>
+    <Drawer onOpenChange={(open) => open && resetContent()}>
+      <DrawerTrigger asChild>
         <Button className="w-full">Submit Ticket</Button>
-      </DialogTrigger>
-      <DialogTitle></DialogTitle>
-      <DialogContent className="max-w-[700px]">{renderContent()}</DialogContent>
-    </Dialog>
+      </DrawerTrigger>
+      <DrawerContent className="px-10">{renderContent()}</DrawerContent>
+    </Drawer>
   );
 }
