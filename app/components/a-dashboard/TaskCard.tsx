@@ -47,7 +47,6 @@ export const TaskCard = ({
                 key={ticket.id}
                 ticket={ticket}
                 onTicketClick={onTicketClick}
-                status={ticket.status} // Pass the status prop if needed
               />
           ))}
         </ul>
