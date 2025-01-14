@@ -22,25 +22,25 @@ export const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/u-dashboard",
+      url: "/user/dashboard",
       icon: SquareTerminal,
       isActive: true,
     },
     {
       title: "Submit Ticket",
-      url: "/u-tickets",
+      url: "/user/tickets",
       icon: TicketPlus,
       isActive: true,
     },
     {
       title: "Announcements",
-      url: "/u-announcements",
+      url: "/user/announcements",
       icon: RadioTower,
       isActive: true,
     },
     {
       title: "Surveys",
-      url: "/u-surveys",
+      url: "/user/surveys",
       icon: NotebookPen,
       isActive: true,
     },

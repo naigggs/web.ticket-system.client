@@ -18,8 +18,8 @@ export async function login(formData: FormData) {
     console.log("Login failed:", error);
   }
 
-  revalidatePath("/u-dashboard", "layout");
-  redirect("/u-dashboard");
+  revalidatePath("/user/dashboard", "layout");
+  redirect("/user/dashboard");
 }
 
 export async function signup(formData: FormData) {
