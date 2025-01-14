@@ -1,4 +1,4 @@
-import { Tickets } from "../components/u-tickets/types";
+import { Tickets } from "../components/user-components/u-tickets/types";
 
 export const tickets: Tickets[] = [
   {

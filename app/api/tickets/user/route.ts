@@ -18,7 +18,7 @@ export async function GET(
   { params }: RouteParams
 ): Promise<Response> {
   const supabase = await createClient();
-  const { userId } = params;
+  const userId = req.headers.get("user-id");
 
   if (!userId) {
     return new Response(JSON.stringify({ error: "User ID is required." }), {
@@ -30,7 +30,7 @@ export async function GET(
     const { data, error } = await supabase
       .from("tickets")
       .select("*")
-      .eq("user_id", userId)
+      .eq("user-id", userId)
       .order("created_at", { ascending: false });
 
     if (error) {
