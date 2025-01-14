@@ -34,7 +34,7 @@ export function SurveyDatePicker({
           )}
         >
           <CalendarIcon />
-          {date ? format(date, "PPP") : <span>Pick a date</span>}
+          <span className="md:block hidden">   {date ? format(date, "PPP") : <span>Pick a date</span>} </span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">

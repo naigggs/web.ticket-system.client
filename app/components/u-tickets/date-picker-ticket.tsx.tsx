@@ -18,7 +18,7 @@ export function TicketDatePicker({
   onDateChange,
 }: Readonly<TicketDatePickerProps>) {
   const [date, setDate] = useState<Date | null>(null);
-  console.log(date)
+  console.log(date);
 
   useEffect(() => {
     onDateChange(date);
@@ -35,7 +35,10 @@ export function TicketDatePicker({
           )}
         >
           <CalendarIcon />
-          {date ? format(date, "PPP") : <span>Pick a date</span>}
+          <span className="md:block hidden">
+            {" "}
+            {date ? format(date, "PPP") : <span>Pick a date</span>}{" "}
+          </span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
