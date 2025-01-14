@@ -92,7 +92,7 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
                 className="w-full p-2 border rounded mt-1"
                 placeholder="Add comment or note"
                 rows={3}
-              ></textarea>
+              />
             </div>
             <div className="flex justify-end">
               <Button onClick={onClose} className="bg-blue-500 text-white px-4 py-2 rounded">
@@ -160,7 +160,7 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
               className="w-full p-2 border rounded mt-1"
               placeholder="Add comment or note"
               rows={3}
-            ></textarea>
+            />
           </div>
           <div className="flex justify-between">
             <DrawerClose asChild>
