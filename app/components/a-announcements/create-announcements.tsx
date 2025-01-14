@@ -45,7 +45,7 @@ export function CreateAnnouncements() {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="default">New Announcement</Button>
+        <Button variant="default"><Plus/></Button>
       </DrawerTrigger>
       <DrawerContent className="h-auto max-w-[100vw]">
         <DrawerHeader className="text-left">
