@@ -10,16 +10,20 @@ import {
 import { Button } from "@/components/ui/button";
 import TicketList from "./TicketList";
 
-export const TaskCard = ({
+export const TaskColumn = ({
   title,
   tickets,
   status,
   onTicketClick,
+  isLastColumn,
+  isFirstColumn,
 }: {
   title: string;
   tickets: any[];
   status: string;
   onTicketClick: (ticket: any) => void;
+  isLastColumn?: boolean;
+  isFirstColumn?: boolean;
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const ticketsPerPage = 5;
@@ -31,7 +35,7 @@ export const TaskCard = ({
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   return (
-    <Card className="flex flex-col h-auto">
+    <div className={`flex flex-col h-auto border-r border-t border-gray-300 ${isFirstColumn ? "" : ""} ${isLastColumn ? "border-r-0" : ""}`}>
       <div className="flex flex-row justify-between p-4">
         <div>
           <h2 className="text-2xl font-semibold mb-2">Submitted Tickets</h2>
@@ -66,6 +70,6 @@ export const TaskCard = ({
           )
         )}
       </CardFooter>
-    </Card>
+    </div>
   );
 };
