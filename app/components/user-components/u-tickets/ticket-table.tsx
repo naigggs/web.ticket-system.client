@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { motion, AnimatePresence } from "framer-motion";
-import { TicketDatePicker } from "./date-picker-ticket.tsx";
+import { TicketDatePicker } from "./date-picker-ticket";
 import { Input } from "@/components/ui/input";
 import SubmitTicket from "./submit-ticket";
 import { Tickets } from "./types.js";
@@ -23,11 +23,11 @@ export default function TicketsTable() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   useEffect(() => {
-    async function fetchTickets() {
+    async function fetchUserTickets() {
       try {
-        const response = await fetch("/api/tickets");
+        const response = await fetch(`/api/tickets/user`);
         if (!response.ok) {
-          throw new Error("Failed to fetch tickets");
+          throw new Error("Failed to fetch tickets for user");
         }
         const data = await response.json();
         setTickets(data);
@@ -38,7 +38,7 @@ export default function TicketsTable() {
       }
     }
 
-    fetchTickets();
+    fetchUserTickets();
   }, []);
 
   const filteredTickets = tickets.filter((ticket) => {
@@ -61,18 +61,22 @@ export default function TicketsTable() {
           Submitted Tickets
         </h2>
         <div className="flex flex-col md:flex-row items-center gap-2 w-full md:w-auto">
-          <div className="w-full md:w-auto">
-            <Input
-              type="text"
-              placeholder="Search"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full md:w-auto"
-            />
+          <div className="flex flex-row w-full gap-2">
+            {" "}
+            <div className="w-full md:w-auto">
+              <Input
+                type="text"
+                placeholder="Search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full md:w-auto"
+              />
+            </div>
+            <div className="md:w-auto">
+              <TicketDatePicker onDateChange={setSelectedDate} />
+            </div>
           </div>
-          <div className="w-full md:w-auto">
-            <TicketDatePicker onDateChange={setSelectedDate} />
-          </div>
+
           <div className="w-full md:w-auto">
             <Select onValueChange={(value) => setFilter(value)}>
               <SelectTrigger className="w-full md:w-[180px]">

@@ -1,8 +1,30 @@
-import React from "react";
-import { tickets } from "@/app/data/u-dash";
+'use client';
+
+import React, { useEffect, useState } from "react";
 import { Calendar, ChevronRight, MapPin } from "lucide-react";
+import { Tickets } from "../u-tickets/types";
 
 export default function TicketCard() {
+  const [tickets, setTickets] = useState<Tickets[]>([]);
+  const [error, setError] = useState("");
+  useEffect(() => {
+    async function fetchUserTickets() {
+      try {
+        const response = await fetch(`/api/tickets/user`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch tickets for user");
+        }
+        const data = await response.json();
+        setTickets(data);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "An unknown error occurred"
+        );
+      }
+    }
+
+    fetchUserTickets();
+  }, []);
   return (
     <div className="card bg-white border border-gray-300 rounded-lg p-4">
       <div className="flex flex-row justify-between">
@@ -14,7 +36,7 @@ export default function TicketCard() {
         </div>
       </div>
       <ul className="text-gray-500 animate-in fade-in slide-in-from-bottom-8 duration-500">
-        {tickets.map((ticket) => (
+        {tickets.slice(0, 5).map((ticket) => (
           <li key={ticket.id} className="border-b py-5 px-5 hover:bg-gray-50">
             <div className="flex flex-row justify-between">
               <div className="uppercase font-bold text-black">

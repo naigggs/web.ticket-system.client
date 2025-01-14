@@ -27,14 +27,13 @@ import { DialogTitle } from "@radix-ui/react-dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { TicketDatePicker } from "./date-picker-ticket.tsx";
+import { TicketDatePicker } from "./date-picker-ticket";
 
 type ContentType = "first" | "second" | null;
 
 export default function SubmitTicket() {
   const [contentType, setContentType] = useState<ContentType>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   const handleButtonClick = (type: ContentType) => {
