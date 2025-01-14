@@ -6,10 +6,16 @@ import { Calendar } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AnnouncementDatePicker } from "./date-picker-announcement";
 import { Input } from "@/components/ui/input";
+import { AnnouncementModal } from "./announcement-modal";
+import { Button } from "@/components/ui/button";
 
 export default function AnnouncementsTable() {
   const [search, setSearch] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedAnnouncement, setSelectedAnnouncement] = useState<any | null>(
+    null
+  );
+  
 
   const filteredAnnouncements = announcements.filter((announcement) => {
     const matchesDate =
@@ -38,7 +44,6 @@ export default function AnnouncementsTable() {
           <div>
             <AnnouncementDatePicker onDateChange={setSelectedDate} />
           </div>
-          <div></div>
         </div>
       </div>
       <ul className="text-gray-500">
@@ -46,18 +51,18 @@ export default function AnnouncementsTable() {
           {filteredAnnouncements.map((announcement, index) => (
             <motion.li
               key={announcement.id}
-              className={`border-b py-5 px-5 hover:bg-gray-50 ${
+              className={`border-b py-5 px-5 hover:bg-gray-50 cursor-pointer ${
                 index === 0 ? "border-t" : ""
               }`}
+              onClick={() => setSelectedAnnouncement(announcement)}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="uppercase font-bold text-black hover:underline">
+              <div className="uppercase font-bold text-black hover:underline ">
                 {announcement.title}
               </div>
-
               <div className="text-sm my-2 line-clamp-3">
                 {announcement.description}
               </div>
@@ -71,6 +76,10 @@ export default function AnnouncementsTable() {
           ))}
         </AnimatePresence>
       </ul>
+      <AnnouncementModal
+        announcement={selectedAnnouncement}
+        onClose={() => setSelectedAnnouncement(null)}
+      />
     </div>
   );
 }
