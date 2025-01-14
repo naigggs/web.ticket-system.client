@@ -33,6 +33,7 @@ export default function SurveysTable() {
               placeholder="Search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              className="w-[160px] md:w-full"
             />
           </div>
           <div>
