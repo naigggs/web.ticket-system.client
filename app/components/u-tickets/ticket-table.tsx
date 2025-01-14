@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
-import { tickets } from "@/app/data/u-dash";
+import React, { useState, useEffect } from "react";
 import { Calendar, MapPin } from "lucide-react";
 import {
   Select,
@@ -14,11 +13,33 @@ import { motion, AnimatePresence } from "framer-motion";
 import { TicketDatePicker } from "./date-picker-ticket.tsx";
 import { Input } from "@/components/ui/input";
 import SubmitTicket from "./submit-ticket";
+import { Tickets } from "./types.js";
 
 export default function TicketsTable() {
+  const [tickets, setTickets] = useState<Tickets[]>([]);
+  const [error, setError] = useState("");
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+  useEffect(() => {
+    async function fetchTickets() {
+      try {
+        const response = await fetch("/api/tickets");
+        if (!response.ok) {
+          throw new Error("Failed to fetch tickets");
+        }
+        const data = await response.json();
+        setTickets(data);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "An unknown error occurred"
+        );
+      }
+    }
+
+    fetchTickets();
+  }, []);
 
   const filteredTickets = tickets.filter((ticket) => {
     const matchesStatus =
