@@ -2,23 +2,16 @@ import React from 'react';
 import { getBadgeColor } from './BadgeColor';
 import { Calendar } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-
-// Define the type for the ticket object
-interface Ticket {
-  id: string | number;
-  title: string;
-  description: string;
-  status: string;
-  created_at: string;
-}
+import { Tickets } from "./types.js";
 
 // Define the type for the props
 interface TicketListProps {
-  ticket: Ticket;
-  onTicketClick: (ticket: Ticket) => void;
+  ticket: Tickets;
+  onTicketClick: (ticket: Tickets) => void;
 }
 
 const TicketList: React.FC<TicketListProps> = ({ ticket, onTicketClick }) => {
+  
   return (
     <div>
       <li

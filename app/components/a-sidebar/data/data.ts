@@ -35,7 +35,7 @@ export const data = {
     },
     {
       title: "Announcements",
-      url: "#",
+      url: "/a-announcements",
       icon: RadioTower,
       isActive: true,
     },

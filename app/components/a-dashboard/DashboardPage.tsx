@@ -1,16 +1,39 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import { tickets, Ticket } from "@/app/data/a-dash";
 import { Input } from "@/components/ui/input";
 import { TaskCard } from "@/app/components/a-dashboard/TaskCard";
 import { TicketModal } from "@/app/components/a-dashboard/TicketModal";
+import { Tickets } from "./types.js";
 
 export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [tickets, setTickets] = useState<Tickets[]>([]);
+  const [error, setError] = useState("");
+  
+  // fetch tickets from supabase
+  useEffect(() => {
+    async function fetchTickets() {
+      try {
+        const response = await fetch("/api/tickets");
+        if (!response.ok) {
+          throw new Error("Failed to fetch tickets");
+        }
+        const data = await response.json();
+        setTickets(data);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "An unknown error occurred"
+        );
+      }
+    }
+
+    fetchTickets();
+  }, []);
 
   const filteredTickets = tickets.filter((ticket) =>
     ticket.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -47,14 +70,14 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         <TaskCard
           title="To Do"
-          tickets={filteredTickets.filter((ticket) => ticket.status === "todo")}
+          tickets={filteredTickets.filter((ticket) => ticket.status === "Open")}
           status="todo"
           onTicketClick={handleTicketClick}
         />
         <TaskCard
           title="In Progress"
           tickets={filteredTickets.filter(
-            (ticket) => ticket.status === "inprogress"
+            (ticket) => ticket.status === "In Progress"
           )}
           status="inprogress"
           onTicketClick={handleTicketClick}
@@ -62,14 +85,14 @@ export default function DashboardPage() {
         <TaskCard
           title="On Hold"
           tickets={filteredTickets.filter(
-            (ticket) => ticket.status === "onhold"
+            (ticket) => ticket.status === "On Hold"
           )}
           status="onhold"
           onTicketClick={handleTicketClick}
         />
         <TaskCard
           title="Done"
-          tickets={filteredTickets.filter((ticket) => ticket.status === "done")}
+          tickets={filteredTickets.filter((ticket) => ticket.status === "Closed")}
           status="done"
           onTicketClick={handleTicketClick}
         />
