@@ -4,7 +4,7 @@ export async function GET() {
   const supabase = await createClient();
   try {
     const { data, error } = await supabase
-      .from("announcement")
+      .from("announcements")
       .select("*")
       .order("created_at", { ascending: false });
 

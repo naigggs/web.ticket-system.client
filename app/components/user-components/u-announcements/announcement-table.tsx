@@ -1,21 +1,42 @@
 "use client";
 
-import React, { useState } from "react";
-import { announcements } from "@/app/data/u-dash";
+import React, { useEffect, useState } from "react";
 import { Calendar } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AnnouncementDatePicker } from "./date-picker-announcement";
 import { Input } from "@/components/ui/input";
 import { AnnouncementModal } from "./announcement-modal";
 import { Button } from "@/components/ui/button";
+import { Announcements } from "./types";
 
 export default function AnnouncementsTable() {
+  const [announcements, setAnnouncements] = useState<Announcements[]>([]);
+  const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedAnnouncement, setSelectedAnnouncement] = useState<any | null>(
     null
   );
   
+   useEffect(() => {
+      async function fetchAnnouncements() {
+        try {
+          const response = await fetch(`/api/announcements`);
+          if (!response.ok) {
+            throw new Error("Failed to fetch tickets for user");
+          }
+          const data = await response.json();
+          setAnnouncements(data);
+        } catch (err) {
+          setError(
+            err instanceof Error ? err.message : "An unknown error occurred"
+          );
+        }
+      }
+  
+      fetchAnnouncements();
+    }, []);
+
 
   const filteredAnnouncements = announcements.filter((announcement) => {
     const matchesDate =
