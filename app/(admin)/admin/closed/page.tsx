@@ -1,12 +1,13 @@
 import AnnouncementsTable from '@/app/components/admin-components/a-announcements/announcement-table'
+import ClosedPage from '@/app/components/admin-components/a-closed/closed-page'
 import React from 'react'
 
-function Announcements() {
+function Closed() {
   return (
-    <div className="container mx-auto py-4 px-0 sm:px-6 lg:px-8">
-        <AnnouncementsTable/>
+    <div>
+        <ClosedPage/>
     </div>
   )
 }
 
-export default Announcements
+export default Closed

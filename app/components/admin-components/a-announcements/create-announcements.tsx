@@ -32,7 +32,7 @@ export function CreateAnnouncements() {
         <DialogTrigger asChild>
           <Button variant="default">New Announcement</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[40%]">
           <DialogHeader>
             <DialogTitle>New Announcement</DialogTitle>
           </DialogHeader>

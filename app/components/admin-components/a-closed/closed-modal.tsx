@@ -8,23 +8,16 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, Dr
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { getBadgeColor } from "./BadgeColor";
-
-interface Ticket {
-  id: number;
-  title: string;
-  description: string;
-  status: string;
-  // Add other fields as needed
-}
+import { getBadgeColor } from "../badge-color";
+import { Tickets } from "../a-dashboard/types";
 
 interface TicketModalProps {
   isOpen: boolean;
   onClose: () => void;
-  ticket: Ticket | null;
+  ticket: Tickets | null;
 }
 
-export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
+export function ClosedModal({ isOpen, onClose, ticket }: TicketModalProps) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   if (!ticket) return null;
@@ -32,6 +25,7 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
   if (isDesktop) {
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogTitle>
         <DialogContent className="max-w-2xl w-[90vw] sm:w-full max-h-[90vh] overflow-y-auto rounded-lg">
           <DialogHeader className="text-left space-y-2">
             <div className="text-md font-medium text-gray-500 -mt-4 -mb-2">#{ticket.id}</div>
@@ -92,15 +86,12 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
                 className="w-full p-2 border rounded mt-1"
                 placeholder="Add comment or note"
                 rows={3}
+                disabled
               />
-            </div>
-            <div className="flex justify-end">
-              <Button onClick={onClose} className="bg-blue-500 text-white px-4 py-2 rounded">
-                Send
-              </Button>
             </div>
           </div>
         </DialogContent>
+        </DialogTitle>
       </Dialog>
     );
   }
@@ -160,15 +151,8 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
               className="w-full p-2 border rounded mt-1"
               placeholder="Add comment or note"
               rows={3}
+              disabled
             />
-          </div>
-          <div className="flex justify-between">
-            <DrawerClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DrawerClose>
-            <Button onClick={onClose} className="bg-blue-500 text-white px-4 py-2 rounded">
-              Send
-            </Button>
           </div>
         </div>
       </DrawerContent>
