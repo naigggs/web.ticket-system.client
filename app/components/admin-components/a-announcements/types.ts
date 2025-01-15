@@ -2,6 +2,8 @@ export type Announcements = {
   id: number;
   title: string;
   description: string;
+  subtitle: string;
+  body: string;
   created_at: string;
 };
 
