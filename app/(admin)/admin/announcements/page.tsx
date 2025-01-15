@@ -3,7 +3,7 @@ import React from 'react'
 
 function Announcements() {
   return (
-    <div>
+    <div className="container mx-auto py-4 px-0 sm:px-6 lg:px-8">
         <AnnouncementsTable/>
     </div>
   )
