@@ -43,15 +43,12 @@ export default function TicketsTable() {
 
   const filteredTickets = tickets.filter((ticket) => {
     const matchesStatus =
-      filter === "all" || ticket.status.toLowerCase() === filter.toLowerCase();
+      filter === "all" || ticket.ticket_status.toLowerCase() === filter.toLowerCase();
     const matchesDate =
       !selectedDate ||
       new Date(ticket.created_at).toDateString() ===
         selectedDate.toDateString();
-    const matchesSearch = ticket.title
-      .toLowerCase()
-      .includes(search.toLowerCase());
-    return matchesStatus && matchesDate && matchesSearch;
+    return matchesStatus && matchesDate ;
   });
 
   return (
@@ -111,20 +108,20 @@ export default function TicketsTable() {
             >
               <div className="flex flex-row justify-between h-full items-center">
                 <div className="uppercase font-bold text-black">
-                  {ticket.title}
+                  ticket - {ticket.id}
                 </div>
                 <div className="text-sm bg-blue-200 text-blue-800 px-3 py-1 uppercase font-semibold inline-flex rounded-full">
-                  {ticket.status}
+                  {ticket.ticket_status}
                 </div>
               </div>
               <div className="text-sm my-2 line-clamp-3">
-                {ticket.description}
+                {ticket.description || ticket.concern_type}
               </div>
               <div className="flex flex-row gap-3">
                 <div>
                   <span className="text-gray-400 text-sm flex flex-row items-center">
                     <MapPin className="h-3.5 -mt-0.5 w-auto mr-1" />
-                    {ticket.location}
+                    {ticket.location || ticket.address}
                   </span>
                 </div>
                 <div>
