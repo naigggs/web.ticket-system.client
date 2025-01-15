@@ -30,7 +30,7 @@ export async function GET(
     const { data, error } = await supabase
       .from("tickets")
       .select("*")
-      .eq("user-id", userId)
+      .eq("user_id", userId)
       .order("created_at", { ascending: false });
 
     if (error) {
