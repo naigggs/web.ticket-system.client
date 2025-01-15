@@ -8,7 +8,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, Dr
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { getBadgeColor } from "./BadgeColor";
+import { getBadgeColor } from "../badge-color";
 
 interface Ticket {
   id: number;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { getBadgeColor } from './BadgeColor';
+import { getBadgeColor } from '../badge-color';
 import { Calendar } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Tickets } from "./types.js";

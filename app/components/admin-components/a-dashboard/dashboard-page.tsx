@@ -2,15 +2,14 @@
 
 import React, { useState, useEffect } from "react";
 import { Search } from "lucide-react";
-import { tickets, Ticket } from "@/app/data/a-dash";
 import { Input } from "@/components/ui/input";
-import { TaskCard } from "./TaskCard";
-import { TicketModal } from "./TicketModal";
+import { TaskCard } from "./task-card";
+import { TicketModal } from "./ticket-modal";
 import { Tickets } from "./types.js";
 
 export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
+  const [selectedTicket, setSelectedTicket] = useState<Tickets | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tickets, setTickets] = useState<Tickets[]>([]);
   const [error, setError] = useState("");
@@ -39,7 +38,7 @@ export default function DashboardPage() {
     ticket.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleTicketClick = (ticket: Ticket) => {
+  const handleTicketClick = (ticket: Tickets) => {
     setSelectedTicket(ticket);
     setIsModalOpen(true);
   };

@@ -1,7 +1,6 @@
 import {
     Pagination,
     PaginationContent,
-    PaginationEllipsis,
     PaginationItem,
     PaginationLink,
     PaginationNext,
@@ -42,24 +41,6 @@ import {
               className={currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""}
             />
           </PaginationItem>
-  
-          {Array.from({ length: totalPages }, (_, i) => (
-            <PaginationItem key={i + 1}>
-              <PaginationLink
-                href="#"
-                onClick={() => onPageChange(i + 1)}
-                isActive={currentPage === i + 1}
-              >
-                {i + 1}
-              </PaginationLink>
-            </PaginationItem>
-          ))}
-  
-          {totalPages > 5 && (
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-          )}
   
           <PaginationItem>
             <PaginationNext
