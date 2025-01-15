@@ -24,8 +24,8 @@ export default function SurveysTable() {
   });
 
   return (
-    <div className="container">
-      <div className="flex flex-row justify-between items-center mb-6 mt-4">
+    <div>
+      <div className="flex flex-row justify-between h-full items-center mb-6 mt-4">
         <h2 className="text-2xl font-semibold ml-4">Surveys</h2>
         <div className="flex flex-row items-center gap-2 p-2">
           <div>
@@ -41,7 +41,7 @@ export default function SurveysTable() {
             <CreateSurveys/>
         </div>
       </div>
-      <ul className="text-gray-500">
+      <ul className="text-gray-500 w-full">
         <AnimatePresence>
           {filteredSurveys.map((survey, index) => (
             <motion.li
