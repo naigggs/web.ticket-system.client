@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { announcements } from "@/app/data/u-dash";
 import { Calendar } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -8,14 +8,36 @@ import { AnnouncementDatePicker } from "./date-picker-announcement";
 import { Input } from "@/components/ui/input";
 import { AnnouncementModal } from "./modal-announcement";
 import { Button } from "@/components/ui/button";
-import { CreateAnnouncements } from "./create-announcements"; // Import the new component
+import { CreateAnnouncements } from "./create-announcements";
+import { Announcements } from "./types";
 
 export default function AnnouncementsTable() {
+  const [announcements, setAnnouncements] = useState<Announcements[]>([]);
   const [search, setSearch] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [error, setError] = useState("");
   const [selectedAnnouncement, setSelectedAnnouncement] = useState<any | null>(
     null
   );
+
+  useEffect(() => {
+    async function fetchAnnouncements() {
+      try {
+        const response = await fetch(`/api/announcements`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch tickets for user");
+        }
+        const data = await response.json();
+        setAnnouncements(data);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "An unknown error occurred"
+        );
+      }
+    }
+
+    fetchAnnouncements();
+  }, []);
 
   const filteredAnnouncements = announcements.filter((announcement) => {
     const matchesDate =
@@ -29,9 +51,9 @@ export default function AnnouncementsTable() {
   });
 
   return (
-    <div className="p-4 md:p-10 w-full max-w-[100vw] overflow-x-hidden">
+    <div className="">
       {/* Header Section */}
-      <div className="flex flex-col md:flex-row justify-between items-center mb-6 mt-4 gap-4">
+      <div className="flex flex-row justify-between h-full items-center mb-6 mt-4">
         <h2 className="text-2xl font-semibold">Announcements</h2>
         <div className="flex flex-col md:flex-row items-center gap-2 w-full md:w-auto">
             <div className="w-full flex flex-row items-center gap-2">
