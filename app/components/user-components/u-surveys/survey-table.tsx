@@ -1,15 +1,36 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { surveys } from "@/app/data/u-dash";
 import { Calendar } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SurveyDatePicker } from "./date-picker-survey";
 import { Input } from "@/components/ui/input";
+import { Surveys } from "./types";
 
 export default function SurveysTable() {
+  const [surveys, setSurveys] = useState<Surveys[]>([]);
+  const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+  useEffect(() => {
+    async function fetchUserUnansweredSurveys() {
+      try {
+        const response = await fetch(`/api/surveys/user-unanswered`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch tickets for user");
+        }
+        const data = await response.json();
+        setSurveys(data);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "An unknown error occurred"
+        );
+      }
+    }
+    fetchUserUnansweredSurveys();
+  }, []);
 
   const filteredSurveys = surveys.filter((survey) => {
     const matchesDate =
