@@ -35,7 +35,7 @@ export const TaskColumn = ({
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   return (
-    <div className={`flex flex-col h-auto border-r border-t border-gray-300 ${isFirstColumn ? "" : ""} ${isLastColumn ? "border-r-0" : ""}`}>
+    <Card className={`flex flex-col h-auto border-r border-t border-gray-300 ${isFirstColumn ? "" : ""} ${isLastColumn ? "border-r-0" : ""}`}>
       <div className="flex flex-row justify-between p-4">
         <div>
           <h2 className="text-2xl font-semibold mb-2">Submitted Tickets</h2>
@@ -70,6 +70,6 @@ export const TaskColumn = ({
           )
         )}
       </CardFooter>
-    </div>
+    </Card>
   );
 };

@@ -67,13 +67,14 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         <TaskColumn
           title="To Do"
           tickets={filteredTickets.filter((ticket) => ticket.status === "Open")}
           status="todo"
           onTicketClick={handleTicketClick}
           isFirstColumn
+          // isLastColumn={lastColumnIndex === 0}
         />
         <TaskColumn
           title="In Progress"
@@ -82,6 +83,7 @@ export default function DashboardPage() {
           )}
           status="inprogress"
           onTicketClick={handleTicketClick}
+          // isLastColumn={lastColumnIndex === 1}
         />
         <TaskColumn
           title="On Hold"
@@ -90,13 +92,14 @@ export default function DashboardPage() {
           )}
           status="onhold"
           onTicketClick={handleTicketClick}
+          // isLastColumn={lastColumnIndex === 2}
         />
         <TaskColumn
           title="Done"
           tickets={filteredTickets.filter((ticket) => ticket.status === "Closed")}
           status="done"
           onTicketClick={handleTicketClick}
-          isLastColumn
+          // isLastColumn={lastColumnIndex === 3}
         />
       </div>
 
