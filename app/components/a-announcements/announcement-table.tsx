@@ -34,22 +34,19 @@ export default function AnnouncementsTable() {
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 mt-4 gap-4">
         <h2 className="text-2xl font-semibold">Announcements</h2>
         <div className="flex flex-col md:flex-row items-center gap-2 w-full md:w-auto">
-          <div className="w-full md:w-auto">
-            <Input
-              type="text"
-              placeholder="Search"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full"
-            />
-          </div>
-          <div className="w-full md:w-auto">
-            <AnnouncementDatePicker onDateChange={setSelectedDate} />
-          </div>
-          <div className="ml-auto md:w-auto">
-            <CreateAnnouncements /> {/* Add the Create Announcement button */}
-          </div>
+            <div className="w-full flex flex-row items-center gap-2">
+              <Input
+                type="text"
+                placeholder="Search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full"
+              />
+              <AnnouncementDatePicker onDateChange={setSelectedDate} />
+              <CreateAnnouncements />
+            </div>
         </div>
+
       </div>
 
       {/* Announcements List */}

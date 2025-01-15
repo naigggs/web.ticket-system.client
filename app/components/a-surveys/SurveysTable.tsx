@@ -6,6 +6,7 @@ import { Calendar } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SurveyDatePicker } from "@/app/components/a-surveys/date-picker-surveys";
 import { Input } from "@/components/ui/input";
+import { CreateSurveys } from "./create-surveys";
 
 export default function SurveysTable() {
   const [search, setSearch] = useState("");
@@ -23,22 +24,21 @@ export default function SurveysTable() {
   });
 
   return (
-    <div>
+    <div className="container">
       <div className="flex flex-row justify-between items-center mb-6 mt-4">
         <h2 className="text-2xl font-semibold ml-4">Surveys</h2>
-        <div className="flex flex-row items-center gap-2">
+        <div className="flex flex-row items-center gap-2 p-2">
           <div>
             <Input
               type="text"
               placeholder="Search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              className="w-[150px] md:w-full"
             />
           </div>
-          <div>
             <SurveyDatePicker onDateChange={setSelectedDate} />
-          </div>
-          <div></div>
+            <CreateSurveys/>
         </div>
       </div>
       <ul className="text-gray-500">
