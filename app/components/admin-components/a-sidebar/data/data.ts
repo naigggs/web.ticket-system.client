@@ -4,7 +4,9 @@ import {
   TicketPlus,
   RadioTower,
   NotebookPen,
-  UserRoundCog
+  UserRoundCog,
+  Ticket,
+  TicketXIcon
 } from "lucide-react";
 
 export const data = {
@@ -25,6 +27,12 @@ export const data = {
       title: "Task Board",
       url: "/admin/dashboard",
       icon: SquareTerminal,
+      isActive: true,
+    },
+    {
+      title: "Closed Tickets",
+      url: "/admin/closed",
+      icon: TicketXIcon,
       isActive: true,
     },
     {
