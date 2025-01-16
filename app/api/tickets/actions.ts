@@ -4,12 +4,26 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
-import { FormData } from "./types";
 
-export async function submitBarangayID(data: FormData) {
+export async function submitBarangayID(formData: FormData) {
   const supabase = await createClient();
   const headersList = await headers();
   const userId = headersList.get("user-id");
+
+  const data = {
+    firstName: formData.get("firstName") as string,
+    middleName: formData.get("middleName") as string,
+    lastName: formData.get("lastName") as string,
+    birthdate: formData.get("birthdate") as string,
+    birthplace: formData.get("birthplace") as string,
+    age: parseInt(formData.get("age") as string),
+    height: formData.get("height") as string,
+    weight: formData.get("weight") as string,
+    civilStatus: formData.get("civilStatus") as string,
+    address: formData.get("address") as string,
+    contactPersonName: formData.get("contactPersonName") as string,
+    contactPersonNumber: formData.get("contactPersonNumber") as string,
+  };
 
   const { error } = await supabase.from("tickets").insert([
     {
@@ -37,10 +51,21 @@ export async function submitBarangayID(data: FormData) {
   redirect("/user/tickets");
 }
 
-export async function submitBarangayCert(data: FormData) {
+export async function submitBarangayCert(formData: FormData) {
   const supabase = await createClient();
   const headersList = await headers();
   const userId = headersList.get("user-id");
+
+  const data = {
+    firstName: formData.get("firstName") as string,
+    middleName: formData.get("middleName") as string,
+    lastName: formData.get("lastName") as string,
+    age: parseInt(formData.get("age") as string),
+    civilStatus: formData.get("civilStatus") as string,
+    address: formData.get("address") as string,
+    purpose: formData.get("purpose") as string,
+  };
+
   const { error } = await supabase.from("tickets").insert([
     {
       concern_type: "Barangay Certificate",
@@ -60,10 +85,21 @@ export async function submitBarangayCert(data: FormData) {
   }
 }
 
-export async function submitBarangayClearance(data: FormData) {
+export async function submitBarangayClearance(formData: FormData) {
   const supabase = await createClient();
   const headersList = await headers();
   const userId = headersList.get("user-id");
+
+  const data = {
+    firstName: formData.get("firstName") as string,
+    middleName: formData.get("middleName") as string,
+    lastName: formData.get("lastName") as string,
+    age: parseInt(formData.get("age") as string),
+    status: formData.get("status") as string,
+    address: formData.get("address") as string,
+    purpose: formData.get("purpose") as string,
+  };
+
   const { error } = await supabase.from("tickets").insert([
     {
       concern_type: "Barangay Clearance",
@@ -83,16 +119,28 @@ export async function submitBarangayClearance(data: FormData) {
   }
 }
 
-export async function submitCedula(data: FormData) {
+export async function submitCedula(formData: FormData) {
   const supabase = await createClient();
   const headersList = await headers();
   const userId = headersList.get("user-id");
+
+  const data = {
+    firstName: formData.get("firstName") as string,
+    middleName: formData.get("middleName") as string,
+    lastName: formData.get("lastName") as string,
+    birthdate: formData.get("birthdate") as string,
+    birthplace: formData.get("birthplace") as string,
+    age: parseInt(formData.get("age") as string),
+    height: formData.get("height") as string,
+    weight: formData.get("weight") as string,
+    civilStatus: formData.get("civilStatus") as string,
+    address: formData.get("address") as string,
+  };
+
   const { error } = await supabase.from("tickets").insert([
     {
       concern_type: "Cedula",
-      last_name: data.lastName,
-      first_name: data.firstName,
-      middle_name: data.middleName,
+      name: `${data.firstName} ${data.middleName} ${data.lastName}`,
       birthdate: data.birthdate ? new Date(data.birthdate) : null,
       birthplace: data.birthplace,
       age: data.age,
@@ -111,16 +159,25 @@ export async function submitCedula(data: FormData) {
   }
 }
 
-export async function submitBarangayIndigent(data: FormData) {
+export async function submitBarangayIndigent(formData: FormData) {
   const supabase = await createClient();
   const headersList = await headers();
   const userId = headersList.get("user-id");
+
+  const data = {
+    firstName: formData.get("firstName") as string,
+    middleName: formData.get("middleName") as string,
+    lastName: formData.get("lastName") as string,
+    age: parseInt(formData.get("age") as string),
+    status: formData.get("status") as string,
+    address: formData.get("address") as string,
+    purpose: formData.get("purpose") as string,
+  };
+
   const { error } = await supabase.from("tickets").insert([
     {
       concern_type: "Barangay Indigent",
-      last_name: data.lastName,
-      first_name: data.firstName,
-      middle_name: data.middleName,
+      name: `${data.firstName} ${data.middleName} ${data.lastName}`,
       age: data.age,
       status: data.status,
       address: data.address,
@@ -132,6 +189,68 @@ export async function submitBarangayIndigent(data: FormData) {
 
   if (error) {
     console.error("Error submitting Barangay Indigent:", error);
+    throw error;
+  }
+}
+
+export async function submitBarangayProblem(formData: FormData) {
+  const supabase = await createClient();
+  const headersList = await headers();
+  const userId = headersList.get("user-id");
+
+  const uploadFile = async (file: File | null) => {
+    if (!file) return null;
+
+    const fileName = `${Date.now()}_${file.name}`;
+    const filePath = `attachments/tickets/${fileName}`;
+
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from("ticket_attachments")
+      .upload(filePath, file, {
+        cacheControl: "3600",
+        upsert: false,
+      });
+
+    if (uploadError) {
+      console.error("Error uploading file:", uploadError);
+      throw uploadError;
+    }
+
+    const { data: urlData } = supabase.storage
+      .from("ticket_attachments")
+      .getPublicUrl(filePath);
+
+    return urlData.publicUrl;
+  };
+
+  const attachment1 = formData.get("attachment1") as File | null;
+  const attachment2 = formData.get("attachment2") as File | null;
+
+  const attachment1Url = attachment1 ? await uploadFile(attachment1) : null;
+  const attachment2Url = attachment2 ? await uploadFile(attachment2) : null;
+
+  const data = {
+    title: formData.get("title") as string,
+    description: formData.get("description") as string,
+    location: formData.get("location") as string,
+    attachment1: attachment1Url,
+    attachment2: attachment2Url,
+  };
+
+  const { error } = await supabase.from("tickets").insert([
+    {
+      title: data.title,
+      description: data.description,
+      location: data.location,
+      attachment_1: data.attachment1,
+      attachment_2: data.attachment2,
+      user_id: userId,
+      ticket_status: "Open",
+    },
+  ]);
+
+  if (error) {
+    console.error("Error submitting Barangay Problem:", error);
     throw error;
   }
 }
