@@ -35,7 +35,7 @@ export default function ClosedPage() {
   }, []);
 
   const filteredTickets = tickets.filter((ticket) =>
-    ticket.title.toLowerCase().includes(searchQuery.toLowerCase())
+    ticket.id?.toString().includes(searchQuery)
   );
 
   const handleTicketClick = (ticket: Tickets) => {
