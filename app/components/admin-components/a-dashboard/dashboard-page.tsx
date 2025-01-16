@@ -13,8 +13,8 @@ export default function DashboardPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tickets, setTickets] = useState<Tickets[]>([]);
   const [error, setError] = useState("");
-  
-  // fetch tickets from supabase
+
+  // Fetch tickets from Supabase
   useEffect(() => {
     async function fetchTickets() {
       try {
@@ -23,6 +23,7 @@ export default function DashboardPage() {
           throw new Error("Failed to fetch tickets");
         }
         const data = await response.json();
+        // Directly set the fetched data to the tickets state
         setTickets(data);
       } catch (err) {
         setError(
@@ -34,8 +35,9 @@ export default function DashboardPage() {
     fetchTickets();
   }, []);
 
+  // Filter tickets by ID
   const filteredTickets = tickets.filter((ticket) =>
-    ticket.title.toLowerCase().includes(searchQuery.toLowerCase())
+    ticket.id?.toString().includes(searchQuery)
   );
 
   const handleTicketClick = (ticket: Tickets) => {
@@ -60,7 +62,7 @@ export default function DashboardPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full h-full pl-10 pr-4 py-2 text-sm placeholder:text-gray-500 focus:ring-1"
-            placeholder="Search tickets"
+            placeholder="Search tickets by ID"
           />
           <Search className="absolute top-1/2 -translate-y-1/2 left-4 w-5 h-5 text-gray-400" />
         </div>
@@ -69,29 +71,28 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <TaskCard
           title="To Do"
-          tickets={filteredTickets.filter((ticket) => ticket.status === "Open")}
+          tickets={filteredTickets.filter(
+            (ticket) => ticket.ticket_status === "Open"
+          )}
           status="todo"
           onTicketClick={handleTicketClick}
           isFirstColumn
-          // isLastColumn={lastColumnIndex === 0}
         />
         <TaskCard
           title="In Progress"
           tickets={filteredTickets.filter(
-            (ticket) => ticket.status === "In Progress"
+            (ticket) => ticket.ticket_status === "In Progress"
           )}
           status="inprogress"
           onTicketClick={handleTicketClick}
-          // isLastColumn={lastColumnIndex === 1}
         />
         <TaskCard
           title="On Hold"
           tickets={filteredTickets.filter(
-            (ticket) => ticket.status === "On Hold"
+            (ticket) => ticket.ticket_status === "On Hold"
           )}
           status="onhold"
           onTicketClick={handleTicketClick}
-          // isLastColumn={lastColumnIndex === 2}
         />
       </div>
 
