@@ -9,19 +9,12 @@ import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { getBadgeColor } from "../badge-color";
-
-interface Ticket {
-  id: number;
-  title: string;
-  description: string;
-  status: string;
-  // Add other fields as needed
-}
+import { Tickets } from "./types.js";
 
 interface TicketModalProps {
   isOpen: boolean;
   onClose: () => void;
-  ticket: Ticket | null;
+  ticket: Tickets | null;
 }
 
 export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
@@ -34,15 +27,14 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-2xl w-[90vw] sm:w-full max-h-[90vh] overflow-y-auto rounded-lg">
           <DialogHeader className="text-left space-y-2">
-            <div className="text-md font-medium text-gray-500 -mt-4 -mb-2">#{ticket.id}</div>
-            <DialogTitle className="flex items-center gap-x-4">
-              <span className="text-xl font-semibold text-gray-900">{ticket.title}</span>
+            <DialogTitle className="flex items-center gap-x-2 mb-4">
+              <div className="text-lg font-semibold">Ticket - {ticket.id}</div>
               <Badge
                 className={`${getBadgeColor(
-                  ticket.status
+                  ticket.ticket_status
                 )} h-6 px-2 flex items-center justify-center rounded-full whitespace-nowrap text-[10px] uppercase font-bold shrink-0 pointer-events-none`}
               >
-                {ticket.status}
+                {ticket.ticket_status}
               </Badge>
             </DialogTitle>
             <DialogDescription className="text-sm text-gray-600">
