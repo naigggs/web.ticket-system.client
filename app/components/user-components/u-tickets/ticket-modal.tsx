@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Calendar } from "lucide-react";
 import {
@@ -21,6 +21,10 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import useMediaQuery from "@/hooks/use-media-query";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 
 interface ModalProps {
   ticket: {
@@ -51,25 +55,198 @@ interface ModalProps {
 
 export function TicketModal({ ticket, onClose }: ModalProps) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
+
   if (!ticket) return null;
+
+  const renderContent = () => {
+    switch (ticket.concern_type) {
+      case "Barangay ID":
+        return (
+          <div className="h-auto">
+            <div className="flex flex-row items-center gap-56">
+              <div className="grid items-center ">
+                <div className="uppercase font-semibold text-lg">
+                  ticket - {ticket.id}
+                </div>
+              </div>
+              <div className="grid items-center ">
+                <div className="uppercase font-semibold text-lg">
+                  {ticket.concern_type}
+                </div>
+              </div>
+              <div className="grid items-center">
+                <span className="">
+                  <Badge>{ticket.ticket_status}</Badge>
+                </span>
+              </div>
+            </div>
+            <div className="flex flex-col gap-4 mt-2">
+              <div className="grid w-full items-center ">
+                <Label>Full Name</Label>
+                <span className="">{ticket.name}</span>
+              </div>
+
+              <div className="flex flex-row w-full">
+                <div className="grid w-full items-center">
+                  <Label>Birthdate</Label>
+                  <span className="">
+                    {ticket.birthdate ? ticket.birthdate : "January 01, 2025"}
+                  </span>
+                </div>
+                <div className="grid w-full items-center">
+                  <Label>Birthplace</Label>
+                  <span className="">{ticket.birthplace}</span>
+                </div>
+                <div className="grid w-full items-center">
+                  <Label>Age</Label>
+                  <span className="">{ticket.age}</span>
+                </div>
+              </div>
+              <div className="flex flex-row items-center gap-4">
+                <div className="grid w-full items-center">
+                  <Label>Height</Label>
+                  <span className="">{ticket.height} cm</span>
+                </div>
+                <div className="grid w-full items-center">
+                  <Label>Weight</Label>
+                  <span className="">{ticket.weight} kg</span>
+                </div>
+                <div className="grid w-full items-center">
+                  <Label>Civil Status</Label>
+                  <span className="">{ticket.civil_status}</span>
+                </div>
+              </div>
+              <div className="grid w-full items-center">
+                <Label>Address/Purok #</Label>
+                <span className="">{ticket.address}</span>
+              </div>
+              <div className="-mt-4">
+                <div className="relative my-4">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-gray-300"></div>
+                  </div>
+                  <div className="relative flex justify-center text-sm">
+                    <span className="bg-white px-2 text-gray-500">
+                      In Case of Emergency Contact Person
+                    </span>
+                  </div>
+                </div>
+                <div className="flex flex-row items-center gap-4">
+                  <div className="grid w-full items-center">
+                    <Label>Contact Person Name</Label>
+                    <span className="">{ticket.contact_person_name}</span>
+                  </div>
+                  <div className="grid w-full items-center">
+                    <Label>Mobile Number</Label>
+                    <span className="">{ticket.contact_person_number}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      case "Barangay Certificate":
+        return (
+          <div className="h-auto">
+            <div className="flex flex-row items-center gap-44">
+              <div className="grid items-center">
+                <div className="uppercase font-semibold text-lg">
+                  ticket - {ticket.id}
+                </div>
+              </div>
+              <div className="grid items-center ">
+                <div className="uppercase font-semibold text-lg">
+                  {ticket.concern_type}
+                </div>
+              </div>
+              <div className="grid items-center">
+                <span className="">
+                  <Badge>{ticket.ticket_status}</Badge>
+                </span>
+              </div>
+            </div>
+            <div className="grid w-full items-center mt-2">
+              <Label>Full Name</Label>
+              <span className="">{ticket.name}</span>
+            </div>
+            <div className="flex flex-col gap-2 mt-2">
+              <div className="flex flex-row items-center gap-4">
+                <div className="grid w-full items-center gap-1.5">
+                  <Label>Age</Label>
+                  <span className="">{ticket.age}</span>
+                </div>
+                <div className="grid w-full items-center gap-1.5">
+                  <Label>Civil Status</Label>
+                  <span className="">{ticket.civil_status}</span>
+                </div>
+              </div>
+              <div className="grid w-full items-center gap-1.5">
+                <Label>Address/Purok #</Label>
+                <span className="">{ticket.address}</span>
+              </div>
+              <div className="grid w-full items-center gap-1.5">
+                <Label>Purpose</Label>
+                <span className="">{ticket.purpose}</span>
+              </div>
+            </div>
+          </div>
+        );
+      case "Barangay Clearance":
+        return (
+          <div className="h-auto">
+            <div className="flex flex-row items-center gap-44">
+              <div className="grid items-center">
+                <div className="uppercase font-semibold text-lg">
+                  ticket - {ticket.id}
+                </div>
+              </div>
+              <div className="grid items-center ">
+                <div className="uppercase font-semibold text-lg">
+                  {ticket.concern_type}
+                </div>
+              </div>
+              <div className="grid items-center">
+                <span className="">
+                  <Badge>{ticket.ticket_status}</Badge>
+                </span>
+              </div>
+            </div>
+            <div className="grid w-full items-center mt-2">
+              <Label>Full Name</Label>
+              <span className="">{ticket.name}</span>
+            </div>
+            <div className="flex flex-col gap-2 mt-2">
+              <div className="flex flex-row items-center gap-4">
+                <div className="grid w-full items-center gap-1.5">
+                  <Label>Age</Label>
+                  <span className="">{ticket.age}</span>
+                </div>
+                <div className="grid w-full items-center gap-1.5">
+                  <Label>Purpose</Label>
+                  <span className="">{ticket.purpose}</span>
+                </div>
+                <div className="grid w-full items-center gap-1.5">
+                  <Label>Status</Label>
+                  <span className="">{ticket.status}</span>
+                </div>
+              </div>
+
+              <div className="grid w-full items-center ">
+                <Label>Address/Purok #</Label>
+                <span className="">{ticket.address}</span>
+              </div>
+            </div>
+          </div>
+        );
+    }
+  };
 
   if (isDesktop) {
     return (
       <Dialog open={true} onOpenChange={onClose}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{ticket?.title}</DialogTitle>
-            <DialogDescription>{ticket?.description}</DialogDescription>
-          </DialogHeader>
-          <div className="font-bold text-md">{ticket?.description}</div>
-          <div className="text-sm">{ticket?.ticket_status}</div>
-          <div className="mt-4 text-gray-500 text-sm flex items-center">
-            {new Date(ticket.created_at).toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            })}
-          </div>
+        <DialogContent className="max-w-[800px]">
+          <DialogTitle className="sr-only"></DialogTitle>
+          {renderContent()}
         </DialogContent>
       </Dialog>
     );
@@ -77,25 +254,8 @@ export function TicketModal({ ticket, onClose }: ModalProps) {
   return (
     <Drawer open={true} onOpenChange={onClose}>
       <DrawerContent>
-        <DrawerHeader className="text-left">
-          <DrawerTitle>{ticket?.title}</DrawerTitle>
-          <DrawerDescription className="max-h-[calc(100vh-200px)] overflow-y-auto">
-            {ticket?.description}
-          </DrawerDescription>
-        </DrawerHeader>
-        <div className="text-md font-bold w-[92%] mx-auto">{ticket?.title}</div>
-        <div className="text-sm flex w-[92%] mx-auto">
-          {" "}
-          {ticket?.description} {ticket?.description} {ticket?.description}{" "}
-          {ticket?.description}{" "}
-        </div>
-        <DrawerFooter className="pt-2">
-          {new Date(ticket.created_at).toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-          })}
-        </DrawerFooter>
+        <DialogTitle className="sr-only"></DialogTitle>
+       {renderContent()}
       </DrawerContent>
     </Drawer>
   );
