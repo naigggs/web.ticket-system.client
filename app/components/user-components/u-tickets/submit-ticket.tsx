@@ -2,7 +2,12 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import {
   Select,
@@ -226,7 +231,11 @@ export default function SubmitTicket() {
                       </div>
                       <div className="grid w-full items-center gap-1.5">
                         <Label>Mobile Number</Label>
-                        <Input type="tel" pattern="[0-9]*" name="contactPersonNumber" />
+                        <Input
+                          type="tel"
+                          pattern="[0-9]*"
+                          name="contactPersonNumber"
+                        />
                       </div>
                     </div>
                   </div>
@@ -462,6 +471,7 @@ export default function SubmitTicket() {
             <Button>Submit Ticket</Button>
           </DialogTrigger>
           <DialogContent className="max-w-[700px]">
+            <DialogTitle className="sr-only"></DialogTitle>
             {renderContent()}
           </DialogContent>
         </Dialog>
@@ -471,6 +481,7 @@ export default function SubmitTicket() {
             <Button className="w-full">Submit Ticket</Button>
           </DrawerTrigger>
           <DrawerContent className="px-10 mb-4">
+            <DialogTitle className="sr-only"></DialogTitle>
             {renderContent()}
           </DrawerContent>
         </Drawer>
