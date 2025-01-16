@@ -38,7 +38,7 @@ export function AnnouncementModal({ announcement, onClose }: ModalProps) {
   if (isDesktop) {
     return (
       <Dialog open={true} onOpenChange={onClose}>
-        <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
+        <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} aria-describedby={undefined}>
           <DialogHeader>
             <DialogTitle>{announcement?.title}</DialogTitle>
             <DialogDescription>{announcement?.description}</DialogDescription>
