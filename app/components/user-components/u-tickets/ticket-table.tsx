@@ -14,6 +14,7 @@ import { TicketDatePicker } from "./date-picker-ticket";
 import { Input } from "@/components/ui/input";
 import SubmitTicket from "./submit-ticket";
 import { Tickets } from "./types.js";
+import { TicketModal } from "./ticket-modal";
 
 export default function TicketsTable() {
   const [tickets, setTickets] = useState<Tickets[]>([]);
@@ -21,6 +22,7 @@ export default function TicketsTable() {
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedTicket, setSelectedTicket] = useState<any | null>(null);
 
   useEffect(() => {
     async function fetchUserTickets() {
@@ -43,14 +45,14 @@ export default function TicketsTable() {
 
   const filteredTickets = tickets.filter((ticket) => {
     const matchesStatus =
-      filter === "all" || ticket.ticket_status.toLowerCase() === filter.toLowerCase();
+      filter === "all" ||
+      ticket.ticket_status.toLowerCase() === filter.toLowerCase();
     const matchesDate =
       !selectedDate ||
       new Date(ticket.created_at).toDateString() ===
         selectedDate.toDateString();
-    return matchesStatus && matchesDate ;
+    return matchesStatus && matchesDate;
   });
-
   return (
     <div>
       <div className="flex flex-col md:flex-row justify-between h-full items-center mb-6 mt-4 w-[90%] md:w-full mx-auto">
@@ -101,21 +103,19 @@ export default function TicketsTable() {
               className={`border-b py-5 md:px-2 px-5 hover:bg-gray-50 ${
                 index === 0 ? "border-t" : ""
               }`}
+              onClick={() => setSelectedTicket(ticket)}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="flex flex-row justify-between h-full items-center">
+              <div className="flex flex-row justify-between h-full items-center space-y-2">
                 <div className="uppercase font-bold text-black">
                   ticket - {ticket.id}
                 </div>
                 <div className="text-sm bg-blue-200 text-blue-800 px-3 py-1 uppercase font-semibold inline-flex rounded-full">
                   {ticket.ticket_status}
                 </div>
-              </div>
-              <div className="text-sm my-2 line-clamp-3">
-                {ticket.description || ticket.concern_type}
               </div>
               <div className="flex flex-row gap-3">
                 <div>
@@ -127,7 +127,11 @@ export default function TicketsTable() {
                 <div>
                   <span className="text-gray-400 text-sm flex flex-row items-center">
                     <Calendar className="h-3.5 -mt-0.5 w-auto mr-1" />
-                    {ticket.created_at}
+                    {new Date(ticket.created_at).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
                   </span>
                 </div>
               </div>
@@ -135,6 +139,10 @@ export default function TicketsTable() {
           ))}
         </AnimatePresence>
       </ul>
+      <TicketModal
+        ticket={selectedTicket}
+        onClose={() => setSelectedTicket(null)}
+      />
     </div>
   );
 }
