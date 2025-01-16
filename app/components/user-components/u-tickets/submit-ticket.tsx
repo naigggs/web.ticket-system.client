@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useMediaQuery } from "@/hooks/use-media-query";
@@ -24,7 +23,6 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { DialogTitle } from "@radix-ui/react-dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -35,29 +33,8 @@ import {
   submitBarangayClearance,
   submitCedula,
   submitBarangayIndigent,
+  submitBarangayProblem,
 } from "@/app/api/tickets/actions";
-
-type FormData = {
-  lastName: string;
-  firstName: string;
-  middleName: string;
-  birthdate?: string;
-  birthplace?: string;
-  age?: number;
-  height?: string;
-  weight?: string;
-  civilStatus?: string;
-  address?: string;
-  contactPersonName?: string;
-  contactPersonNumber?: string;
-  purpose?: string;
-  status?: string;
-  problem?: string;
-  comments?: string;
-  location?: string;
-  attachment1?: FileList;
-  attachment2?: FileList;
-};
 
 type ContentType = "first" | "second" | null;
 
@@ -67,39 +44,43 @@ export default function SubmitTicket() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
-  const { register, handleSubmit, reset } = useForm<FormData>();
-
   const handleButtonClick = (type: ContentType) => {
     setContentType(type);
   };
 
   const resetContent = () => {
     setContentType(null);
-    reset();
   };
 
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
-    try {
-      switch (concernType) {
-        case "barangay-id":
-          await submitBarangayID(data);
-          break;
-        case "barangay-cert":
-          await submitBarangayCert(data);
-          break;
-        case "barangay-clearance":
-          await submitBarangayClearance(data);
-          break;
-        case "cedula":
-          await submitCedula(data);
-          break;
-        case "barangay-indigent":
-          await submitBarangayIndigent(data);
-          break;
-        default:
-          throw new Error("Invalid concern type");
-      }
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
+    const formData = new FormData(event.currentTarget);
+
+    try {
+      if (contentType === "first") {
+        await submitBarangayProblem(formData);
+      } else {
+        switch (concernType) {
+          case "barangay-id":
+            await submitBarangayID(formData);
+            break;
+          case "barangay-cert":
+            await submitBarangayCert(formData);
+            break;
+          case "barangay-clearance":
+            await submitBarangayClearance(formData);
+            break;
+          case "cedula":
+            await submitCedula(formData);
+            break;
+          case "barangay-indigent":
+            await submitBarangayIndigent(formData);
+            break;
+          default:
+            throw new Error("Invalid concern type");
+        }
+      }
       resetContent();
     } catch (error) {
       console.error("Error submitting ticket:", error);
@@ -110,31 +91,31 @@ export default function SubmitTicket() {
     switch (contentType) {
       case "first":
         return (
-          <form onSubmit={handleSubmit(onSubmit)} className="container mx-auto">
+          <form onSubmit={handleSubmit} className="container mx-auto">
             <h2 className="text-lg font-semibold">
               Report Problems or Concerns
             </h2>
             <div className="mt-4 space-y-5">
               <div className="grid w-full items-center gap-1.5">
                 <Label>Problem or Concern</Label>
-                <Input type="text" {...register("problem")} />
+                <Input type="text" name="title" />
               </div>
               <div className="grid w-full items-center gap-1.5">
                 <Label>Additional Comments</Label>
-                <Textarea {...register("comments")} />
+                <Textarea name="description" />
               </div>
               <div className="grid w-full items-center gap-1.5">
                 <Label>Location</Label>
-                <Input type="text" {...register("location")} />
+                <Input type="text" name="location" />
               </div>
               <div className="flex flex-row items-center gap-4">
                 <div className="grid w-full items-center gap-1.5">
                   <Label>Attachment 1</Label>
-                  <Input type="file" {...register("attachment1")} />
+                  <Input type="file" name="attachment1" />
                 </div>
                 <div className="grid w-full items-center gap-1.5">
                   <Label>Attachment 2</Label>
-                  <Input type="file" {...register("attachment2")} />
+                  <Input type="file" name="attachment2" />
                 </div>
               </div>
               <div className="flex justify-end gap-2">
@@ -148,7 +129,7 @@ export default function SubmitTicket() {
         );
       case "second":
         return (
-          <form onSubmit={handleSubmit(onSubmit)} className="container mx-auto">
+          <form onSubmit={handleSubmit} className="container mx-auto">
             <h2 className="text-lg font-semibold">
               Request Services or Assistance
             </h2>
@@ -182,15 +163,15 @@ export default function SubmitTicket() {
                   <div className="flex flex-row items-center gap-4">
                     <div className="grid w-full items-center gap-1.5">
                       <Label>Last Name</Label>
-                      <Input type="text" {...register("lastName")} />
+                      <Input type="text" name="lastName" />
                     </div>
                     <div className="grid w-full items-center gap-1.5">
                       <Label>First Name</Label>
-                      <Input type="text" {...register("firstName")} />
+                      <Input type="text" name="firstName" />
                     </div>
                     <div className="grid w-full items-center gap-1.5">
                       <Label>Middle Name</Label>
-                      <Input type="text" {...register("middleName")} />
+                      <Input type="text" name="middleName" />
                     </div>
                   </div>
                   <div className="flex flex-col gap-2 mt-2">
@@ -203,30 +184,30 @@ export default function SubmitTicket() {
                       </div>
                       <div className="grid w-full items-center gap-1.5">
                         <Label>Birthplace</Label>
-                        <Input type="text" {...register("birthplace")} />
+                        <Input type="text" name="birthplace" />
                       </div>
                       <div className="grid w-full items-center gap-1.5">
                         <Label>Age</Label>
-                        <Input type="number" {...register("age")} />
+                        <Input type="number" name="age" />
                       </div>
                     </div>
                     <div className="flex flex-row items-center gap-4">
                       <div className="grid w-full items-center gap-1.5">
                         <Label>Height</Label>
-                        <Input type="text" {...register("height")} />
+                        <Input type="text" name="height" />
                       </div>
                       <div className="grid w-full items-center gap-1.5">
                         <Label>Weight</Label>
-                        <Input type="text" {...register("weight")} />
+                        <Input type="text" name="weight" />
                       </div>
                       <div className="grid w-full items-center gap-1.5">
                         <Label>Civil Status</Label>
-                        <Input type="text" {...register("civilStatus")} />
+                        <Input type="text" name="civilStatus" />
                       </div>
                     </div>
                     <div className="grid w-full items-center gap-1.5">
                       <Label>Address/Purok #</Label>
-                      <Input type="text" {...register("address")} />
+                      <Input type="text" name="address" />
                     </div>
                     <div className="relative my-4">
                       <div className="absolute inset-0 flex items-center">
@@ -241,15 +222,11 @@ export default function SubmitTicket() {
                     <div className="flex flex-row items-center gap-4">
                       <div className="grid w-full items-center gap-1.5">
                         <Label>Contact Person Name</Label>
-                        <Input type="text" {...register("contactPersonName")} />
+                        <Input type="text" name="contactPersonName" />
                       </div>
                       <div className="grid w-full items-center gap-1.5">
                         <Label>Mobile Number</Label>
-                        <Input
-                          type="tel"
-                          pattern="[0-9]*"
-                          {...register("contactPersonNumber")}
-                        />
+                        <Input type="tel" pattern="[0-9]*" name="contactPersonNumber" />
                       </div>
                     </div>
                   </div>
@@ -266,35 +243,35 @@ export default function SubmitTicket() {
                   <div className="flex flex-row items-center gap-4">
                     <div className="grid w-full items-center gap-1.5">
                       <Label>Last Name</Label>
-                      <Input type="text" {...register("lastName")} />
+                      <Input type="text" name="lastName" />
                     </div>
                     <div className="grid w-full items-center gap-1.5">
                       <Label>First Name</Label>
-                      <Input type="text" {...register("firstName")} />
+                      <Input type="text" name="firstName" />
                     </div>
                     <div className="grid w-full items-center gap-1.5">
                       <Label>Middle Name</Label>
-                      <Input type="text" {...register("middleName")} />
+                      <Input type="text" name="middleName" />
                     </div>
                   </div>
                   <div className="flex flex-col gap-2 mt-2">
                     <div className="flex flex-row items-center gap-4">
                       <div className="grid w-full items-center gap-1.5">
                         <Label>Age</Label>
-                        <Input type="number" {...register("age")} />
+                        <Input type="number" name="age" />
                       </div>
                       <div className="grid w-full items-center gap-1.5">
                         <Label>Civil Status</Label>
-                        <Input type="text" {...register("civilStatus")} />
+                        <Input type="text" name="civilStatus" />
                       </div>
                     </div>
                     <div className="grid w-full items-center gap-1.5">
                       <Label>Address/Purok #</Label>
-                      <Input type="text" {...register("address")} />
+                      <Input type="text" name="address" />
                     </div>
                     <div className="grid w-full items-center gap-1.5">
                       <Label>Purpose</Label>
-                      <Input type="text" {...register("purpose")} />
+                      <Input type="text" name="purpose" />
                     </div>
                   </div>
                   <div className="flex justify-end gap-2 mt-4">
@@ -310,35 +287,35 @@ export default function SubmitTicket() {
                   <div className="flex flex-row items-center gap-4">
                     <div className="grid w-full items-center gap-1.5">
                       <Label>Last Name</Label>
-                      <Input type="text" {...register("lastName")} />
+                      <Input type="text" name="lastName" />
                     </div>
                     <div className="grid w-full items-center gap-1.5">
                       <Label>First Name</Label>
-                      <Input type="text" {...register("firstName")} />
+                      <Input type="text" name="firstName" />
                     </div>
                     <div className="grid w-full items-center gap-1.5">
                       <Label>Middle Name</Label>
-                      <Input type="text" {...register("middleName")} />
+                      <Input type="text" name="middleName" />
                     </div>
                   </div>
                   <div className="flex flex-col gap-2 mt-2">
                     <div className="flex flex-row items-center gap-4">
                       <div className="grid w-full items-center gap-1.5">
                         <Label>Age</Label>
-                        <Input type="number" {...register("age")} />
+                        <Input type="number" name="age" />
                       </div>
                       <div className="grid w-full items-center gap-1.5">
                         <Label>Status</Label>
-                        <Input type="text" {...register("status")} />
+                        <Input type="text" name="status" />
                       </div>
                     </div>
                     <div className="grid w-full items-center gap-1.5">
                       <Label>Address/Purok #</Label>
-                      <Input type="text" {...register("address")} />
+                      <Input type="text" name="address" />
                     </div>
                     <div className="grid w-full items-center gap-1.5">
                       <Label>Purpose</Label>
-                      <Input type="text" {...register("purpose")} />
+                      <Input type="text" name="purpose" />
                     </div>
                   </div>
                   <div className="flex justify-end gap-2 mt-4">
@@ -354,15 +331,15 @@ export default function SubmitTicket() {
                   <div className="flex flex-row items-center gap-4">
                     <div className="grid w-full items-center gap-1.5">
                       <Label>Last Name</Label>
-                      <Input type="text" {...register("lastName")} />
+                      <Input type="text" name="lastName" />
                     </div>
                     <div className="grid w-full items-center gap-1.5">
                       <Label>First Name</Label>
-                      <Input type="text" {...register("firstName")} />
+                      <Input type="text" name="firstName" />
                     </div>
                     <div className="grid w-full items-center gap-1.5">
                       <Label>Middle Name</Label>
-                      <Input type="text" {...register("middleName")} />
+                      <Input type="text" name="middleName" />
                     </div>
                   </div>
                   <div className="flex flex-col gap-2 mt-2">
@@ -375,30 +352,30 @@ export default function SubmitTicket() {
                       </div>
                       <div className="grid w-full items-center gap-1.5">
                         <Label>Birthplace</Label>
-                        <Input type="text" {...register("birthplace")} />
+                        <Input type="text" name="birthplace" />
                       </div>
                       <div className="grid w-full items-center gap-1.5">
                         <Label>Age</Label>
-                        <Input type="number" {...register("age")} />
+                        <Input type="number" name="age" />
                       </div>
                     </div>
                     <div className="flex flex-row items-center gap-4">
                       <div className="grid w-full items-center gap-1.5">
                         <Label>Height</Label>
-                        <Input type="text" {...register("height")} />
+                        <Input type="text" name="height" />
                       </div>
                       <div className="grid w-full items-center gap-1.5">
                         <Label>Weight</Label>
-                        <Input type="text" {...register("weight")} />
+                        <Input type="text" name="weight" />
                       </div>
                       <div className="grid w-full items-center gap-1.5">
                         <Label>Civil Status</Label>
-                        <Input type="text" {...register("civilStatus")} />
+                        <Input type="text" name="civilStatus" />
                       </div>
                     </div>
                     <div className="grid w-full items-center gap-1.5">
                       <Label>Address/Purok #</Label>
-                      <Input type="text" {...register("address")} />
+                      <Input type="text" name="address" />
                     </div>
                   </div>
                   <div className="flex justify-end gap-2 mt-4">
@@ -414,35 +391,35 @@ export default function SubmitTicket() {
                   <div className="flex flex-row items-center gap-4">
                     <div className="grid w-full items-center gap-1.5">
                       <Label>Last Name</Label>
-                      <Input type="text" {...register("lastName")} />
+                      <Input type="text" name="lastName" />
                     </div>
                     <div className="grid w-full items-center gap-1.5">
                       <Label>First Name</Label>
-                      <Input type="text" {...register("firstName")} />
+                      <Input type="text" name="firstName" />
                     </div>
                     <div className="grid w-full items-center gap-1.5">
                       <Label>Middle Name</Label>
-                      <Input type="text" {...register("middleName")} />
+                      <Input type="text" name="middleName" />
                     </div>
                   </div>
                   <div className="flex flex-col gap-2 mt-2">
                     <div className="flex flex-row items-center gap-4">
                       <div className="grid w-full items-center gap-1.5">
                         <Label>Age</Label>
-                        <Input type="number" {...register("age")} />
+                        <Input type="number" name="age" />
                       </div>
                       <div className="grid w-full items-center gap-1.5">
                         <Label>Status</Label>
-                        <Input type="text" {...register("status")} />
+                        <Input type="text" name="status" />
                       </div>
                     </div>
                     <div className="grid w-full items-center gap-1.5">
                       <Label>Address/Purok #</Label>
-                      <Input type="text" {...register("address")} />
+                      <Input type="text" name="address" />
                     </div>
                     <div className="grid w-full items-center gap-1.5">
                       <Label>Purpose</Label>
-                      <Input type="text" {...register("purpose")} />
+                      <Input type="text" name="purpose" />
                     </div>
                   </div>
                   <div className="flex justify-end gap-2 mt-4">
