@@ -15,23 +15,23 @@ export default function DashboardPage() {
   const [error, setError] = useState("");
 
   // Fetch tickets from Supabase
-  useEffect(() => {
-    async function fetchTickets() {
-      try {
-        const response = await fetch("/api/tickets");
-        if (!response.ok) {
-          throw new Error("Failed to fetch tickets");
-        }
-        const data = await response.json();
-        // Directly set the fetched data to the tickets state
-        setTickets(data);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "An unknown error occurred"
-        );
+  const fetchTickets = async () => {
+    try {
+      const response = await fetch("/api/tickets");
+      if (!response.ok) {
+        throw new Error("Failed to fetch tickets");
       }
+      const data = await response.json();
+      setTickets(data);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "An unknown error occurred"
+      );
     }
+  };
 
+  // Fetch tickets on initial load
+  useEffect(() => {
     fetchTickets();
   }, []);
 
@@ -50,21 +50,24 @@ export default function DashboardPage() {
     setSelectedTicket(null);
   };
 
+  const handleStatusUpdate = async () => {
+    await fetchTickets();
+  };
+
   return (
     <div className="mx-auto justify-center px-2 md:px-10 my-6 animate-in fade-in slide-in-from-bottom-8 duration-300">
       <div className="flex justify-between mb-4">
-        <h1 className="text-3xl md:text-4xl font-bold text-center">
+        <h2 className="text-xl md:text-2xl flex items-center font-bold text-center">
           Task Board
-        </h1>
+        </h2>
         <div className="relative w-40 md:w-64 h-10">
           <Input
             type="search"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-full pl-10 pr-4 py-2 text-sm placeholder:text-gray-500 focus:ring-1"
+            className="w-full h-10 py-2 text-sm placeholder:text-gray-500 focus-visible:ring-0"
             placeholder="Search tickets by ID"
           />
-          <Search className="absolute top-1/2 -translate-y-1/2 left-4 w-5 h-5 text-gray-400" />
         </div>
       </div>
 
@@ -100,6 +103,7 @@ export default function DashboardPage() {
         isOpen={isModalOpen}
         onClose={closeModal}
         ticket={selectedTicket}
+        onStatusUpdate={handleStatusUpdate}
       />
     </div>
   );
