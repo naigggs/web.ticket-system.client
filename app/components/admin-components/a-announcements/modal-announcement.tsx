@@ -37,43 +37,20 @@ export function AnnouncementModal({ announcement, onClose }: ModalProps) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
   if (!announcement) return null;
 
-  if (isDesktop) {
-    return (
-      <Dialog open={true} onOpenChange={onClose}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{announcement?.title}</DialogTitle>
-            <DialogDescription>{announcement?.description}</DialogDescription>
-          </DialogHeader>
-          <div className="font-bold text-md">{announcement?.subtitle}</div>
-          <div className="text-sm">{announcement?.body}</div>
-          <div className="mt-4 text-gray-500 text-sm flex items-center">
-            <Calendar className="h-4 w-4 mr-1" />
-            {announcement?.created_at}
-          </div>
-        </DialogContent>
-      </Dialog>
-    );
-  }
   return (
-    <Drawer open={true} onOpenChange={onClose}>
-      <DrawerContent>
-        <DrawerHeader className="text-left">
-          <DrawerTitle>{announcement?.title}</DrawerTitle>
-          <DrawerDescription className="max-h-[calc(100vh-200px)] overflow-y-auto">
-            {announcement?.description}
-          </DrawerDescription>
-        </DrawerHeader>
-        <div className="text-md font-bold w-[92%] mx-auto">
-          {announcement?.title}
+    <Dialog open={true} onOpenChange={onClose}>
+      <DialogContent className="w-[95%] sm:max-w-[50%] max-h-[90vh] overflow-y-auto rounded-lg">
+        <DialogHeader>
+          <DialogTitle>{announcement?.title}</DialogTitle>
+          <DialogDescription>{announcement?.description}</DialogDescription>
+        </DialogHeader>
+        <div className="font-bold text-md">{announcement?.subtitle}</div>
+        <div className="text-sm">{announcement?.body}</div>
+        <div className="mt-4 text-gray-500 text-sm flex items-center">
+          <Calendar className="h-4 w-4 mr-1" />
+          {announcement?.created_at}
         </div>
-        <div className="text-sm flex w-[92%] mx-auto">
-          {" "}
-          {announcement?.description} {announcement?.description}{" "}
-          {announcement?.description} {announcement?.description}{" "}
-        </div>
-        <DrawerFooter className="pt-2"></DrawerFooter>
-      </DrawerContent>
-    </Drawer>
+      </DialogContent>
+    </Dialog>
   );
 }
