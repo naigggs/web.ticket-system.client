@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -10,24 +10,48 @@ import { Input } from "@/components/ui/input";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { getBadgeColor } from "../badge-color";
 import { Tickets } from "./types.js";
-
-type TicketStatus = "Open" | "In Progress" | "Closed" | "On Hold";
+import { createClient } from "@/utils/supabase/client";
+import { TicketStatus } from "@/app/api/tickets/types";
 
 interface TicketModalProps {
   isOpen: boolean;
   onClose: () => void;
   ticket: Tickets | null;
+  onStatusUpdate: () => void;
 }
 
-export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
+export function TicketModal({ isOpen, onClose, ticket, onStatusUpdate }: TicketModalProps) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
-  const [status, setStatus] = useState<TicketStatus>(ticket?.ticket_status || "Open");
+  const [status, setStatus] = useState<TicketStatus>("Open");
+  const supabase = createClient();
+
+  useEffect(() => {
+    if (ticket) {
+      setStatus(ticket.ticket_status);
+    }
+  }, [ticket]);
 
   if (!ticket) return null;
 
   const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedStatus = event.target.value as TicketStatus;
     setStatus(selectedStatus);
+  };
+
+  const updateTicketStatus = async () => {
+    if (!ticket) return;
+
+    const { data, error } = await supabase
+      .from("tickets")
+      .update({ ticket_status: status })
+      .eq("id", ticket.id);
+
+    if (error) {
+      console.error("Error updating ticket status:", error);
+    } else {
+      onStatusUpdate();
+      onClose();
+    }
   };
 
   if (isDesktop) {
@@ -104,7 +128,7 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
               />
             </div>
             <div className="flex justify-end">
-              <Button onClick={onClose} className="bg-blue-500 text-white px-4 py-2 rounded">
+              <Button onClick={updateTicketStatus} className="bg-blue-500 text-white px-4 py-2 rounded">
                 Send
               </Button>
             </div>
@@ -187,7 +211,7 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
             <DrawerClose asChild>
               <Button variant="outline">Cancel</Button>
             </DrawerClose>
-            <Button onClick={onClose} className="bg-blue-500 text-white px-4 py-2 rounded">
+            <Button onClick={updateTicketStatus} className="bg-blue-500 text-white px-4 py-2 rounded">
               Send
             </Button>
           </div>
