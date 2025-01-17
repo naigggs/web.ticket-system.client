@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Bell } from "lucide-react";
 import React from "react";
+import NotificationBell from "./notification-bell";
 
 export default function Header() {
   return (
@@ -21,9 +22,11 @@ export default function Header() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-    <div className="flex justify-end w-[100%]">
-      <Bell className="w-7 h-7 hover:bg-gray-100 hover:rounded-md p-1 text-gray-700"/>
-    </div>
+      <div className="flex justify-end w-[100%]">
+        {/* <Bell className="w-7 h-7 hover:bg-gray-100 hover:rounded-md p-1 text-gray-700"/> */}
+
+        <NotificationBell />
+      </div>
     </header>
   );
 }

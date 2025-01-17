@@ -230,7 +230,6 @@ export function TicketModal({ ticket, onClose }: ModalProps) {
                   <span className="">{ticket.status}</span>
                 </div>
               </div>
-
               <div className="grid w-full items-center ">
                 <Label>Address/Purok #</Label>
                 <span className="">{ticket.address}</span>
@@ -238,13 +237,163 @@ export function TicketModal({ ticket, onClose }: ModalProps) {
             </div>
           </div>
         );
+      case "Cedula":
+        return (
+          <div className="h-auto">
+            <div className="flex flex-row items-center gap-60">
+              <div className="grid items-center">
+                <div className="uppercase font-semibold text-lg">
+                  ticket - {ticket.id}
+                </div>
+              </div>
+              <div className="grid items-center ">
+                <div className="uppercase font-semibold text-lg">
+                  {ticket.concern_type}
+                </div>
+              </div>
+              <div className="grid items-center">
+                <span className="">
+                  <Badge>{ticket.ticket_status}</Badge>
+                </span>
+              </div>
+            </div>
+            <div className="grid w-full items-center mt-2">
+              <Label>Full Name</Label>
+              <span className="">{ticket.name}</span>
+            </div>
+            <div className="flex flex-col gap-2 mt-2">
+              <div className="flex flex-row items-center gap-4">
+                <div className="grid w-full items-center gap-1.5">
+                  <Label>Birthdate</Label>
+                  <span className="">
+                    {ticket.birthdate ? ticket.birthdate : "January 01, 2025"}
+                  </span>
+                </div>
+                <div className="grid w-full items-center gap-1.5">
+                  <Label>Birthplace</Label>
+                  <span className="">{ticket.birthplace}</span>
+                </div>
+                <div className="grid w-full items-center gap-1.5">
+                  <Label>Age</Label>
+                  <span className="">{ticket.age}</span>
+                </div>
+              </div>
+              <div className="flex flex-row items-center gap-4">
+                <div className="grid w-full items-center gap-1.5">
+                  <Label>Height</Label>
+                  <span className="">{ticket.height} cm</span>
+                </div>
+                <div className="grid w-full items-center gap-1.5">
+                  <Label>Weight</Label>
+                  <span className="">{ticket.weight} kg</span>
+                </div>
+                <div className="grid w-full items-center gap-1.5">
+                  <Label>Civil Status</Label>
+                  <span className="">{ticket.civil_status}</span>
+                </div>
+              </div>
+              <div className="grid w-full items-center gap-1.5">
+                <Label>Address/Purok #</Label>
+                <span className="">{ticket.address}</span>
+              </div>
+            </div>
+          </div>
+        );
+      case "Barangay Indigent":
+        return (
+          <div className="h-auto">
+            <div className="flex flex-row items-center gap-60">
+              <div className="grid items-center">
+                <div className="uppercase font-semibold text-lg">
+                  ticket - {ticket.id}
+                </div>
+              </div>
+              <div className="grid items-center ">
+                <div className="uppercase font-semibold text-lg">
+                  {ticket.concern_type}
+                </div>
+              </div>
+              <div className="grid items-center">
+                <span className="">
+                  <Badge>{ticket.ticket_status}</Badge>
+                </span>
+              </div>
+            </div>
+            <div className="grid w-full items-center mt-2">
+              <Label>Full Name</Label>
+              <span className="">{ticket.name}</span>
+            </div>
+            <div className="flex flex-col gap-2 mt-2">
+              <div className="flex flex-row items-center gap-4">
+                <div className="grid w-full items-center gap-1.5">
+                  <Label>Age</Label>
+                  <span className="">{ticket.age}</span>
+                </div>
+                <div className="grid w-full items-center gap-1.5">
+                  <Label>Status</Label>
+                  <span className="">{ticket.status}</span>
+                </div>
+              </div>
+              <div className="grid w-full items-center gap-1.5">
+                <Label>Address/Purok #</Label>
+                <span className="">{ticket.address}</span>
+              </div>
+              <div className="grid w-full items-center gap-1.5">
+                <Label>Purpose</Label>
+                <span className="">{ticket.purpose}</span>
+              </div>
+            </div>
+          </div>
+        );
+        case "Barangay Problem":
+          return(
+            <div className="h-auto">
+              <div className="flex flex-row items-center gap-44">
+                <div className="grid items-center">
+                  <div className="uppercase font-semibold text-lg">
+                    ticket - {ticket.id}
+                  </div>
+                </div>
+                <div className="grid items-center ">
+                  <div className="uppercase font-semibold text-lg">
+                    {ticket.concern_type}
+                  </div>
+                </div>
+                <div className="grid items-center">
+                  <span className="">
+                    <Badge>{ticket.ticket_status}</Badge>
+                  </span>
+                </div>
+              </div>
+              <div className="grid w-full items-center mt-2">
+                <Label>Title</Label>
+                <span className="">{ticket.title}</span>
+              </div>
+              <div className="grid w-full items-center mt-2">
+                <Label>Description</Label>
+                <span className="">{ticket.description}</span>
+              </div>
+              <div className="grid w-full items-center mt-2">
+                <Label>Location</Label>
+                <span className="">{ticket.location}</span>
+              </div>
+              <div className="grid w-full items-center mt-2">
+                <Label>Attachment 1</Label>
+                <img src={ticket.attachment_1} className=""/>
+              </div>
+              <div className="grid w-full items-center mt-2">
+                <Label>Attachment 2</Label>
+                <img src={ticket.attachment_2} className=""/>
+              </div>
+            </div>
+          )
     }
   };
 
   if (isDesktop) {
     return (
       <Dialog open={true} onOpenChange={onClose}>
-        <DialogContent className="max-w-[800px]">
+        <DialogContent className="max-w-[900px]">
           <DialogTitle className="sr-only"></DialogTitle>
           {renderContent()}
         </DialogContent>
@@ -255,7 +404,7 @@ export function TicketModal({ ticket, onClose }: ModalProps) {
     <Drawer open={true} onOpenChange={onClose}>
       <DrawerContent>
         <DialogTitle className="sr-only"></DialogTitle>
-       {renderContent()}
+        {renderContent()}
       </DrawerContent>
     </Drawer>
   );

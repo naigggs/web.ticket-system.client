@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import SubmitTicket from "./submit-ticket";
 import { Tickets } from "./types.js";
 import { TicketModal } from "./ticket-modal";
+import { createClient } from "@/utils/supabase/client";
 
 export default function TicketsTable() {
   const [tickets, setTickets] = useState<Tickets[]>([]);
@@ -23,6 +24,8 @@ export default function TicketsTable() {
   const [search, setSearch] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTicket, setSelectedTicket] = useState<any | null>(null);
+
+  const supabase = createClient();
 
   useEffect(() => {
     async function fetchUserTickets() {
@@ -41,6 +44,39 @@ export default function TicketsTable() {
     }
 
     fetchUserTickets();
+
+    const subscription = supabase
+      .channel("tickets-changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "tickets" },
+        (payload) => {
+          switch (payload.eventType) {
+            case "INSERT":
+              setTickets((prev) => [payload.new as Tickets, ...prev]); // Prepend the new ticket
+              break;
+            case "UPDATE":
+              setTickets((prev) =>
+                prev.map((ticket) =>
+                  ticket.id === (payload.new as Tickets).id
+                    ? (payload.new as Tickets)
+                    : ticket
+                )
+              );
+              break;
+            case "DELETE":
+              setTickets((prev) =>
+                prev.filter((ticket) => ticket.id !== payload.old.id)
+              );
+              break;
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(subscription);
+    };
   }, []);
 
   const filteredTickets = tickets.filter((ticket) => {
@@ -53,6 +89,7 @@ export default function TicketsTable() {
         selectedDate.toDateString();
     return matchesStatus && matchesDate;
   });
+
   return (
     <div>
       <div className="flex flex-col md:flex-row justify-between h-full items-center mb-6 mt-4 w-[90%] md:w-full mx-auto">
@@ -111,7 +148,7 @@ export default function TicketsTable() {
             >
               <div className="flex flex-row justify-between h-full items-center space-y-2">
                 <div className="uppercase font-bold text-black">
-                  ticket - {ticket.id}
+                  ticket - {ticket.id} || {ticket.title ? ticket.title : ticket.concern_type} 
                 </div>
                 <div className="text-sm bg-blue-200 text-blue-800 px-3 py-1 uppercase font-semibold inline-flex rounded-full">
                   {ticket.ticket_status}
