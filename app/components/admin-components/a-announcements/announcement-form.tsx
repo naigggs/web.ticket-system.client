@@ -77,52 +77,56 @@ export function AnnouncementForm({
   };
 
   return (
-    <form className={formClassName} onSubmit={handleSubmit}>
-      <div className="grid gap-2">
-        <Label htmlFor="title">Title</Label>
-        <Input
-          id="title"
-          name="title"
-          placeholder="Enter announcement title"
-          value={formValues.title}
-          onChange={handleInputChange}
-        />
-      </div>
-      <div className="grid gap-2">
-        <Label htmlFor="subtitle">Subtitle</Label>
-        <Input
-          id="subtitle"
-          name="subtitle"
-          placeholder="Enter announcement subtitle"
-          value={formValues.subtitle}
-          onChange={handleInputChange}
-        />
-      </div>
-      <div className="grid gap-2">
-        <Label htmlFor="description">Description</Label>
-        <textarea
-          className="w-full p-2 border rounded mt-1"
-          name="description"
-          placeholder="Description..."
-          rows={2}
-          value={formValues.description}
-          onChange={handleInputChange}
-        />
-      </div>
-      <div className="grid gap-2">
-        <Label htmlFor="body">Body</Label>
-        <textarea
-          className="w-full p-2 border rounded mt-1"
-          name="body"
-          placeholder="Body..."
-          rows={5}
-          value={formValues.body}
-          onChange={handleInputChange}
-        />
-      </div>
-      <Button type="submit" disabled={!isFormValid}>
-        Create Announcement
-      </Button>
-    </form>
+    <div className="overflow-y-auto">
+        <form className={formClassName} onSubmit={handleSubmit}>
+        <div className="grid gap-2">
+            <Label htmlFor="title">Title</Label>
+            <Input
+            id="title"
+            name="title"
+            placeholder="Enter announcement title"
+            value={formValues.title}
+            onChange={handleInputChange}
+            className="focus-visible:ring-0"
+            />
+        </div>
+        <div className="grid gap-2">
+            <Label htmlFor="subtitle">Subtitle</Label>
+            <Input
+            id="subtitle"
+            name="subtitle"
+            placeholder="Enter announcement subtitle"
+            value={formValues.subtitle}
+            onChange={handleInputChange}
+            className="focus-visible:ring-0"
+            />
+        </div>
+        <div className="grid gap-2">
+            <Label htmlFor="description">Description</Label>
+            <textarea
+            className="w-full p-2 border rounded mt-1 focus:outline-0"
+            name="description"
+            placeholder="Description..."
+            rows={2}
+            value={formValues.description}
+            onChange={handleInputChange}
+            />
+        </div>
+        <div className="grid gap-2">
+            <Label htmlFor="body">Body</Label>
+            <textarea
+            className="w-full p-2 border rounded mt-1 focus:outline-0"
+            name="body"
+            placeholder="Body..."
+            rows={5}
+            value={formValues.body}
+            onChange={handleInputChange}
+            />
+        </div>
+        <Button type="submit" disabled={!isFormValid}>
+            Create Announcement
+        </Button>
+        </form>
+    </div>
   );
 }
