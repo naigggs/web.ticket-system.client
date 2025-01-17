@@ -26,6 +26,8 @@ interface ModalProps {
   announcement: {
     title: string;
     description: string;
+    subtitle: string;
+    body: string;
     created_at: string;
   } | null;
   onClose: () => void;
@@ -38,11 +40,13 @@ export function AnnouncementModal({ announcement, onClose }: ModalProps) {
   if (isDesktop) {
     return (
       <Dialog open={true} onOpenChange={onClose}>
-        <DialogContent onOpenAutoFocus={(e) => e.preventDefault()} aria-describedby={undefined}>
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>{announcement?.title}</DialogTitle>
             <DialogDescription>{announcement?.description}</DialogDescription>
           </DialogHeader>
+          <div className="font-bold text-md">{announcement?.subtitle}</div>
+          <div className="text-sm">{announcement?.body}</div>
           <div className="mt-4 text-gray-500 text-sm flex items-center">
             <Calendar className="h-4 w-4 mr-1" />
             {announcement?.created_at}
@@ -60,7 +64,9 @@ export function AnnouncementModal({ announcement, onClose }: ModalProps) {
             {announcement?.description}
           </DrawerDescription>
         </DrawerHeader>
-        <div className="text-md font-bold w-[92%] mx-auto">{announcement?.title}</div>
+        <div className="text-md font-bold w-[92%] mx-auto">
+          {announcement?.title}
+        </div>
         <div className="text-sm flex w-[92%] mx-auto">
           {" "}
           {announcement?.description} {announcement?.description}{" "}
