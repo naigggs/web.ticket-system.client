@@ -19,3 +19,5 @@ export type FormData = {
   attachment1?: File | undefined;
   attachment2?: File;
 };
+
+export type TicketStatus = "Open" | "In Progress" | "Closed" | "On Hold";
