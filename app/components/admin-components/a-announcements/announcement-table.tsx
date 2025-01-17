@@ -53,16 +53,16 @@ export default function AnnouncementsTable() {
   return (
     <div className="">
       {/* Header Section */}
-      <div className="flex flex-row justify-between h-full items-center mb-6 mt-4">
-        <h2 className="text-2xl font-semibold">Announcements</h2>
-        <div className="flex flex-col md:flex-row items-center gap-2 w-full md:w-auto">
-            <div className="w-full flex flex-row items-center gap-2">
+      <div className="flex flex-col md:flex-row justify-between w-full h-full mb-6 mt-4 p-0">
+        <h2 className="text-center text-xl md:text-2xl mb-3 md:mb-0 font-semibold">Announcements</h2>
+        <div className="flex flex-col md:flex-row items-center gap-2 md:w-auto">
+            <div className="flex flex-row justify-center items-center gap-2">
               <Input
                 type="text"
                 placeholder="Search"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full"
+                className="w-auto focus-visible:ring-0"
               />
               <AnnouncementDatePicker onDateChange={setSelectedDate} />
               <CreateAnnouncements />
