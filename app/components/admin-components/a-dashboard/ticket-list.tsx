@@ -16,7 +16,7 @@ const TicketList: React.FC<TicketListProps> = ({ ticket, onTicketClick }) => {
     <div>
       <li
         key={ticket.id}
-        className="border-b last:border-b-0 p-4 hover:bg-gray-50 transition-colors rounded-md cursor-pointer"
+        className="border-b pb-4 pt-4 transition-colors rounded-md cursor-pointer"
         onClick={() => onTicketClick(ticket)}
       >
         <div className="flex items-start justify-between gap-4">
