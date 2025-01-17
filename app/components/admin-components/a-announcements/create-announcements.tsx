@@ -10,21 +10,24 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+
+import { AnnouncementForm } from "./announcement-form";
 import { Plus } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export function CreateAnnouncements() {
   const [open, setOpen] = React.useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
+  const { toast } = useToast();
+
+  const handleSuccess = () => {
+    setOpen(false);
+      toast({
+        title: "Success!",
+        description: "Your announcement has been created.",
+      });
+    console.log('success')
+  };
 
   if (isDesktop) {
     return (
@@ -36,52 +39,24 @@ export function CreateAnnouncements() {
           <DialogHeader>
             <DialogTitle>New Announcement</DialogTitle>
           </DialogHeader>
-          <AnnouncementForm />
+          <AnnouncementForm onSuccess={handleSuccess} />
         </DialogContent>
       </Dialog>
     );
   }
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
         <Button variant="default"><Plus/></Button>
-      </DrawerTrigger>
-      <DrawerContent className="h-auto max-w-[100vw]">
-        <DrawerHeader className="text-left">
-          <DrawerTitle>New Announcement</DrawerTitle>
-        </DrawerHeader>
-        <AnnouncementForm className="px-4" />
-        <DrawerFooter>
-          <DrawerClose asChild>
-            <Button variant="outline">Cancel</Button>
-          </DrawerClose>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
-  );
-}
-
-function AnnouncementForm({ className }: React.ComponentProps<"form">) {
-  // Replace `cn` with a regular string concatenation or template literals
-  const formClassName = `grid items-start gap-4 ${className || ""}`;
-
-  return (
-    <form className={formClassName}>
-      <div className="grid gap-2">
-        <Label htmlFor="title">Title</Label>
-        <Input id="title" placeholder="Enter announcement title" />
-      </div>
-      <div className="grid gap-2">
-        <Label htmlFor="description">Description</Label>
-        <textarea
-            className="w-full p-2 border rounded mt-1"
-            placeholder="Description..."
-            rows={4}
-        />
-      </div>
-      <Button type="submit">Create Announcement</Button>
-    </form>
+      </DialogTrigger>
+      <DialogContent className="w-[95%] sm:max-w-[40%] max-h-[90vh] overflow-y-auto rounded-lg">
+        <DialogHeader>
+          <DialogTitle>New Announcement</DialogTitle>
+        </DialogHeader>
+        <AnnouncementForm onSuccess={handleSuccess} />
+      </DialogContent>
+    </Dialog>
   );
 }
 

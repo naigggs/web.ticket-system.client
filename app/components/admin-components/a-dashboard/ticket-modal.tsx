@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -11,6 +11,8 @@ import { useMediaQuery } from "@/hooks/use-media-query";
 import { getBadgeColor } from "../badge-color";
 import { Tickets } from "./types.js";
 
+type TicketStatus = "Open" | "In Progress" | "Closed" | "On Hold";
+
 interface TicketModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -19,8 +21,14 @@ interface TicketModalProps {
 
 export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
+  const [status, setStatus] = useState<TicketStatus>(ticket?.ticket_status || "Open");
 
   if (!ticket) return null;
+
+  const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedStatus = event.target.value as TicketStatus;
+    setStatus(selectedStatus);
+  };
 
   if (isDesktop) {
     return (
@@ -31,10 +39,10 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
               <div className="text-lg font-semibold">Ticket - {ticket.id}</div>
               <Badge
                 className={`${getBadgeColor(
-                  ticket.ticket_status
+                  status
                 )} h-6 px-2 flex items-center justify-center rounded-full whitespace-nowrap text-[10px] uppercase font-bold shrink-0 pointer-events-none`}
               >
-                {ticket.ticket_status}
+                {status}
               </Badge>
             </DialogTitle>
             <DialogDescription className="text-sm text-gray-600">
@@ -64,8 +72,17 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
                 <p className="bg-gray-100 p-2 rounded mt-1">Khen Luat</p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Requestor</label>
-                <p className="bg-gray-100 p-2 rounded mt-1">Carlos Joaquin Martin</p>
+                <label className="block text-sm font-medium text-gray-700">Status</label>
+                <select
+                  value={status}
+                  onChange={handleStatusChange}
+                  className="w-full p-2 border rounded mt-1 bg-white"
+                >
+                  <option value="Open">Open</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="On Hold">On Hold</option>
+                  <option value="Closed">Closed</option>
+                </select>
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -99,17 +116,17 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
 
   return (
     <Drawer open={isOpen} onOpenChange={onClose}>
-      <DrawerContent className="w-full max-h-[100vh]">
+      <DrawerContent className="w-full max-h-[96dvh]">
         <DrawerHeader className="text-left">
-          <div className="text-md font-medium text-gray-500 -mt-4 -mb-2">#{ticket.id}</div>
+          <div className="text-md font-medium text-gray-500 -pt-10 -mb-2">#{ticket.id}</div>
           <DrawerTitle className="flex items-center justify-between">
             <span>{ticket.title}</span>
             <Badge
               className={`${getBadgeColor(
-                ticket.status
+                status
               )} h-6 px-2 flex items-center justify-center rounded-full whitespace-nowrap text-[10px] uppercase font-bold shrink-0 pointer-events-none`}
             >
-              {ticket.status}
+              {status}
             </Badge>
           </DrawerTitle>
           <DrawerDescription>08:23 am | 09/14/2024</DrawerDescription>
@@ -117,7 +134,6 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
         </DrawerHeader>
         <Separator />
         <div className="space-y-4 p-4 overflow-y-auto">
-
           <div>
             <label className="block text-sm font-medium text-gray-700">Category *</label>
             <p className="bg-gray-100 p-2 rounded mt-1">Infrastructure Issues</p>
@@ -136,15 +152,28 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
               <p className="bg-gray-100 p-2 rounded mt-1">Khen Luat</p>
             </div>
           </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Status</label>
+            <select
+              value={status}
+              onChange={handleStatusChange}
+              className="w-full h-10 p-2 border rounded mt-1 bg-gray-100"
+            >
+              <option value="Open">Open</option>
+              <option value="In Progress">In Progress</option>
+              <option value="On Hold">On Hold</option>
+              <option value="Closed">Closed</option>
+            </select>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Attachment 1</label>
-                <Input id="picture" type="file" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Attachment 2</label>
-                <Input id="picture" type="file" />
-              </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Attachment 1</label>
+              <Input id="picture" type="file" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Attachment 2</label>
+              <Input id="picture" type="file" />
+            </div>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Comment</label>
