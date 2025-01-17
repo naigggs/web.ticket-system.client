@@ -100,10 +100,10 @@ export const ClosedTable = ({
                   <TableCell>
                     <Badge
                       className={`${getBadgeColor(
-                        ticket.status
+                        ticket.ticket_status
                       )} h-6 px-3 rounded-full whitespace-nowrap text-[10px] uppercase font-bold shrink-0 pointer-events-none`}
                     >
-                      {ticket.status}
+                      {ticket.ticket_status}
                     </Badge>
                   </TableCell>
                   <TableCell>

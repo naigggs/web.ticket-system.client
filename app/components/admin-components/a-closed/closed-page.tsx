@@ -55,7 +55,7 @@ export default function ClosedPage() {
         <ClosedTable
             title="Closed"
             tickets={filteredTickets.filter(
-                (ticket) => ticket.status === "Closed"
+                (ticket) => ticket.ticket_status === "Closed"
             )}
             status="onhold"
             onTicketClick={handleTicketClick}
