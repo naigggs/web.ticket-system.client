@@ -10,14 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
+
 import { AnnouncementForm } from "./announcement-form";
 import { Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -53,24 +46,17 @@ export function CreateAnnouncements() {
   }
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
-        <Button variant="default">
-          <Plus />
-        </Button>
-      </DrawerTrigger>
-      <DrawerContent className="h-auto max-w-[100vw]">
-        <DrawerHeader className="text-left">
-          <DrawerTitle>New Announcement</DrawerTitle>
-        </DrawerHeader>
-        <AnnouncementForm className="px-4" onSuccess={handleSuccess} />
-        <DrawerFooter>
-          <DrawerClose asChild>
-            <Button variant="outline">Cancel</Button>
-          </DrawerClose>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="default"><Plus/></Button>
+      </DialogTrigger>
+      <DialogContent className="w-[95%] sm:max-w-[40%] max-h-[90vh] overflow-y-auto rounded-lg">
+        <DialogHeader>
+          <DialogTitle>New Announcement</DialogTitle>
+        </DialogHeader>
+        <AnnouncementForm onSuccess={handleSuccess} />
+      </DialogContent>
+    </Dialog>
   );
 }
 
