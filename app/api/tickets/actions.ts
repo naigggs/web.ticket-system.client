@@ -239,6 +239,7 @@ export async function submitBarangayProblem(formData: FormData) {
 
   const { error } = await supabase.from("tickets").insert([
     {
+      concern_type: "Barangay Problem",
       title: data.title,
       description: data.description,
       location: data.location,
