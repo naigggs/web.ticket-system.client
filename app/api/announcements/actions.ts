@@ -18,7 +18,6 @@ export async function createAnnouncement(body: {
             description,
             subtitle,
             body: announcementBody,
-            created_at: new Date().toISOString(),
           },
         ])
         .select();
