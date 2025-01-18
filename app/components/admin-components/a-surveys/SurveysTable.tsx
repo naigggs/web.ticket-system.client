@@ -1,17 +1,47 @@
 "use client";
 
-import React, { useState } from "react";
-import { surveys } from "@/app/data/u-dash";
+import React, { useState, useEffect } from "react";
 import { Calendar } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SurveyDatePicker } from "@/app/components/admin-components/a-surveys/date-picker-surveys";
 import { Input } from "@/components/ui/input";
 import { CreateSurveys } from "./create-surveys";
 
+interface Survey {
+  id: string;
+  title: string;
+  description: string;
+  created_at: string;
+}
+
 export default function SurveysTable() {
   const [search, setSearch] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [surveys, setSurveys] = useState<Survey[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
+  // Fetch surveys from the API
+  useEffect(() => {
+    const fetchSurveys = async () => {
+      try {
+        const response = await fetch("/api/surveys");
+        if (!response.ok) {
+          throw new Error("Failed to fetch surveys");
+        }
+        const data = await response.json();
+        setSurveys(data);
+      } catch (error: any) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSurveys();
+  }, []);
+
+  // Filter surveys based on search and date
   const filteredSurveys = surveys.filter((survey) => {
     const matchesDate =
       !selectedDate ||
@@ -37,8 +67,8 @@ export default function SurveysTable() {
               className="w-[150px] md:w-full"
             />
           </div>
-            <SurveyDatePicker onDateChange={setSelectedDate} />
-            <CreateSurveys/>
+          <SurveyDatePicker onDateChange={setSelectedDate} />
+          <CreateSurveys />
         </div>
       </div>
       <ul className="text-gray-500 w-full">
@@ -64,7 +94,7 @@ export default function SurveysTable() {
               <div>
                 <span className="text-gray-400 text-sm flex flex-row items-center">
                   <Calendar className="h-3.5 -mt-0.5 w-auto mr-1" />
-                  {survey.created_at}
+                  {new Date(survey.created_at).toLocaleDateString()}
                 </span>
               </div>
             </motion.li>
