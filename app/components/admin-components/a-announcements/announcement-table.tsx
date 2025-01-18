@@ -1,42 +1,77 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { announcements } from "@/app/data/u-dash";
 import { Calendar } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AnnouncementDatePicker } from "./date-picker-announcement";
 import { Input } from "@/components/ui/input";
 import { AnnouncementModal } from "./modal-announcement";
-import { Button } from "@/components/ui/button";
 import { CreateAnnouncements } from "./create-announcements";
 import { Announcements } from "./types";
+import { createClient } from "@/utils/supabase/client";
 
 export default function AnnouncementsTable() {
   const [announcements, setAnnouncements] = useState<Announcements[]>([]);
   const [search, setSearch] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [error, setError] = useState("");
-  const [selectedAnnouncement, setSelectedAnnouncement] = useState<any | null>(
-    null
-  );
+  const [selectedAnnouncement, setSelectedAnnouncement] = useState<any | null>(null);
+  const supabase = createClient();
+  
+
+  const fetchAnnouncements = async () => {
+    try {
+      const response = await fetch(`/api/announcements`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch tickets for user");
+      }
+      const data = await response.json();
+      setAnnouncements(data);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "An unknown error occurred"
+      );
+    }
+  }
 
   useEffect(() => {
-    async function fetchAnnouncements() {
-      try {
-        const response = await fetch(`/api/announcements`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch tickets for user");
-        }
-        const data = await response.json();
-        setAnnouncements(data);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "An unknown error occurred"
-        );
-      }
-    }
-
+    // Fetch announcements
     fetchAnnouncements();
+  
+    // Set up real-time subscription for announcements
+    const subscription = supabase
+      .channel("announcements-changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "announcements" },
+        (payload) => {
+          switch (payload.eventType) {
+            case "INSERT":
+              setAnnouncements((prev) => [payload.new as Announcements, ...prev]); // Prepend the new announcement
+              break;
+            case "UPDATE":
+              setAnnouncements((prev) =>
+                prev.map((announcement) =>
+                  announcement.id === payload.new.id ? (payload.new as Announcements) : announcement
+                )
+              );
+              break;
+            case "DELETE":
+              setAnnouncements((prev) =>
+                prev.filter((announcement) => announcement.id !== payload.old.id)
+              );
+              break;
+            default:
+              break;
+          }
+        }
+      )
+      .subscribe();
+  
+    // Cleanup subscription on component unmount
+    return () => {
+      supabase.removeChannel(subscription);
+    };
   }, []);
 
   const filteredAnnouncements = announcements.filter((announcement) => {
