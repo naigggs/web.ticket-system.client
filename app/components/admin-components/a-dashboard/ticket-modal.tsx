@@ -17,10 +17,9 @@ interface TicketModalProps {
   isOpen: boolean;
   onClose: () => void;
   ticket: Tickets | null;
-  onStatusUpdate: () => void;
 }
 
-export function TicketModal({ isOpen, onClose, ticket, onStatusUpdate }: TicketModalProps) {
+export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const [status, setStatus] = useState<TicketStatus>("Open");
   const supabase = createClient();
@@ -49,7 +48,6 @@ export function TicketModal({ isOpen, onClose, ticket, onStatusUpdate }: TicketM
     if (error) {
       console.error("Error updating ticket status:", error);
     } else {
-      onStatusUpdate();
       onClose();
     }
   };
