@@ -6,6 +6,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { SurveyDatePicker } from "@/app/components/admin-components/a-surveys/date-picker-surveys";
 import { Input } from "@/components/ui/input";
 import { CreateSurveys } from "./create-surveys";
+import { createClient } from "@/utils/supabase/client";
+
 
 interface Survey {
   id: string;
@@ -20,25 +22,61 @@ export default function SurveysTable() {
   const [surveys, setSurveys] = useState<Survey[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const supabase = createClient();
+  
 
   // Fetch surveys from the API
-  useEffect(() => {
-    const fetchSurveys = async () => {
-      try {
-        const response = await fetch("/api/surveys");
-        if (!response.ok) {
-          throw new Error("Failed to fetch surveys");
-        }
-        const data = await response.json();
-        setSurveys(data);
-      } catch (error: any) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
+  const fetchSurveys = async () => {
+    try {
+      const response = await fetch("/api/surveys");
+      if (!response.ok) {
+        throw new Error("Failed to fetch surveys");
       }
-    };
+      const data = await response.json();
+      setSurveys(data);
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchSurveys();
+
+        // Set up real-time subscription
+        const subscription = supabase
+          .channel("surveys-changes")
+          .on(
+            "postgres_changes",
+            { event: "*", schema: "public", table: "surveys" },
+            (payload) => {
+              switch (payload.eventType) {
+                case "INSERT":
+                  setSurveys((prev) => [payload.new as Survey, ...prev]); // Prepend the new ticket
+                  break;
+                case "UPDATE":
+                  setSurveys((prev) =>
+                    prev.map((ticket) =>
+                      ticket.id === payload.new.id ? (payload.new as Survey) : ticket
+                    )
+                  );
+                  break;
+                case "DELETE":
+                  setSurveys((prev) =>
+                    prev.filter((survey) => survey.id !== payload.old.id)
+                  );
+                  break;
+              }
+            }
+          )
+          .subscribe();
+    
+        // Cleanup subscription on component unmount
+        return () => {
+          supabase.removeChannel(subscription);
+        };
+
   }, []);
 
   // Filter surveys based on search and date
