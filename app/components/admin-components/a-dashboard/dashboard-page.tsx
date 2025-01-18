@@ -85,10 +85,6 @@ export default function DashboardPage() {
     setSelectedTicket(null);
   };
 
-  const handleStatusUpdate = async () => {
-    await fetchTickets();
-  };
-
   return (
     <div className="mx-auto justify-center px-2 md:px-10 my-6 animate-in fade-in slide-in-from-bottom-8 duration-300">
       <div className="flex justify-between mb-4">
