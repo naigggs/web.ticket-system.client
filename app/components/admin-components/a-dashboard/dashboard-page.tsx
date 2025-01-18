@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { TaskCard } from "./task-card";
 import { TicketModal } from "./ticket-modal";
 import { Tickets } from "./types.js";
+import { createClient } from "@/utils/supabase/client";
 
 export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -14,15 +15,16 @@ export default function DashboardPage() {
   const [tickets, setTickets] = useState<Tickets[]>([]);
   const [error, setError] = useState("");
 
+  const supabase = createClient();
+
   // Fetch tickets from Supabase
   const fetchTickets = async () => {
     try {
-      const response = await fetch("/api/tickets");
-      if (!response.ok) {
-        throw new Error("Failed to fetch tickets");
+      const { data, error } = await supabase.from("tickets").select("*");
+      if (error) {
+        throw error;
       }
-      const data = await response.json();
-      setTickets(data);
+      setTickets(data || []);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "An unknown error occurred"
@@ -30,9 +32,42 @@ export default function DashboardPage() {
     }
   };
 
-  // Fetch tickets on initial load
   useEffect(() => {
+    // Fetch tickets on initial load
     fetchTickets();
+
+    // Set up real-time subscription
+    const subscription = supabase
+      .channel("tickets-changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "tickets" },
+        (payload) => {
+          switch (payload.eventType) {
+            case "INSERT":
+              setTickets((prev) => [payload.new as Tickets, ...prev]); // Prepend the new ticket
+              break;
+            case "UPDATE":
+              setTickets((prev) =>
+                prev.map((ticket) =>
+                  ticket.id === payload.new.id ? (payload.new as Tickets) : ticket
+                )
+              );
+              break;
+            case "DELETE":
+              setTickets((prev) =>
+                prev.filter((ticket) => ticket.id !== payload.old.id)
+              );
+              break;
+          }
+        }
+      )
+      .subscribe();
+
+    // Cleanup subscription on component unmount
+    return () => {
+      supabase.removeChannel(subscription);
+    };
   }, []);
 
   // Filter tickets by ID
@@ -103,7 +138,6 @@ export default function DashboardPage() {
         isOpen={isModalOpen}
         onClose={closeModal}
         ticket={selectedTicket}
-        onStatusUpdate={handleStatusUpdate}
       />
     </div>
   );
