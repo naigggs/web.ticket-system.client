@@ -20,8 +20,9 @@ import {
 } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Minus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
+import { useRouter } from "next/navigation";
 
 export function CreateSurveys() {
   const [open, setOpen] = React.useState(false);
@@ -29,98 +30,115 @@ export function CreateSurveys() {
 
   if (isDesktop) {
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-            <Button variant="default">Create Survey</Button>
+          <Button variant="default">Create Survey</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[80%] max-w-[95%] max-h-[80%] overflow-y-auto">
-            <DialogHeader>
+        <DialogContent className="max-w-[60%] lg:max-w-[50%] mmax-h-[80%] overflow-y-auto">
+          <DialogHeader>
             <DialogTitle>Create Survey</DialogTitle>
-            </DialogHeader>
-            <SurveyForm className="w-full" />
+          </DialogHeader>
+          <SurveyForm className="w-full" onSuccess={() => setOpen(false)} />
         </DialogContent>
-        </Dialog>
+      </Dialog>
     );
   }
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="default"><Plus /></Button>
+        <Button variant="default">
+          <Plus />
+        </Button>
       </DrawerTrigger>
       <DrawerContent className="max-h-[90%]">
         <DrawerHeader className="text-left">
           <DrawerTitle>Create Survey</DrawerTitle>
         </DrawerHeader>
-        <SurveyForm className="px-4 max-h-[80%] overflow-y-auto pb-6" />
-        {/* <DrawerFooter>
-          <DrawerClose asChild>
-            <Button variant="outline">Cancel</Button>
-          </DrawerClose>
-        </DrawerFooter> */}
+        <SurveyForm className="px-4 overflow-y-auto" onSuccess={() => setOpen(false)} />
       </DrawerContent>
     </Drawer>
   );
 }
 
-function SurveyForm({ className }: React.ComponentProps<"form">) {
-    const [questions, setQuestions] = React.useState([{ id: 1, value: "" }]);
-  
-    const addQuestion = () => {
-      setQuestions([...questions, { id: questions.length + 1, value: "" }]);
-    };
-  
-    const removeQuestion = () => {
-      if (questions.length > 1) {
-        setQuestions(questions.slice(0, -1)); // Remove the last question
-      }
-    };
-  
-    const handleQuestionChange = (id: number, value: string) => {
-      setQuestions(questions.map((q) => (q.id === id ? { ...q, value } : q)));
-    };
-  
-    const formClassName = `grid items-start gap-4 ${className || ""}`;
-  
-    return (
-      <form className={formClassName}>
-        <div className="grid gap-2">
-          <Label htmlFor="title">Survey Title</Label>
-          <Input id="title" placeholder="Enter survey title" />
-        </div>
-  
-        {questions.map((question) => (
-          <div key={question.id} className="grid gap-2">
-            <Label htmlFor={`question-${question.id}`}>Question {question.id}</Label>
-            <Textarea
-              id={`question-${question.id}`}
-              placeholder={`Enter question ${question.id}`}
-              value={question.value}
-              onChange={(e) => handleQuestionChange(question.id, e.target.value)}
-              rows={3}
-            />
-          </div>
-        ))}
-  
-        <div className="flex justify-between">
-          <Button
-            type="button"
-            variant="destructive"
-            onClick={removeQuestion}
-            disabled={questions.length <= 1} // Disable if only one question remains
-          >
-            <Minus className="mr-2 h-4 w-4" /> Remove Question
-          </Button>
-          <Button type="button" className="bg-blue-500 hover:bg-blue-600 text-white" onClick={addQuestion}>
-            <Plus className="mr-2 h-4 w-4" /> Add Question
-          </Button>
-        </div>
-  
-        <Button type="submit">Create Survey</Button>
-      </form>
-    );
+interface SurveyFormProps extends React.ComponentProps<"form"> {
+  onSuccess: () => void;
 }
 
-function DrawerFooter({ children }: { children: React.ReactNode }) {
-  return <div className="flex flex-col gap-2 p-4">{children}</div>;
+function SurveyForm({ className, onSuccess }: SurveyFormProps) {
+  const router = useRouter();
+  const [title, setTitle] = React.useState("");
+  const [description, setDescription] = React.useState("");
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      const response = await fetch("/api/surveys", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title, description }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create survey");
+      }
+
+      const data = await response.json();
+      console.log("Survey created:", data);
+
+      // Reset form and close dialog/drawer
+      setTitle("");
+      setDescription("");
+      onSuccess(); // Close the dialog/drawer
+      router.refresh(); // Refresh the page to show the new survey
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className={className}>
+      <div className="grid gap-4">
+        <div className="grid gap-2">
+          <Label htmlFor="title">Survey Title</Label>
+          <Input
+            id="title"
+            placeholder="Enter survey title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+            className="focus-visible:ring-0"
+          />
+        </div>
+
+        <div className="grid gap-2">
+          <Label htmlFor="description">Description</Label>
+          <textarea
+            className="w-full p-2 border rounded mt-1 focus:outline-0"
+            id="description"
+            placeholder="Enter survey description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            required
+            rows={4}
+          />
+        </div>
+
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Creating..." : "Create Survey"}
+        </Button>
+      </div>
+    </form>
+  );
 }
