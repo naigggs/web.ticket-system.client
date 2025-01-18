@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { ClosedTable  } from "./closed-table";
 import { ClosedModal } from "./closed-modal";
 import { Tickets } from "../a-dashboard/types";
+import { createClient } from "@/utils/supabase/client";
+
 
 export default function ClosedPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -13,25 +15,60 @@ export default function ClosedPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tickets, setTickets] = useState<Tickets[]>([]);
   const [error, setError] = useState("");
+  const supabase = createClient();
+  
   
   // fetch tickets from supabase
-  useEffect(() => {
-    async function fetchTickets() {
-      try {
-        const response = await fetch("/api/tickets");
-        if (!response.ok) {
-          throw new Error("Failed to fetch tickets");
-        }
-        const data = await response.json();
-        setTickets(data);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "An unknown error occurred"
-        );
+  const fetchTickets = async () => {
+    try {
+      const { data, error } = await supabase.from("tickets").select("*");
+      if (error) {
+        throw error;
       }
+      setTickets(data || []);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "An unknown error occurred"
+      );
     }
+  };
 
+  useEffect(() => {
+    // Fetch tickets on initial load
     fetchTickets();
+
+    // Set up real-time subscription
+    const subscription = supabase
+      .channel("tickets-changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "tickets" },
+        (payload) => {
+          switch (payload.eventType) {
+            case "INSERT":
+              setTickets((prev) => [payload.new as Tickets, ...prev]); // Prepend the new ticket
+              break;
+            case "UPDATE":
+              setTickets((prev) =>
+                prev.map((ticket) =>
+                  ticket.id === payload.new.id ? (payload.new as Tickets) : ticket
+                )
+              );
+              break;
+            case "DELETE":
+              setTickets((prev) =>
+                prev.filter((ticket) => ticket.id !== payload.old.id)
+              );
+              break;
+          }
+        }
+      )
+      .subscribe();
+
+    // Cleanup subscription on component unmount
+    return () => {
+      supabase.removeChannel(subscription);
+    };
   }, []);
 
   const filteredTickets = tickets.filter((ticket) =>
