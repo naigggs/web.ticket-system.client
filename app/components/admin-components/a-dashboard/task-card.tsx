@@ -36,7 +36,7 @@ export const TaskCard = ({
   };
 
   return (
-    <Card className='flex flex-col h-auto border-r border-t border-gray-300'>
+    <Card className='flex flex-col h-[780px] border-r border-t border-gray-300'>
       <div className="flex flex-row justify-between p-4">
         <div>
           <h2 className="text-2xl font-semibold mb-2">{title}</h2>
