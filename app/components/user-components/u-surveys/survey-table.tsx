@@ -7,12 +7,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { SurveyDatePicker } from "./date-picker-survey";
 import { Input } from "@/components/ui/input";
 import { Surveys } from "./types";
+import { SurveyModal } from "./survey-modal";
 
 export default function SurveysTable() {
   const [surveys, setSurveys] = useState<Surveys[]>([]);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedSurvey, setSelectedSurvey] = useState<any | null>(
+    null
+  );
 
   useEffect(() => {
     async function fetchUserUnansweredSurveys() {
@@ -70,6 +74,7 @@ export default function SurveysTable() {
               className={`border-b py-5 px-5 hover:bg-gray-50 ${
                 index === 0 ? "border-t" : ""
               }`}
+              onClick={() => setSelectedSurvey(survey)}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
@@ -92,6 +97,10 @@ export default function SurveysTable() {
           ))}
         </AnimatePresence>
       </ul>
+          <SurveyModal
+              survey={selectedSurvey}
+              onClose={() => setSelectedSurvey(null)}
+            />
     </div>
   );
 }
