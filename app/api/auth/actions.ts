@@ -12,14 +12,40 @@ export async function login(formData: FormData) {
     password: formData.get("password") as string,
   };
 
-  const { error } = await supabase.auth.signInWithPassword(data);
+  const { error, data: authData } = await supabase.auth.signInWithPassword(data);
 
   if (error) {
     console.log("Login failed:", error);
+    return; // Exit the function if there's an error
   }
 
-  revalidatePath("/user/dashboard", "layout");
-  redirect("/user/dashboard");
+  // Get the current user
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect('/auth/login');
+  }
+
+  // Fetch the user's role_id from the user-roles table
+  const { data: roleData, error: roleError } = await supabase
+    .from('user-roles')
+    .select('role_id')
+    .eq('user_id', user.id)
+    .single();
+
+  if (roleError) {
+    console.log("Error fetching role:", roleError);
+    redirect('/auth/login');
+  }
+
+  revalidatePath("/", "layout");
+
+  // Redirect based on role_id
+  if (roleData.role_id === 3) {
+    redirect("/admin/dashboard");
+  } else {
+    redirect("/user/dashboard");
+  }
 }
 
 export async function signup(formData: FormData) {
