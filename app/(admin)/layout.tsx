@@ -8,6 +8,8 @@ import {
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/app/components/admin-components/a-sidebar/app-sidebar";
 import Header from "../components/header/header";
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -22,14 +24,39 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "User Dashboard",
+  title: "Admin Dashboard",
 };
 
-export default function UserLayout({
+async function checkAdminAccess() {
+  const supabase = await createClient();
+
+  // Get current user
+  const { data: { user } } = await supabase.auth.getUser();
+  
+  if (!user) {
+    redirect('/auth/login');
+  }
+
+  // Check user role
+  const { data: roleData, error } = await supabase
+    .from('user-roles')
+    .select('role_id')
+    .eq('user_id', user.id)
+    .single();
+
+  if (roleData.role_id !== 3) {
+    redirect('/');
+  }
+}
+
+export default async function AdminLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Verify admin access before rendering
+  await checkAdminAccess();
+
   return (
     <html lang="en">
       <body
