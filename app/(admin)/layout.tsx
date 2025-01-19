@@ -44,7 +44,7 @@ async function checkAdminAccess() {
     .eq('user_id', user.id)
     .single();
 
-  if (roleData.role_id !== 3) {
+  if (!roleData || roleData.role_id !== 3) {
     redirect('/');
   }
 }
