@@ -35,6 +35,12 @@ export async function updateSession(request: NextRequest) {
 
   // IMPORTANT: DO NOT REMOVE auth.getUser()
 
+  interface UserRole {
+    roles: {
+      role_name: string;
+    };
+  }
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -45,10 +51,47 @@ export async function updateSession(request: NextRequest) {
     url.pathname = "/auth/login";
     return NextResponse.redirect(url);
   }
+
   if (user) {
     const userId = user.id;
+
+    const { data: userRoles, error } = (await supabase
+      .from("user-roles")
+      .select("roles (role_name)")
+      .eq("user_id", userId)) as { data: UserRole[] | null; error: any };
+
+    if (error || !userRoles || userRoles.length === 0) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/auth/forbidden";
+      return NextResponse.redirect(url);
+    }
+
+    const roles = userRoles.map((role) => role.roles.role_name);
+
+    const adminRoutes = ["/admin", "/admin/dashboard"];
+    const staffRoutes = ["/staff", "/staff/dashboard"];
+
+    if (
+      adminRoutes.includes(request.nextUrl.pathname) &&
+      !roles.includes("admin")
+    ) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/auth/forbidden";
+      return NextResponse.redirect(url);
+    }
+
+    if (
+      staffRoutes.includes(request.nextUrl.pathname) &&
+      !roles.includes("staff")
+    ) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/auth/forbidden";
+      return NextResponse.redirect(url);
+    }
+
     const response = NextResponse.next();
     response.headers.set("user-id", userId);
+    response.headers.set("user-roles", roles.join(","));
     return response;
   }
 
