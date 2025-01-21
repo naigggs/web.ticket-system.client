@@ -39,7 +39,7 @@ export function AnnouncementModal({ announcement, onClose }: ModalProps) {
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="w-[95%] sm:max-w-[50%] max-h-[90vh] overflow-y-auto rounded-lg">
+      <DialogContent className="w-[95%] sm:max-w-[50%] max-h-[90vh] overflow-y-auto rounded-lg" onOpenAutoFocus={(e) => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle>{announcement?.title}</DialogTitle>
           <DialogDescription>{announcement?.description}</DialogDescription>
