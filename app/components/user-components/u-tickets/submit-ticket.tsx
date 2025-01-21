@@ -286,7 +286,198 @@ export default function SubmitTicket() {
                   </div>
                 </div>
               )}
-              {/* Repeat similar changes for other concern types */}
+              {concernType === "barangay-cert" && (
+                <div className="h-auto">
+                  <div className="flex flex-row items-center gap-4">
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Last Name</Label>
+                      <Input type="text" name="lastName" />
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>First Name</Label>
+                      <Input type="text" name="firstName" />
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Middle Name</Label>
+                      <Input type="text" name="middleName" />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2 mt-2">
+                    <div className="flex flex-row items-center gap-4">
+                      <div className="grid w-full items-center gap-1.5">
+                        <Label>Age</Label>
+                        <Input type="number" name="age" />
+                      </div>
+                      <div className="grid w-full items-center gap-1.5">
+                        <Label>Civil Status</Label>
+                        <Input type="text" name="civilStatus" />
+                      </div>
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Address/Purok #</Label>
+                      <Input type="text" name="address" />
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Purpose</Label>
+                      <Input type="text" name="purpose" />
+                    </div>
+                  </div>
+                  <div className="flex justify-end gap-2 mt-4">
+                    <Button variant="secondary" onClick={resetContent}>
+                      Reset
+                    </Button>
+                    <Button type="submit">Submit</Button>
+                  </div>
+                </div>
+              )}
+              {concernType === "barangay-clearance" && (
+                <div className="h-auto">
+                  <div className="flex flex-row items-center gap-4">
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Last Name</Label>
+                      <Input type="text" name="lastName" />
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>First Name</Label>
+                      <Input type="text" name="firstName" />
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Middle Name</Label>
+                      <Input type="text" name="middleName" />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2 mt-2">
+                    <div className="flex flex-row items-center gap-4">
+                      <div className="grid w-full items-center gap-1.5">
+                        <Label>Age</Label>
+                        <Input type="number" name="age" />
+                      </div>
+                      <div className="grid w-full items-center gap-1.5">
+                        <Label>Status</Label>
+                        <Input type="text" name="status" />
+                      </div>
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Address/Purok #</Label>
+                      <Input type="text" name="address" />
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Purpose</Label>
+                      <Input type="text" name="purpose" />
+                    </div>
+                  </div>
+                  <div className="flex justify-end gap-2 mt-4">
+                    <Button variant="secondary" onClick={resetContent}>
+                      Reset
+                    </Button>
+                    <Button type="submit">Submit</Button>
+                  </div>
+                </div>
+              )}
+              {concernType === "cedula" && (
+                <div className="h-auto">
+                  <div className="flex flex-row items-center gap-4">
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Last Name</Label>
+                      <Input type="text" name="lastName" />
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>First Name</Label>
+                      <Input type="text" name="firstName" />
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Middle Name</Label>
+                      <Input type="text" name="middleName" />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2 mt-2">
+                    <div className="flex flex-row items-center gap-4">
+                      <div className="grid w-full items-center gap-1.5">
+                        <Label>Birthdate</Label>
+                        <TicketDatePicker
+                          onDateChange={(date) => setSelectedDate(date)}
+                        />
+                      </div>
+                      <div className="grid w-full items-center gap-1.5">
+                        <Label>Birthplace</Label>
+                        <Input type="text" name="birthplace" />
+                      </div>
+                      <div className="grid w-full items-center gap-1.5">
+                        <Label>Age</Label>
+                        <Input type="number" name="age" />
+                      </div>
+                    </div>
+                    <div className="flex flex-row items-center gap-4">
+                      <div className="grid w-full items-center gap-1.5">
+                        <Label>Height</Label>
+                        <Input type="text" name="height" />
+                      </div>
+                      <div className="grid w-full items-center gap-1.5">
+                        <Label>Weight</Label>
+                        <Input type="text" name="weight" />
+                      </div>
+                      <div className="grid w-full items-center gap-1.5">
+                        <Label>Civil Status</Label>
+                        <Input type="text" name="civilStatus" />
+                      </div>
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Address/Purok #</Label>
+                      <Input type="text" name="address" />
+                    </div>
+                  </div>
+                  <div className="flex justify-end gap-2 mt-4">
+                    <Button variant="secondary" onClick={resetContent}>
+                      Reset
+                    </Button>
+                    <Button type="submit">Submit</Button>
+                  </div>
+                </div>
+              )}
+              {concernType === "barangay-indigent" && (
+                <div className="h-auto">
+                  <div className="flex flex-row items-center gap-4">
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Last Name</Label>
+                      <Input type="text" name="lastName" />
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>First Name</Label>
+                      <Input type="text" name="firstName" />
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Middle Name</Label>
+                      <Input type="text" name="middleName" />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2 mt-2">
+                    <div className="flex flex-row items-center gap-4">
+                      <div className="grid w-full items-center gap-1.5">
+                        <Label>Age</Label>
+                        <Input type="number" name="age" />
+                      </div>
+                      <div className="grid w-full items-center gap-1.5">
+                        <Label>Status</Label>
+                        <Input type="text" name="status" />
+                      </div>
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Address/Purok #</Label>
+                      <Input type="text" name="address" />
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Purpose</Label>
+                      <Input type="text" name="purpose" />
+                    </div>
+                  </div>
+                  <div className="flex justify-end gap-2 mt-4">
+                    <Button variant="secondary" onClick={resetContent}>
+                      Reset
+                    </Button>
+                    <Button type="submit">Submit</Button>
+                  </div>
+                </div>
+              )}
             </div>
           </form>
         );
