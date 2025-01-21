@@ -16,7 +16,7 @@ export default function ForbiddenPage() {
           >
             <AlertCircle className="h-24 w-24 text-destructive" />
           </motion.div>
-        </div>
+        </div>  
         <h1 className="text-4xl font-bold tracking-tight">Access Forbidden</h1>
         <p className="text-xl text-muted-foreground">
           Sorry, you don't have permission to access this page.
