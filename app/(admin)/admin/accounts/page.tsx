@@ -5,7 +5,7 @@ import AccountRequest from '@/app/components/admin-components/a-accounts/account
 
 export default function AdminAccounts() {
   return (
-    <div className="p-2 sm:p-6 animate-in fade-in slide-in-from-bottom-8 duration-300">
+    <div className="p-2 sm:p-6 animate-in fade-in slide-in-from-bottom-8 duration-300 space-y-4">
       <AccountManage/>
       <AccountRequest/>
     </div>
