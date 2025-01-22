@@ -6,12 +6,12 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerClose, DrawerFooter } from "@/components/ui/drawer";
 import { Separator } from "@/components/ui/separator";
-import { Input } from "@/components/ui/input";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { getBadgeColor } from "../badge-color";
 import { Tickets } from "./types.js";
 import { createClient } from "@/utils/supabase/client";
 import { TicketStatus } from "@/app/api/tickets/types";
+import { TicketContent } from "../ticket-content";
 
 interface TicketModalProps {
   isOpen: boolean;
@@ -55,10 +55,10 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
   if (isDesktop) {
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-2xl w-[90vw] sm:w-full max-h-[90vh] overflow-y-auto rounded-lg">
-          <DialogHeader className="text-left space-y-2">
-            <DialogTitle className="flex items-center gap-x-2 mb-4">
-              <div className="text-lg font-semibold">Ticket - {ticket.id} </div>
+        <DialogContent className="max-w-2xl w-[90vw] sm:w-full max-h-[90vh] overflow-y-auto rounded-lg" onOpenAutoFocus={(e) => e.preventDefault()}>
+          <DialogHeader className="text-left space-y-2 border-b border-gray-300 pb-4">
+            <DialogTitle className="flex items-center gap-x-2">
+              <div className="text-xl font-bold">Ticket - {ticket.id}</div>
               <Badge
                 className={`${getBadgeColor(
                   status
@@ -67,56 +67,15 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
                 {status}
               </Badge>
             </DialogTitle>
+            <DialogTitle className="text-lg">
+              {ticket.concern_type}
+            </DialogTitle>
             <DialogDescription className="text-sm text-gray-600">
-              08:23 am | 09/14/2024
-            </DialogDescription>
-            <DialogDescription className="text-sm text-gray-600">
-              Requestor | <span className="font-medium text-gray-700">Carlos Joaquin Martin</span>
+              {ticket.created_at}
             </DialogDescription>
           </DialogHeader>
-          <Separator />
           <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Category *</label>
-              <p className="bg-gray-100 p-2 rounded mt-1">Infrastructure Issues</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Problem/Concern</label>
-              <p className="bg-gray-100 p-2 rounded mt-1">{ticket.description}</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Location</label>
-              <p className="bg-gray-100 p-2 rounded mt-1">Camla Street Purok 2</p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Assignee</label>
-                <p className="bg-gray-100 p-2 rounded mt-1">Khen Luat</p>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Status</label>
-                <select
-                  value={status}
-                  onChange={handleStatusChange}
-                  className="w-full p-2 border rounded mt-1 bg-white"
-                >
-                  <option value="Open">Open</option>
-                  <option value="In Progress">In Progress</option>
-                  <option value="On Hold">On Hold</option>
-                  <option value="Closed">Closed</option>
-                </select>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Attachment 1</label>
-                <Input id="picture" type="file" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Attachment 2</label>
-                <Input id="picture" type="file" />
-              </div>
-            </div>
+            <TicketContent ticket={ticket} status={status} onStatusChange={handleStatusChange} />
             <div>
               <label className="block text-sm font-medium text-gray-700">Comment</label>
               <textarea
@@ -125,7 +84,10 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
                 rows={3}
               />
             </div>
-            <div className="flex justify-end">
+            <div className="flex justify-between">
+              <DrawerClose asChild>
+                <Button variant="outline">Cancel</Button>
+              </DrawerClose>
               <Button onClick={updateTicketStatus} className="bg-blue-500 text-white px-4 py-2 rounded">
                 Send
               </Button>
@@ -139,72 +101,27 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
   return (
     <Drawer open={isOpen} onOpenChange={onClose}>
       <DrawerContent className="w-full max-h-[96dvh]">
-        <DrawerHeader className="text-left">
-          <div className="text-md font-medium text-gray-500 -pt-10 -mb-2">#{ticket.id}</div>
-          <DrawerTitle className="flex items-center justify-between">
-            <span>{ticket.title}</span>
-            <Badge
-              className={`${getBadgeColor(
-                status
-              )} h-6 px-2 flex items-center justify-center rounded-full whitespace-nowrap text-[10px] uppercase font-bold shrink-0 pointer-events-none`}
-            >
-              {status}
-            </Badge>
-          </DrawerTitle>
-          <DrawerDescription>08:23 am | 09/14/2024</DrawerDescription>
-          <DrawerDescription>Requestor | Carlos Joaquin Martin </DrawerDescription>
-        </DrawerHeader>
+          <DrawerHeader className="text-left space-y-2 border-b border-gray-300 pb-4">
+            <DrawerTitle className="flex items-center gap-x-2">
+              <div className="text-xl font-bold">Ticket - {ticket.id}</div>
+              <Badge
+                className={`${getBadgeColor(
+                  status
+                )} h-6 px-2 flex items-center justify-center rounded-full whitespace-nowrap text-[10px] uppercase font-bold shrink-0 pointer-events-none`}
+              >
+                {status}
+              </Badge>
+            </DrawerTitle>
+            <DrawerTitle className="text-lg">
+              {ticket.concern_type}
+            </DrawerTitle>
+            <DrawerDescription className="text-sm text-gray-600">
+              {ticket.created_at}
+            </DrawerDescription>
+          </DrawerHeader>
         <Separator />
         <div className="space-y-4 p-4 overflow-y-auto">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Category *</label>
-            <p className="bg-gray-100 p-2 rounded mt-1">Infrastructure Issues</p>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Problem/Concern</label>
-            <p className="bg-gray-100 p-2 rounded mt-1">{ticket.description}</p>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Location</label>
-            <p className="bg-gray-100 p-2 rounded mt-1">Camla Street Purok 2</p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Assignee</label>
-              <p className="bg-gray-100 p-2 rounded mt-1">Khen Luat</p>
-            </div>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Status</label>
-            <select
-              value={status}
-              onChange={handleStatusChange}
-              className="w-full h-10 p-2 border rounded mt-1 bg-gray-100"
-            >
-              <option value="Open">Open</option>
-              <option value="In Progress">In Progress</option>
-              <option value="On Hold">On Hold</option>
-              <option value="Closed">Closed</option>
-            </select>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Attachment 1</label>
-              <Input id="picture" type="file" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Attachment 2</label>
-              <Input id="picture" type="file" />
-            </div>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Comment</label>
-            <textarea
-              className="w-full p-2 border rounded mt-1"
-              placeholder="Add comment or note"
-              rows={3}
-            />
-          </div>
+          <TicketContent ticket={ticket} status={status} onStatusChange={handleStatusChange} />
           <div className="flex justify-between">
             <DrawerClose asChild>
               <Button variant="outline">Cancel</Button>
@@ -218,3 +135,4 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
     </Drawer>
   );
 }
+
