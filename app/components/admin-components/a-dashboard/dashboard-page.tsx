@@ -32,6 +32,9 @@ export default function DashboardPage() {
     }
   };
 
+
+
+
   useEffect(() => {
     fetchTickets();
     const subscription = supabase
