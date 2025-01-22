@@ -1,4 +1,10 @@
 import { createServerClient } from "@supabase/ssr";
+
+type UserRole = {
+  roles: {
+    role_name: string;
+  };
+};
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function updateSession(request: NextRequest) {
@@ -28,18 +34,6 @@ export async function updateSession(request: NextRequest) {
       },
     }
   );
-
-  // Do not run code between createServerClient and
-  // supabase.auth.getUser(). A simple mistake could make it very hard to debug
-  // issues with users being randomly logged out.
-
-  // IMPORTANT: DO NOT REMOVE auth.getUser()
-
-  interface UserRole {
-    roles: {
-      role_name: string;
-    };
-  }
 
   const {
     data: { user },
@@ -71,19 +65,31 @@ export async function updateSession(request: NextRequest) {
     const adminRoutes = ["/admin", "/admin/dashboard"];
     const staffRoutes = ["/staff", "/staff/dashboard"];
 
-    if (
-      adminRoutes.includes(request.nextUrl.pathname) &&
-      !roles.includes("admin")
-    ) {
+    // Redirect staff users to /staff/dashboard
+    if (roles.includes("staff") && !request.nextUrl.pathname.startsWith("/staff")) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/staff/dashboard";
+      return NextResponse.redirect(url);
+    }
+
+    // Prevent user role from accessing admin and staff routes
+    if (roles.includes("user")) {
+      if (adminRoutes.includes(request.nextUrl.pathname) || staffRoutes.includes(request.nextUrl.pathname)) {
+        const url = request.nextUrl.clone();
+        url.pathname = "/auth/forbidden";
+        return NextResponse.redirect(url);
+      }
+    }
+
+    // Prevent non-admin users from accessing admin routes
+    if (adminRoutes.includes(request.nextUrl.pathname) && !roles.includes("admin")) {
       const url = request.nextUrl.clone();
       url.pathname = "/auth/forbidden";
       return NextResponse.redirect(url);
     }
 
-    if (
-      staffRoutes.includes(request.nextUrl.pathname) &&
-      !roles.includes("staff")
-    ) {
+    // Prevent non-staff users from accessing staff routes
+    if (staffRoutes.includes(request.nextUrl.pathname) && !roles.includes("staff")) {
       const url = request.nextUrl.clone();
       url.pathname = "/auth/forbidden";
       return NextResponse.redirect(url);
@@ -94,19 +100,6 @@ export async function updateSession(request: NextRequest) {
     response.headers.set("user-roles", roles.join(","));
     return response;
   }
-
-  // IMPORTANT: You *must* return the supabaseResponse object as it is.
-  // If you're creating a new response object with NextResponse.next() make sure to:
-  // 1. Pass the request in it, like so:
-  //    const myNewResponse = NextResponse.next({ request })
-  // 2. Copy over the cookies, like so:
-  //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
-  // 3. Change the myNewResponse object to fit your needs, but avoid changing
-  //    the cookies!
-  // 4. Finally:
-  //    return myNewResponse
-  // If this is not done, you may be causing the browser and server to go out
-  // of sync and terminate the user's session prematurely!
 
   return supabaseResponse;
 }
