@@ -45,8 +45,10 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
     try {
       const { data, error } = await supabase
         .from("ticket-comments")
-        .select("*")
+        .select("*, user_id(*)")
+
         .eq("ticket_id", ticket?.id);
+
       if (error) {
         throw error;
       }
@@ -165,6 +167,7 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
               {comments.map((comment, index) => (
                 <div key={index} className="mt-2 p-2 border rounded">
                   <p className="text-sm text-gray-600">{comment.comment}</p>
+                  <p className="text-xs text-gray-400">{comment.user_id.first_name} {comment.user_id.last_name}</p> 
                   <p className="text-xs text-gray-400">{comment.created_at}</p>
                 </div>
               ))}

@@ -55,18 +55,15 @@ export function TicketSubmitted() {
 
   useEffect(() => {
     if (tickets.length > 0) {
-      // Get the current date
       const currentDate = new Date();
       const sixMonthsAgo = new Date();
-      sixMonthsAgo.setMonth(currentDate.getMonth() - 5); // Include the current month
+      sixMonthsAgo.setMonth(currentDate.getMonth() - 5); 
 
-      // Filter tickets submitted in the last 6 months (including the current month)
       const filteredTickets = tickets.filter((ticket) => {
         const ticketDate = new Date(ticket.created_at);
         return ticketDate >= sixMonthsAgo && ticketDate <= currentDate;
       });
 
-      // Group tickets by month and count
       const ticketCountsByMonth: { [key: string]: number } = {};
 
       filteredTickets.forEach((ticket) => {
@@ -79,7 +76,6 @@ export function TicketSubmitted() {
         }
       });
 
-      // Generate chart data for the last 6 months (including the current month)
       const months = [
         "January",
         "February",
