@@ -58,7 +58,7 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
         <DialogContent className="max-w-2xl w-[90vw] sm:w-full max-h-[90vh] overflow-y-auto rounded-lg">
           <DialogHeader className="text-left space-y-2">
             <DialogTitle className="flex items-center gap-x-2 mb-4">
-              <div className="text-lg font-semibold">Ticket - {ticket.id}</div>
+              <div className="text-lg font-semibold">Ticket - {ticket.id} </div>
               <Badge
                 className={`${getBadgeColor(
                   status
