@@ -54,7 +54,7 @@ export const ClosedTable = ({
   };
 
   return (
-    <Card className="flex flex-col h-auto border-r border-t border-gray-300">
+    <div className="flex flex-col h-auto">
       <div className="flex flex-row justify-between p-4">
         <div>
           <h2 className="text-xl md:text-2xl font-semibold mb-2">{title} tickets</h2>
@@ -89,7 +89,7 @@ export const ClosedTable = ({
                 <TableRow
                   key={ticket.id}
                   onClick={() => onTicketClick(ticket)}
-                  className="cursor-pointer hover:bg-gray-50"
+                  className="cursor-pointer hover:bg-gray-50 h-16"
                 >
                   <TableCell className="font-medium text-xs md:text-sm">
                     {ticket.id}
@@ -125,6 +125,6 @@ export const ClosedTable = ({
           onPageChange={handlePageChange}
         />
       </CardFooter>
-    </Card>
+    </div>
   );
 };
