@@ -8,15 +8,7 @@ import { CreateSurveys } from "./create-surveys";
 import { createClient } from "@/utils/supabase/client";
 import { SurveysModal } from "./surveys-modal";
 import { Survey } from "./types";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import { SurveyPagination } from "./survey-pagination";
 
 export default function SurveysTable() {
   const [search, setSearch] = useState("");
@@ -27,7 +19,7 @@ export default function SurveysTable() {
   const [selectedSurvey, setSelectedSurvey] = useState<Survey | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10); // Number of items per page
+  const [itemsPerPage] = useState(6);
   const supabase = createClient();
 
   // Fetch surveys from the API
@@ -113,7 +105,7 @@ export default function SurveysTable() {
 
   return (
     <div>
-      <div className="flex flex-row justify-between h-full items-center mb-6 mt-4">
+      <div className="flex flex-row justify-between h-full items-center mb-4">
         <h2 className="text-2xl font-semibold ml-4">Surveys</h2>
         <div className="flex flex-row items-center gap-2 p-2">
           <div>
@@ -129,7 +121,7 @@ export default function SurveysTable() {
           <CreateSurveys />
         </div>
       </div>
-      <ul className="text-gray-500 w-full">
+      <ul className="text-gray-500 w-full pb-4">
         {currentItems.map((survey, index) => (
           <li
             key={survey.id}
@@ -156,41 +148,11 @@ export default function SurveysTable() {
       </ul>
 
       {/* Pagination */}
-      <Pagination>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious
-              href="#"
-              onClick={(e) => {
-                if (currentPage === 1) e.preventDefault(); // Prevent navigation if on the first page
-                else handlePageChange(currentPage - 1);
-              }}
-              className={currentPage === 1 ? "pointer-events-none opacity-50" : ""} // Disable visually
-            />
-          </PaginationItem>
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-            <PaginationItem key={page}>
-              <PaginationLink
-                href="#"
-                isActive={page === currentPage}
-                onClick={() => handlePageChange(page)}
-              >
-                {page}
-              </PaginationLink>
-            </PaginationItem>
-          ))}
-          <PaginationItem>
-            <PaginationNext
-              href="#"
-              onClick={(e) => {
-                if (currentPage === totalPages) e.preventDefault(); // Prevent navigation if on the last page
-                else handlePageChange(currentPage + 1);
-              }}
-              className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""} // Disable visually
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+      <SurveyPagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
 
       <SurveysModal
         isOpen={isModalOpen}
