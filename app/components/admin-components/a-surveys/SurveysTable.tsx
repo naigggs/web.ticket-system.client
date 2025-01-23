@@ -2,13 +2,21 @@
 
 import React, { useState, useEffect } from "react";
 import { Calendar } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 import { SurveyDatePicker } from "@/app/components/admin-components/a-surveys/date-picker-surveys";
 import { Input } from "@/components/ui/input";
 import { CreateSurveys } from "./create-surveys";
 import { createClient } from "@/utils/supabase/client";
 import { SurveysModal } from "./surveys-modal";
 import { Survey } from "./types";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 export default function SurveysTable() {
   const [search, setSearch] = useState("");
@@ -18,6 +26,8 @@ export default function SurveysTable() {
   const [error, setError] = useState<string | null>(null);
   const [selectedSurvey, setSelectedSurvey] = useState<Survey | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // Number of items per page
   const supabase = createClient();
 
   // Fetch surveys from the API
@@ -85,6 +95,17 @@ export default function SurveysTable() {
     return matchesDate && matchesSearch;
   });
 
+  // Pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredSurveys.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(filteredSurveys.length / itemsPerPage);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   const handleSurveyClick = (survey: Survey) => {
     setSelectedSurvey(survey);
     setIsModalOpen(true);
@@ -109,43 +130,73 @@ export default function SurveysTable() {
         </div>
       </div>
       <ul className="text-gray-500 w-full">
-        <AnimatePresence>
-          {filteredSurveys.map((survey, index) => (
-            <motion.li
-              key={survey.id}
-              className={`border-b py-5 px-5 hover:bg-gray-50 ${
-                index === 0 ? "border-t" : ""
-              }`}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-              onClick={() => handleSurveyClick(survey)}
-            >
-              <div className="uppercase font-bold text-black hover:underline">
-                {survey.title}
-              </div>
+        {currentItems.map((survey, index) => (
+          <li
+            key={survey.id}
+            className={`border-b py-5 px-5 hover:bg-gray-50 ${
+              index === 0 ? "border-t" : ""
+            }`}
+            onClick={() => handleSurveyClick(survey)}
+          >
+            <div className="uppercase font-bold text-black hover:underline">
+              {survey.title}
+            </div>
 
-              <div className="text-sm my-2 line-clamp-3">
-                {survey.description}
-              </div>
-              <div>
-                <span className="text-gray-400 text-sm flex flex-row items-center">
-                  <Calendar className="h-3.5 -mt-0.5 w-auto mr-1" />
-                  {new Date(survey.created_at).toLocaleDateString()}
-                </span>
-              </div>
-            </motion.li>
-          ))}
-        </AnimatePresence>
+            <div className="text-sm my-2 line-clamp-3">
+              {survey.description}
+            </div>
+            <div>
+              <span className="text-gray-400 text-sm flex flex-row items-center">
+                <Calendar className="h-3.5 -mt-0.5 w-auto mr-1" />
+                {new Date(survey.created_at).toLocaleDateString()}
+              </span>
+            </div>
+          </li>
+        ))}
       </ul>
+
+      {/* Pagination */}
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious
+              href="#"
+              onClick={(e) => {
+                if (currentPage === 1) e.preventDefault(); // Prevent navigation if on the first page
+                else handlePageChange(currentPage - 1);
+              }}
+              className={currentPage === 1 ? "pointer-events-none opacity-50" : ""} // Disable visually
+            />
+          </PaginationItem>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <PaginationItem key={page}>
+              <PaginationLink
+                href="#"
+                isActive={page === currentPage}
+                onClick={() => handlePageChange(page)}
+              >
+                {page}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+          <PaginationItem>
+            <PaginationNext
+              href="#"
+              onClick={(e) => {
+                if (currentPage === totalPages) e.preventDefault(); // Prevent navigation if on the last page
+                else handlePageChange(currentPage + 1);
+              }}
+              className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""} // Disable visually
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
 
       <SurveysModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         survey={selectedSurvey}
       />
-      
     </div>
   );
 }
