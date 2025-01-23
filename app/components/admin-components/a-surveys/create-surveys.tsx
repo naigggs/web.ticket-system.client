@@ -51,7 +51,7 @@ export function CreateSurveys() {
           <Plus />
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="max-h-[90%]">
+      <DrawerContent className="max-h-[90%] pb-4">
         <DrawerHeader className="text-left">
           <DrawerTitle>Create Survey</DrawerTitle>
         </DrawerHeader>
