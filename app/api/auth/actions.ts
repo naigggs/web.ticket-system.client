@@ -73,7 +73,7 @@ export async function signup(formData: FormData) {
 
   const { error: insertError } = await supabase.from("user-roles").insert({
     user_id: signUpData.user?.id,
-    role: 1,
+    role_id: 1,
   });
   if (insertError) {
     console.log("Error updating user status:", updateError);
