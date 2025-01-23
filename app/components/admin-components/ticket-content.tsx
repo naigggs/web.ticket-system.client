@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Label } from "@/components/ui/label";
 import { TicketStatus } from "@/app/api/tickets/types";
-import { Tickets } from "./a-dashboard/types.js";
+import { Tickets } from "./a-taskboard/types.js";
 
 interface TicketContentProps {
   ticket: Tickets;

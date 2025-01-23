@@ -5,7 +5,7 @@ import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { ClosedTable  } from "./closed-table";
 import { ClosedModal } from "./closed-modal";
-import { Tickets } from "../a-dashboard/types";
+import { Tickets } from "../a-taskboard/types";
 import { createClient } from "@/utils/supabase/client";
 
 

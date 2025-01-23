@@ -8,7 +8,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, Dr
 import { Separator } from "@/components/ui/separator";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { getBadgeColor } from "../badge-color";
-import { Tickets } from "../a-dashboard/types";
+import { Tickets } from "../a-taskboard/types";
 import { createClient } from "@/utils/supabase/client";
 import { TicketStatus } from "@/app/api/tickets/types";
 import { TicketContent } from "../ticket-content";

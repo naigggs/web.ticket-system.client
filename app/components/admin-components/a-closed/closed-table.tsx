@@ -18,7 +18,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { ClosedPagination } from "./closed-pagination";
 import { getBadgeColor } from "../badge-color";
-import { Tickets } from "../a-dashboard/types";
+import { Tickets } from "../a-taskboard/types";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 
