@@ -9,3 +9,14 @@ export type Accounts = {
   created_at: string;
   status: string;
 };
+
+export interface UserInfo {
+  user_id: string;
+  first_name: string;
+  last_name: string;
+  age: number;
+  location: string;
+  document_1: string;
+  document_2: string;
+  created_at: string;
+}
