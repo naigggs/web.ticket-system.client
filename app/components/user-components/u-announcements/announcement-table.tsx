@@ -90,7 +90,11 @@ export default function AnnouncementsTable() {
               <div>
                 <span className="text-gray-400 text-sm flex flex-row items-center">
                   <Calendar className="h-3.5 -mt-0.5 w-auto mr-1" />
-                  {announcement.created_at}
+                  {new Date(announcement.created_at).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
                 </span>
               </div>
             </motion.li>
