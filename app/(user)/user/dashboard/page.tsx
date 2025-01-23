@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useEffect, useState } from "react";
 import TicketCard from "@/app/components/user-components/u-dashboard/ticket-card";
@@ -6,7 +6,6 @@ import AnnouncementCard from "@/app/components/user-components/u-dashboard/annou
 import SurveyCard from "@/app/components/user-components/u-dashboard/survey-card";
 import { TicketSubmitted } from "@/app/components/user-components/u-dashboard/ticket-submitted";
 import { TicketStatus } from "@/app/components/user-components/u-dashboard/ticket-status";
-import { Ticket } from "lucide-react";
 import { User } from "@/app/components/sidebar/types";
 
 export default function UserDashboard() {
@@ -35,14 +34,14 @@ export default function UserDashboard() {
   }, []);
 
   return (
-    <div className="px-10 my-6">
-      <div className="flex justify-between mb-4">
-        <h2 className="text-xl md:text-2xl flex items-center font-bold text-center">
+    <div className="px-4 sm:px-6 lg:px-10 my-6">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl md:text-2xl font-bold text-center">
           Goodmorning {user?.first_name} {user?.last_name}!
         </h2>
       </div>
-      <div className="grid grid-cols-3 gap-6">
-        {/* Left Side: Tickets */}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         <div className="flex flex-col gap-3 animate-in fade-in slide-in-from-bottom-8 duration-300">
           <div className="px-4 py-2 bg-green-300 rounded-2xl font-bold">
             Tickets
@@ -50,7 +49,6 @@ export default function UserDashboard() {
           <TicketCard />
         </div>
 
-        {/* Center: Announcements */}
         <div className="flex flex-col gap-3 animate-in fade-in slide-in-from-bottom-8 duration-500">
           <div className="px-4 py-2 bg-blue-300 rounded-2xl font-bold">
             Announcements
@@ -58,12 +56,21 @@ export default function UserDashboard() {
           <AnnouncementCard />
         </div>
 
-        {/* Right Side: Surveys */}
         <div className="flex flex-col gap-3 animate-in fade-in slide-in-from-bottom-8 duration-700">
           <div className="px-4 py-2 bg-red-400 rounded-2xl font-bold">
             Surveys
           </div>
           <SurveyCard />
+        </div>
+        
+        <div className="flex flex-col gap-3 animate-in fade-in slide-in-from-bottom-8 duration-700">
+          <div className="px-4 py-2 bg-yellow-400 rounded-2xl font-bold">
+            Charts
+          </div>
+          <div className="grid grid-cols-1 gap-4">
+            <TicketSubmitted />
+            <TicketStatus />
+          </div>
         </div>
       </div>
     </div>

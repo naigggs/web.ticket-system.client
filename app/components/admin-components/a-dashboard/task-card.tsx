@@ -36,7 +36,7 @@ export const TaskCard = ({
   };
 
   return (
-    <div className="flex flex-col h-[650px] border-gray-300">
+    <div className="flex flex-col h-auto gap-4 md:gap-0 md:h-[650px] border-gray-300">
       <div className="flex-1 overflow-y-auto scrollbar-thin">
         <div className="grid grid-cols-1 gap-4">
           {currentTickets.map((ticket) => (
