@@ -123,8 +123,6 @@ function AccountManage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Full Name</TableHead>
-
-                <TableHead>Age</TableHead>
                 <TableHead>Location</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
