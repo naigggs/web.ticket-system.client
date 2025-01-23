@@ -19,7 +19,6 @@ export async function login(formData: FormData) {
 
   if (error) {
     console.log("Login failed:", error);
-    return; 
   }
 
   const {
