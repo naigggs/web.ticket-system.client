@@ -30,7 +30,7 @@ export function SurveyDatePicker({
         <Button
           variant={"outline"}
           className={cn(
-            "w-auto md:w-full justify-start text-left font-normal",
+            "w-auto justify-start text-left font-normal",
             !date && "text-muted-foreground"
           )}
         >
