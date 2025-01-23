@@ -1,9 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { NavMain } from "@/app/components/sidebar/nav-main";
-import { NavUser } from "@/app/components/sidebar/nav-user";
-import { TeamSwitcher } from "@/app/components/sidebar/team-switcher";
+import { NavMain } from "./nav-main";
+import { NavUser } from "./nav-user";
+import { TeamSwitcher } from "./team-switcher";
 import {
   Sidebar,
   SidebarContent,

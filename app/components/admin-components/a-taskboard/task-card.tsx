@@ -6,7 +6,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { DashboardPagination } from "./dashboard-pagination";
+import { TaskBoardPagination } from "./taskboard-pagination";
 
 export const TaskCard = ({
   title,
@@ -64,7 +64,7 @@ export const TaskCard = ({
         </div>
       </div>
       <div className="flex justify-center">
-        <DashboardPagination
+        <TaskBoardPagination
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={handlePageChange}

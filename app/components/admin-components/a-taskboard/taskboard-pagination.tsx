@@ -13,7 +13,7 @@ import {
     onPageChange: (pageNumber: number) => void;
   }
   
-  export const DashboardPagination = ({
+  export const TaskBoardPagination = ({
     currentPage,
     totalPages,
     onPageChange,

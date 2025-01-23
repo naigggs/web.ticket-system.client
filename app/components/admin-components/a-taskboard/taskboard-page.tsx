@@ -10,7 +10,7 @@ import { createClient } from "@/utils/supabase/client";
 import { TicketDone} from "./ticket-done";
 import { TicketStatus } from "./ticket-status";
 
-export default function DashboardPage() {
+export default function TaskBoardPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTicket, setSelectedTicket] = useState<Tickets | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);

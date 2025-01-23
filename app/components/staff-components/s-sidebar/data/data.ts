@@ -6,7 +6,8 @@ import {
   NotebookPen,
   UserRoundCog,
   Ticket,
-  TicketXIcon
+  TicketXIcon,
+  ClipboardType
 } from "lucide-react";
 
 export const data = {
@@ -24,32 +25,32 @@ export const data = {
   ],
   navMain: [
     {
-      title: "Task Board",
-      url: "/admin/dashboard",
+      title: "Dashboard",
+      url: "/staff/dashboard",
       icon: SquareTerminal,
       isActive: true,
     },
     {
+      title: "Taskboard",
+      url: "/staff/taskboard",
+      icon: ClipboardType,
+      isActive: true,
+    },
+    {
       title: "Closed Tickets",
-      url: "/admin/closed",
+      url: "/staff/closed",
       icon: TicketXIcon,
       isActive: true,
     },
     {
-      title: "Manage Accounts",
-      url: "/admin/accounts",
-      icon: UserRoundCog,
-      isActive: true,
-    },
-    {
       title: "Announcements",
-      url: "/admin/announcements",
+      url: "/staff/announcements",
       icon: RadioTower,
       isActive: true,
     },
     {
       title: "Surveys",
-      url: "/admin/surveys",
+      url: "/staff/surveys",
       icon: NotebookPen,
       isActive: true,
     },
