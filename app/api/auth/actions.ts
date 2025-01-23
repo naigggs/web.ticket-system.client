@@ -60,21 +60,42 @@ export async function signup(formData: FormData) {
   if (error) {
     console.log("Error creating user:", error);
   }
-  const { error: updateError } = await supabase.from("user-sign-up").update({
-    status: "Accepted",
-  }).eq('email', signUpData.user?.email);
-  console.log(signUpData);
+  const { error: updateError } = await supabase
+    .from("user-sign-up")
+    .update({
+      status: "Accepted",
+    })
+    .eq("email", signUpData.user?.email);
   if (updateError) {
+    console.log("Error updating user status:", updateError);
+  }
+
+  const { error: insertError } = await supabase.from("user-roles").insert({
+    user_id: signUpData.user?.id,
+    role: 1,
+  });
+  if (insertError) {
+    console.log("Error updating user status:", updateError);
+  }
+  const { error: insertError2 } = await supabase.from("user-info").insert({
+    user_id: signUpData.user?.id,
+    full_name: formData.get("full_name") as string,
+    location: formData.get("location") as string,
+  });
+  if (insertError2) {
     console.log("Error updating user status:", updateError);
   }
 }
 
 export async function declineUser(formData: FormData) {
-  const supabase = supabaseAdminClient; 
+  const supabase = supabaseAdminClient;
 
-  const { error: updateError } = await supabase.from("user-sign-up").update({
-    status: "Declined",
-  }).eq('email', formData.get("email") as string,);
+  const { error: updateError } = await supabase
+    .from("user-sign-up")
+    .update({
+      status: "Declined",
+    })
+    .eq("email", formData.get("email") as string);
   if (updateError) {
     console.log("Error updating user status:", updateError);
   }
@@ -107,14 +128,14 @@ export async function registerUser(formData: FormData) {
     );
     redirect("/error");
   }
-  
+
   const document1Url = supabase.storage
     .from("user_sign_up_attachments")
-    .getPublicUrl(`public/${data.email}/document1`)
+    .getPublicUrl(`public/${data.email}/document1`);
 
   const document2Url = supabase.storage
     .from("user_sign_up_attachments")
-    .getPublicUrl(`public/${data.email}/document2`)
+    .getPublicUrl(`public/${data.email}/document2`);
 
   const { error } = await supabase.from("user-sign-up").insert({
     full_name: `${data.firstName} ${data.lastName}`,
@@ -134,4 +155,3 @@ export async function registerUser(formData: FormData) {
   revalidatePath("/", "layout");
   redirect("/success");
 }
-

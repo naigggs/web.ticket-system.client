@@ -62,6 +62,8 @@ function AccountRequest() {
       const formData = new FormData();
       formData.append("email", account.email);
       formData.append("password", account.password); // Replace with actual logic to generate/set password
+      formData.append("full_name", account.full_name);
+      formData.append("location", account.location);
 
       await signup(formData);
       alert("Account successfully created!");
