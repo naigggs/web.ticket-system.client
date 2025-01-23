@@ -23,6 +23,25 @@ export const SurveysModal: React.FC<SurveyDetailModalProps> = ({
 }) => {
   if (!survey) return null;
 
+  const makeLinksClickable = (text: string): (string | JSX.Element)[] => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.split(urlRegex).map((part, index) =>
+      urlRegex.test(part) ? (
+        <a
+          key={index}
+          href={part}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-500 hover:underline"
+        >
+          {part}
+        </a>
+      ) : (
+        part
+      )
+    );
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-lg" onOpenAutoFocus={(e) => e.preventDefault()}>
@@ -36,10 +55,7 @@ export const SurveysModal: React.FC<SurveyDetailModalProps> = ({
           </span>
         </DialogHeader>
         <div className="space-y-4">
-          <p className="text-gray-700">{survey.description}</p>
-          <div className="text-gray-500 text-sm">
-            
-          </div>
+          <p className="text-gray-700">{makeLinksClickable(survey.description)}</p>
         </div>
       </DialogContent>
     </Dialog>
