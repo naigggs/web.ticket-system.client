@@ -4,10 +4,13 @@ import React, { useEffect, useState } from "react";
 import { Calendar, ChevronRight, MapPin } from "lucide-react";
 import { Tickets } from "../u-tickets/types";
 import { motion, AnimatePresence } from "framer-motion";
+import { TicketModal } from "../ticket-modal";
 
 export default function TicketCard() {
   const [tickets, setTickets] = useState<Tickets[]>([]);
   const [error, setError] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTicket, setSelectedTicket] = useState<any | null>(null);
 
   useEffect(() => {
     async function fetchUserTickets() {
@@ -28,6 +31,16 @@ export default function TicketCard() {
     fetchUserTickets();
   }, []);
 
+  const handleTicketClick = (ticket: Tickets) => {
+    setSelectedTicket(ticket);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedTicket(null);
+  };
+
   return (
     <ul className="text-gray-500">
       <AnimatePresence>
@@ -36,17 +49,17 @@ export default function TicketCard() {
             key={ticket.id}
             className={`mb-4 ${index === 0 ? "" : ""}`}
             initial={{ opacity: 0, y: 10 }}
+            onClick={() => handleTicketClick(ticket)}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
           >
-            <div className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow shadow-sm">
+            <div className="bg-white border hover:cursor-pointer border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow shadow-sm">
               <div className="flex flex-row justify-between h-full items-center space-y-1">
                 <div className="uppercase font-bold text-black text-lg">
                   Ticket - {ticket.id} ||{" "}
                   {ticket.title ? ticket.title : ticket.concern_type}
                 </div>
-             
               </div>
               <div className="flex flex-row gap-3 mt-2">
                 <div>
@@ -73,6 +86,11 @@ export default function TicketCard() {
           </motion.li>
         ))}
       </AnimatePresence>
+      <TicketModal
+              isOpen={isModalOpen}
+              onClose={closeModal}
+              ticket={selectedTicket}
+            />
     </ul>
   );
 }

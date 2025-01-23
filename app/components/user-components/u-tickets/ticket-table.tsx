@@ -14,13 +14,14 @@ import { TicketDatePicker } from "./date-picker-ticket";
 import { Input } from "@/components/ui/input";
 import SubmitTicket from "./submit-ticket";
 import { Tickets } from "./types.js";
-import { TicketModal } from "./ticket-modal";
+import { TicketModal } from "../ticket-modal";
 import { createClient } from "@/utils/supabase/client";
 
 export default function TicketsTable() {
   const [tickets, setTickets] = useState<Tickets[]>([]);
   const [error, setError] = useState("");
   const [filter, setFilter] = useState("all");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTicket, setSelectedTicket] = useState<any | null>(null);
@@ -90,6 +91,16 @@ export default function TicketsTable() {
     return matchesStatus && matchesDate;
   });
 
+  const handleTicketClick = (ticket: Tickets) => {
+    setSelectedTicket(ticket);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedTicket(null);
+  };
+
   return (
     <div>
       <div className="flex flex-col md:flex-row justify-between h-full items-center mb-6 mt-4 w-[90%] md:w-full mx-auto">
@@ -140,7 +151,7 @@ export default function TicketsTable() {
               className={`border-b py-5 md:px-2 px-5 hover:bg-gray-50 ${
                 index === 0 ? "border-t" : ""
               }`}
-              onClick={() => setSelectedTicket(ticket)}
+              onClick={() => handleTicketClick(ticket)}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
@@ -148,7 +159,8 @@ export default function TicketsTable() {
             >
               <div className="flex flex-row justify-between h-full items-center space-y-2">
                 <div className="uppercase font-bold text-black">
-                  ticket - {ticket.id} || {ticket.title ? ticket.title : ticket.concern_type} 
+                  ticket - {ticket.id} ||{" "}
+                  {ticket.title ? ticket.title : ticket.concern_type}
                 </div>
                 <div className="text-sm bg-blue-200 text-blue-800 px-3 py-1 uppercase font-semibold inline-flex rounded-full">
                   {ticket.ticket_status}
@@ -177,8 +189,9 @@ export default function TicketsTable() {
         </AnimatePresence>
       </ul>
       <TicketModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
         ticket={selectedTicket}
-        onClose={() => setSelectedTicket(null)}
       />
     </div>
   );
