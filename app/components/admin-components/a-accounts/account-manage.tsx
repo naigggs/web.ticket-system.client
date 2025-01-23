@@ -13,6 +13,12 @@ import { Input } from "@/components/ui/input";
 import { PaginationAccounts } from "./account-pagination";
 import { ManageModal } from "./manage-modal";
 import { UserInfo } from "./types";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { PopoverClose } from "@radix-ui/react-popover";
 
 function AccountManage() {
   const [users, setUsers] = useState<UserInfo[]>([]);
@@ -131,13 +137,32 @@ function AccountManage() {
                   <TableCell>
                     <div className="flex space-x-2">
                       <ManageModal user={user} />
-                      <Button 
-                      variant="destructive" 
-                      size="sm"
-                      onClick={() => handleDeleteUser(user.user_id)}
-                      >
-                        Delete
-                      </Button>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button variant="destructive" size="sm">Delete</Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-60 p-6">
+                          <h3 className="text-md font-semibold text-gray-900">Delete User</h3>
+                          <div className="text-xs text-gray-600 mb-4">
+                            Are you sure you want to delete this user? This action cannot be undone.
+                          </div>
+                          <div className="flex justify-between">
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => {
+                                handleDeleteUser(user.user_id);
+                                document.getElementById("popover-trigger")?.click(); // Close popover
+                              }}
+                            >
+                              Confirm Delete
+                            </Button>
+                            <PopoverClose className="text-xs border p-2 rounded-md">
+                                Cancel
+                            </PopoverClose>
+                          </div>
+                        </PopoverContent>
+                      </Popover>
                     </div>
                   </TableCell>
                 </TableRow>
