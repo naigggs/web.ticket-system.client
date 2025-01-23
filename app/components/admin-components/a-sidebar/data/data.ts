@@ -6,7 +6,8 @@ import {
   NotebookPen,
   UserRoundCog,
   Ticket,
-  TicketXIcon
+  TicketXIcon,
+  ClipboardType
 } from "lucide-react";
 
 export const data = {
@@ -24,9 +25,15 @@ export const data = {
   ],
   navMain: [
     {
-      title: "Task Board",
+      title: "Dashboard",
       url: "/admin/dashboard",
       icon: SquareTerminal,
+      isActive: true,
+    },
+    {
+      title: "Taskboard",
+      url: "/admin/taskboard",
+      icon: ClipboardType,
       isActive: true,
     },
     {
