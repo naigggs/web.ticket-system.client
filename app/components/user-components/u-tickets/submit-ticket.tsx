@@ -38,6 +38,7 @@ import {
   submitBarangayClearance,
   submitCedula,
   submitBarangayIndigent,
+  submitBarangayProblem,
 } from "@/app/api/tickets/actions";
 import { Loader2 } from "lucide-react";
 
@@ -65,24 +66,28 @@ export default function SubmitTicket() {
     const formData = new FormData(event.currentTarget);
 
     try {
-      switch (concernType) {
-        case "barangay-id":
-          await submitBarangayID(formData);
-          break;
-        case "barangay-cert":
-          await submitBarangayCert(formData);
-          break;
-        case "barangay-clearance":
-          await submitBarangayClearance(formData);
-          break;
-        case "cedula":
-          await submitCedula(formData);
-          break;
-        case "barangay-indigent":
-          await submitBarangayIndigent(formData);
-          break;
-        default:
-          throw new Error("Invalid concern type");
+      if (contentType === "first") {
+        await submitBarangayProblem(formData);
+      } else {
+        switch (concernType) {
+          case "barangay-id":
+            await submitBarangayID(formData);
+            break;
+          case "barangay-cert":
+            await submitBarangayCert(formData);
+            break;
+          case "barangay-clearance":
+            await submitBarangayClearance(formData);
+            break;
+          case "cedula":
+            await submitCedula(formData);
+            break;
+          case "barangay-indigent":
+            await submitBarangayIndigent(formData);
+            break;
+          default:
+            throw new Error("Invalid concern type");
+        }
       }
       resetContent();
     } catch (error) {
