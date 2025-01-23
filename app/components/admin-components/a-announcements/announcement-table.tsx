@@ -17,7 +17,7 @@ export default function AnnouncementsTable() {
   const [error, setError] = useState("");
   const [selectedAnnouncement, setSelectedAnnouncement] = useState<any | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10); // Number of items per page
+  const [itemsPerPage] = useState(6);
   const supabase = createClient();
 
   const fetchAnnouncements = async () => {
