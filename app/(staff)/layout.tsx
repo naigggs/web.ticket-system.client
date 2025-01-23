@@ -5,7 +5,7 @@ import {
   SidebarInset,
   SidebarProvider,
 } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/app/components/staff-components/a-sidebar/app-sidebar";
+import { AppSidebar } from "@/app/components/staff-components/s-sidebar/app-sidebar";
 import Header from "../components/header/header";
 
 const inter = Inter({
