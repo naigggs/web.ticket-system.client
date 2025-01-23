@@ -19,10 +19,12 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { PopoverClose } from "@radix-ui/react-popover";
+import { ModalStaff } from "./modal-staff";
 
 function AccountManage() {
   const [users, setUsers] = useState<UserInfo[]>([]);
   const [error, setError] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     async function fetchUserInfo() {
@@ -96,7 +98,7 @@ function AccountManage() {
         <div className="flex flex-col sm:flex-row justify-between mb-4 gap-4">
           <h1 className="text-2xl font-bold">Manage Users</h1>
 
-          <div className="relative w-full sm:w-64 h-10">
+          <div className="flex flex-row relative w-full sm:w-64 h-10 gap-2">
             <Input
               type="search"
               value={searchTerm}
@@ -104,10 +106,12 @@ function AccountManage() {
                 setSearchTerm(e.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full h-full pl-10 pr-4 py-2 text-sm placeholder:text-gray-500 focus:ring-1"
+              className="w-full py-2 text-sm placeholder:text-gray-500 focus:ring-1"
               placeholder="Search Users..."
             />
-            <Search className="absolute top-1/2 -translate-y-1/2 left-4 w-5 h-5 text-gray-400" />
+            <Button onClick={() => setIsModalOpen(true)}>
+              +
+            </Button>
           </div>
         </div>
 
@@ -119,8 +123,6 @@ function AccountManage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Full Name</TableHead>
-
-                <TableHead>Age</TableHead>
                 <TableHead>Location</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
@@ -129,8 +131,6 @@ function AccountManage() {
               {currentUsers.map((user) => (
                 <TableRow key={user.user_id}>
                   <TableCell>{user.full_name}</TableCell>
-
-                  <TableCell>{user.age}</TableCell>
                   <TableCell>{user.location}</TableCell>
                   <TableCell>
                     <div className="flex space-x-2">
@@ -183,6 +183,7 @@ function AccountManage() {
             onPageChange={handlePageChange}
           />
         </div>
+        <ModalStaff isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       </div>
     </div>
   );

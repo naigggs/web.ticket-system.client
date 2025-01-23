@@ -106,7 +106,7 @@ function UserDetailForm({
           </span>
         </div>
 
-        <div className="grid w-auto items-center mb-4">
+        {/* <div className="grid w-auto items-center mb-4">
           <Label
             className="text-sm font-medium text-gray-700 mb-1"
             htmlFor="age"
@@ -116,7 +116,7 @@ function UserDetailForm({
           <div className="bg-gray-50 p-2 rounded-md border border-gray-300 pr-4">
             {user.age}
           </div>
-        </div>
+        </div> */}
       </div>
 
       <div className="flex flex-row gap-4">
