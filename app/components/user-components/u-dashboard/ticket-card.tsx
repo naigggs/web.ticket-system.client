@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useEffect, useState } from "react";
 import { Calendar, ChevronRight, MapPin } from "lucide-react";
@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function TicketCard() {
   const [tickets, setTickets] = useState<Tickets[]>([]);
   const [error, setError] = useState("");
+
   useEffect(() => {
     async function fetchUserTickets() {
       try {
@@ -26,38 +27,28 @@ export default function TicketCard() {
 
     fetchUserTickets();
   }, []);
+
   return (
-    <div className="card bg-white border border-gray-300 rounded-lg p-4">
-      <div className="flex flex-row justify-between">
-        <div>
-          <h2 className="text-2xl font-semibold mb-2">Submitted Tickets</h2>
-        </div>
-        <div>
-          <ChevronRight className="h-7 w-auto text-black mt-0.5 hover:bg-gray-100 rounded-full " />
-        </div>
-      </div>
-      <ul className="text-gray-500">
-        <AnimatePresence>
-          {tickets.slice(0, 5).map((ticket, index) => (
-            <motion.li
-              key={ticket.id}
-              className={`border-b py-5 md:px-2 px-5 hover:bg-gray-50 ${
-                index === 0 ? "border-t" : ""
-              }`}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="flex flex-row justify-between h-full items-center space-y-2">
-                <div className="uppercase font-bold text-black">
-                  ticket - {ticket.id} || {ticket.title ? ticket.title : ticket.concern_type} 
+    <ul className="text-gray-500">
+      <AnimatePresence>
+        {tickets.slice(0, 5).map((ticket, index) => (
+          <motion.li
+            key={ticket.id}
+            className={`mb-4 ${index === 0 ? "" : ""}`}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow shadow-sm">
+              <div className="flex flex-row justify-between h-full items-center space-y-1">
+                <div className="uppercase font-bold text-black text-lg">
+                  Ticket - {ticket.id} ||{" "}
+                  {ticket.title ? ticket.title : ticket.concern_type}
                 </div>
-                <div className="text-sm bg-blue-200 text-blue-800 px-3 py-1 uppercase font-semibold inline-flex rounded-full">
-                  {ticket.ticket_status}
-                </div>
+             
               </div>
-              <div className="flex flex-row gap-3">
+              <div className="flex flex-row gap-3 mt-2">
                 <div>
                   <span className="text-gray-400 text-sm flex flex-row items-center">
                     <MapPin className="h-3.5 -mt-0.5 w-auto mr-1" />
@@ -74,11 +65,14 @@ export default function TicketCard() {
                     })}
                   </span>
                 </div>
+                <div className="text-xs bg-blue-200 text-blue-800 px-2 py-[2px] uppercase font-semibold inline-flex rounded-full">
+                  {ticket.ticket_status}
+                </div>
               </div>
-            </motion.li>
-          ))}
-        </AnimatePresence>
-      </ul>
-    </div>
+            </div>
+          </motion.li>
+        ))}
+      </AnimatePresence>
+    </ul>
   );
 }
