@@ -1,11 +1,13 @@
 import { createClient } from "@/utils/supabase/server";
 
-export async function GET() {
+export async function GET(req: Request) {
   const supabase = await createClient();
+  const userId = req.headers.get("user-id");
   try {
     const { data, error } = await supabase
-      .from("tickets")
+      .from("user-info")
       .select("*")
+      .eq("user_id", userId)
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -15,10 +17,9 @@ export async function GET() {
     }
 
     return new Response(JSON.stringify(data), { status: 200 });
-  } catch (error:any) {
+  } catch (error: any) {
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
     });
   }
 }
-

@@ -4,8 +4,8 @@ import {
   Card,
   CardContent,
   CardFooter,
+  CardHeader,
 } from "@/components/ui/card";
-import TicketList from "./ticket-list";
 import { DashboardPagination } from "./dashboard-pagination";
 
 export const TaskCard = ({
@@ -23,7 +23,7 @@ export const TaskCard = ({
   isFirstColumn?: boolean;
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const ticketsPerPage = 5;
+  const ticketsPerPage = 4
 
   const indexOfLastTicket = currentPage * ticketsPerPage;
   const indexOfFirstTicket = indexOfLastTicket - ticketsPerPage;
@@ -36,33 +36,40 @@ export const TaskCard = ({
   };
 
   return (
-    <Card className='flex flex-col h-[780px] border-r border-t border-gray-300'>
-      <div className="flex flex-row justify-between p-4">
-        <div>
-          <h2 className="text-2xl font-semibold mb-2">{title}</h2>
-        </div>
-        <div>
-          <ChevronRight className="h-7 w-auto text-black mt-0.5 hover:bg-gray-100 rounded-full " />
+    <div className="flex flex-col h-[650px] border-gray-300">
+      <div className="flex-1 overflow-y-auto scrollbar-thin">
+        <div className="grid grid-cols-1 gap-4">
+          {currentTickets.map((ticket) => (
+            <Card
+              key={ticket.id}
+              className="p-4 hover:shadow-md transition-shadow cursor-pointer"
+              onClick={() => onTicketClick(ticket)}
+            >
+              <div className="flex flex-col space-y-2">
+                <h3 className="text-lg font-semibold uppercase">
+                  ticket - {ticket.id} ||{" "}
+                  {ticket.title ? ticket.title : ticket.concern_type}{" "}
+                </h3>
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm text-gray-500">Status:</span>
+                  <span className="text-sm font-medium">{ticket.status}</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm text-gray-500">Assignee:</span>
+                  <span className="text-sm font-medium">{ticket.assignee}</span>
+                </div>
+              </div>
+            </Card>
+          ))}
         </div>
       </div>
-      <CardContent className="flex-1 overflow-y-auto scrollbar-thin">
-        <ul className="space-y-2">
-          {currentTickets.map((ticket) => (
-            <TicketList
-              key={ticket.id}
-              ticket={ticket}
-              onTicketClick={onTicketClick}
-            />
-          ))}
-        </ul>
-      </CardContent>
-      <CardFooter className="flex justify-center mt-4">
+      <div className="flex justify-center">
         <DashboardPagination
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={handlePageChange}
         />
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   );
 };

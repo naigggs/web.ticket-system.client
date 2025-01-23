@@ -7,14 +7,8 @@ import { SurveyDatePicker } from "@/app/components/admin-components/a-surveys/da
 import { Input } from "@/components/ui/input";
 import { CreateSurveys } from "./create-surveys";
 import { createClient } from "@/utils/supabase/client";
-
-
-interface Survey {
-  id: string;
-  title: string;
-  description: string;
-  created_at: string;
-}
+import { SurveysModal } from "./surveys-modal";
+import { Survey } from "./types";
 
 export default function SurveysTable() {
   const [search, setSearch] = useState("");
@@ -22,8 +16,9 @@ export default function SurveysTable() {
   const [surveys, setSurveys] = useState<Survey[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedSurvey, setSelectedSurvey] = useState<Survey | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const supabase = createClient();
-  
 
   // Fetch surveys from the API
   const fetchSurveys = async () => {
@@ -44,39 +39,38 @@ export default function SurveysTable() {
   useEffect(() => {
     fetchSurveys();
 
-        // Set up real-time subscription
-        const subscription = supabase
-          .channel("surveys-changes")
-          .on(
-            "postgres_changes",
-            { event: "*", schema: "public", table: "surveys" },
-            (payload) => {
-              switch (payload.eventType) {
-                case "INSERT":
-                  setSurveys((prev) => [payload.new as Survey, ...prev]); // Prepend the new ticket
-                  break;
-                case "UPDATE":
-                  setSurveys((prev) =>
-                    prev.map((ticket) =>
-                      ticket.id === payload.new.id ? (payload.new as Survey) : ticket
-                    )
-                  );
-                  break;
-                case "DELETE":
-                  setSurveys((prev) =>
-                    prev.filter((survey) => survey.id !== payload.old.id)
-                  );
-                  break;
-              }
-            }
-          )
-          .subscribe();
-    
-        // Cleanup subscription on component unmount
-        return () => {
-          supabase.removeChannel(subscription);
-        };
+    // Set up real-time subscription
+    const subscription = supabase
+      .channel("surveys-changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "surveys" },
+        (payload) => {
+          switch (payload.eventType) {
+            case "INSERT":
+              setSurveys((prev) => [payload.new as Survey, ...prev]); // Prepend the new ticket
+              break;
+            case "UPDATE":
+              setSurveys((prev) =>
+                prev.map((ticket) =>
+                  ticket.id === payload.new.id ? (payload.new as Survey) : ticket
+                )
+              );
+              break;
+            case "DELETE":
+              setSurveys((prev) =>
+                prev.filter((survey) => survey.id !== payload.old.id)
+              );
+              break;
+          }
+        }
+      )
+      .subscribe();
 
+    // Cleanup subscription on component unmount
+    return () => {
+      supabase.removeChannel(subscription);
+    };
   }, []);
 
   // Filter surveys based on search and date
@@ -90,6 +84,11 @@ export default function SurveysTable() {
       .includes(search.toLowerCase());
     return matchesDate && matchesSearch;
   });
+
+  const handleSurveyClick = (survey: Survey) => {
+    setSelectedSurvey(survey);
+    setIsModalOpen(true);
+  };
 
   return (
     <div>
@@ -121,6 +120,7 @@ export default function SurveysTable() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.3 }}
+              onClick={() => handleSurveyClick(survey)}
             >
               <div className="uppercase font-bold text-black hover:underline">
                 {survey.title}
@@ -139,6 +139,13 @@ export default function SurveysTable() {
           ))}
         </AnimatePresence>
       </ul>
+
+      <SurveysModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        survey={selectedSurvey}
+      />
+      
     </div>
   );
 }

@@ -8,3 +8,10 @@ export type Surveys = {
 export interface SurveyDatePickerProps {
   onDateChange: (date: Date | null) => void;
 }
+
+export interface Survey {
+  id: string;
+  title: string;
+  description: string;
+  created_at: string;
+}

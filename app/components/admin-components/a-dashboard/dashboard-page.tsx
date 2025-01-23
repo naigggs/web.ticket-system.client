@@ -32,11 +32,11 @@ export default function DashboardPage() {
     }
   };
 
-  useEffect(() => {
-    // Fetch tickets on initial load
-    fetchTickets();
 
-    // Set up real-time subscription
+
+
+  useEffect(() => {
+    fetchTickets();
     const subscription = supabase
       .channel("tickets-changes")
       .on(
@@ -45,12 +45,14 @@ export default function DashboardPage() {
         (payload) => {
           switch (payload.eventType) {
             case "INSERT":
-              setTickets((prev) => [payload.new as Tickets, ...prev]); // Prepend the new ticket
+              setTickets((prev) => [payload.new as Tickets, ...prev]); 
               break;
             case "UPDATE":
               setTickets((prev) =>
                 prev.map((ticket) =>
-                  ticket.id === payload.new.id ? (payload.new as Tickets) : ticket
+                  ticket.id === payload.new.id
+                    ? (payload.new as Tickets)
+                    : ticket
                 )
               );
               break;
@@ -63,14 +65,11 @@ export default function DashboardPage() {
         }
       )
       .subscribe();
-
-    // Cleanup subscription on component unmount
     return () => {
       supabase.removeChannel(subscription);
     };
   }, []);
 
-  // Filter tickets by ID
   const filteredTickets = tickets.filter((ticket) =>
     ticket.id?.toString().includes(searchQuery)
   );
@@ -89,7 +88,7 @@ export default function DashboardPage() {
     <div className="mx-auto justify-center px-2 md:px-10 my-6 animate-in fade-in slide-in-from-bottom-8 duration-300">
       <div className="flex justify-between mb-4">
         <h2 className="text-xl md:text-2xl flex items-center font-bold text-center">
-          Task Board
+          Tickets
         </h2>
         <div className="relative w-40 md:w-64 h-10">
           <Input
@@ -101,35 +100,49 @@ export default function DashboardPage() {
           />
         </div>
       </div>
-
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <TaskCard
-          title="To Do"
-          tickets={filteredTickets.filter(
-            (ticket) => ticket.ticket_status === "Open"
-          )}
-          status="todo"
-          onTicketClick={handleTicketClick}
-          isFirstColumn
-        />
-        <TaskCard
-          title="In Progress"
-          tickets={filteredTickets.filter(
-            (ticket) => ticket.ticket_status === "In Progress"
-          )}
-          status="inprogress"
-          onTicketClick={handleTicketClick}
-        />
-        <TaskCard
-          title="On Hold"
-          tickets={filteredTickets.filter(
-            (ticket) => ticket.ticket_status === "On Hold"
-          )}
-          status="onhold"
-          onTicketClick={handleTicketClick}
-        />
-      </div>
+        <div className="flex flex-col justify-between gap-3">
+          <div className="px-4 py-2 bg-green-300 rounded-2xl font-bold">
+            Open
+          </div>
+          <TaskCard
+            title="To Do"
+            tickets={filteredTickets.filter(
+              (ticket) => ticket.ticket_status === "Open"
+            )}
+            status="todo"
+            onTicketClick={handleTicketClick}
+            isFirstColumn
+          />
+        </div>
 
+        <div className="flex flex-col justify-between gap-3">
+          <div className="px-4 py-2 bg-blue-300 rounded-2xl font-bold">
+            In Progress
+          </div>
+          <TaskCard
+            title="In Progress"
+            tickets={filteredTickets.filter(
+              (ticket) => ticket.ticket_status === "In Progress"
+            )}
+            status="inprogress"
+            onTicketClick={handleTicketClick}
+          />
+        </div>
+        <div className="flex flex-col justify-between gap-3">
+          <div className="px-4 py-2 bg-red-400 rounded-2xl font-bold">
+            On Hold
+          </div>
+          <TaskCard
+            title="On Hold"
+            tickets={filteredTickets.filter(
+              (ticket) => ticket.ticket_status === "On Hold"
+            )}
+            status="onhold"
+            onTicketClick={handleTicketClick}
+          />
+        </div>
+      </div>
       <TicketModal
         isOpen={isModalOpen}
         onClose={closeModal}

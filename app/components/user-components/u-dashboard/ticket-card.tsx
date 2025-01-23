@@ -1,12 +1,14 @@
-'use client';
+"use client";
 
 import React, { useEffect, useState } from "react";
 import { Calendar, ChevronRight, MapPin } from "lucide-react";
 import { Tickets } from "../u-tickets/types";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function TicketCard() {
   const [tickets, setTickets] = useState<Tickets[]>([]);
   const [error, setError] = useState("");
+
   useEffect(() => {
     async function fetchUserTickets() {
       try {
@@ -25,47 +27,52 @@ export default function TicketCard() {
 
     fetchUserTickets();
   }, []);
+
   return (
-    <div className="card bg-white border border-gray-300 rounded-lg p-4">
-      <div className="flex flex-row justify-between">
-        <div>
-          <h2 className="text-2xl font-semibold mb-2">Submitted Tickets</h2>
-        </div>
-        <div>
-          <ChevronRight className="h-7 w-auto text-black mt-0.5 hover:bg-gray-100 rounded-full " />
-        </div>
-      </div>
-      <ul className="text-gray-500 animate-in fade-in slide-in-from-bottom-8 duration-500">
-        {tickets.slice(0, 5).map((ticket) => (
-          <li key={ticket.id} className="border-b py-5 px-5 hover:bg-gray-50">
-            <div className="flex flex-row justify-between">
-              <div className="uppercase font-bold text-black">
-                {ticket.title}
+    <ul className="text-gray-500">
+      <AnimatePresence>
+        {tickets.slice(0, 5).map((ticket, index) => (
+          <motion.li
+            key={ticket.id}
+            className={`mb-4 ${index === 0 ? "" : ""}`}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow shadow-sm">
+              <div className="flex flex-row justify-between h-full items-center space-y-1">
+                <div className="uppercase font-bold text-black text-lg">
+                  Ticket - {ticket.id} ||{" "}
+                  {ticket.title ? ticket.title : ticket.concern_type}
+                </div>
+             
               </div>
-              <div className="text-[10px] bg-blue-200 text-blue-800 px-2 py-1 uppercase font-semibold inline-flex rounded-md">
-                {ticket.status}
+              <div className="flex flex-row gap-3 mt-2">
+                <div>
+                  <span className="text-gray-400 text-sm flex flex-row items-center">
+                    <MapPin className="h-3.5 -mt-0.5 w-auto mr-1" />
+                    {ticket.location || ticket.address}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-gray-400 text-sm flex flex-row items-center">
+                    <Calendar className="h-3.5 -mt-0.5 w-auto mr-1" />
+                    {new Date(ticket.created_at).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </span>
+                </div>
+                <div className="text-xs bg-blue-200 text-blue-800 px-2 py-[2px] uppercase font-semibold inline-flex rounded-full">
+                  {ticket.ticket_status}
+                </div>
               </div>
             </div>
-            <div className="text-sm my-2 line-clamp-3">
-              {ticket.description}
-            </div>
-            <div className="flex flex-row gap-3">
-              <div>
-                <span className="text-gray-400 text-sm flex flex-row items-center">
-                  <MapPin className="h-3.5 -mt-0.5 w-auto mr-1" />
-                  {ticket.location}
-                </span>
-              </div>
-              <div>
-                <span className="text-gray-400 text-sm flex flex-row items-center">
-                  <Calendar className="h-3.5 -mt-0.5 w-auto mr-1" />
-                  {ticket.created_at}
-                </span>
-              </div>
-            </div>
-          </li>
+          </motion.li>
         ))}
-      </ul>
-    </div>
+      </AnimatePresence>
+    </ul>
   );
 }

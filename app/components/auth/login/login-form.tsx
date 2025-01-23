@@ -6,12 +6,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { login } from "@/app/api/auth/actions";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"form">) {
   const router = useRouter();
+  const { toast } = useToast();
+  
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -19,8 +22,18 @@ export function LoginForm({
     const formData = new FormData(event.currentTarget);
     try {
       await login(formData);
+        toast({
+          title: "Login Success!",
+          description: "You have successfully logged in.",
+          className: "bg-green-500 text-white", // Tailwind CSS example for green background and white text
+        });
     } catch (error) {
       console.error("Login failed:", error);
+      toast({
+        variant: "destructive",
+        title: "Login failed",
+        description: "Invalid email or password. Please try again.",
+      });
     }
   }
   return (

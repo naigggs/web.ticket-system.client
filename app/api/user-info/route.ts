@@ -4,7 +4,7 @@ export async function GET() {
   const supabase = await createClient();
   try {
     const { data, error } = await supabase
-      .from("tickets")
+      .from("user-info")
       .select("*")
       .order("created_at", { ascending: false });
 
@@ -15,10 +15,9 @@ export async function GET() {
     }
 
     return new Response(JSON.stringify(data), { status: 200 });
-  } catch (error:any) {
+  } catch (error: any) {
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
     });
   }
 }
-

@@ -4,8 +4,9 @@ export async function GET() {
   const supabase = await createClient();
   try {
     const { data, error } = await supabase
-      .from("tickets")
+      .from("user-sign-up")
       .select("*")
+      .eq("status", "Open")
       .order("created_at", { ascending: false });
 
     if (error) {
@@ -21,4 +22,3 @@ export async function GET() {
     });
   }
 }
-

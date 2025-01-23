@@ -1,158 +1,134 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerClose, DrawerFooter } from "@/components/ui/drawer";
 import { Separator } from "@/components/ui/separator";
-import { Input } from "@/components/ui/input";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { getBadgeColor } from "../badge-color";
 import { Tickets } from "../a-dashboard/types";
+import { createClient } from "@/utils/supabase/client";
+import { TicketStatus } from "@/app/api/tickets/types";
+import { TicketContent } from "../ticket-content";
 
-interface TicketModalProps {
+interface ClosedModalProps {
   isOpen: boolean;
   onClose: () => void;
   ticket: Tickets | null;
 }
 
-export function ClosedModal({ isOpen, onClose, ticket }: TicketModalProps) {
+export function ClosedModal({ isOpen, onClose, ticket }: ClosedModalProps) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
+  const [status, setStatus] = useState<TicketStatus>("Open");
+  const supabase = createClient();
+
+  useEffect(() => {
+    if (ticket) {
+      setStatus(ticket.ticket_status);
+    }
+  }, [ticket]);
 
   if (!ticket) return null;
+
+  const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedStatus = event.target.value as TicketStatus;
+    setStatus(selectedStatus);
+  };
+
+  const updateTicketStatus = async () => {
+    if (!ticket) return;
+
+    const { data, error } = await supabase
+      .from("tickets")
+      .update({ ticket_status: status })
+      .eq("id", ticket.id);
+
+    if (error) {
+      console.error("Error updating ticket status:", error);
+    } else {
+      onClose();
+    }
+  };
 
   if (isDesktop) {
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogTitle>
-        <DialogContent className="max-w-2xl w-[90vw] sm:w-full max-h-[90vh] overflow-y-auto rounded-lg">
-          <DialogHeader className="text-left space-y-2">
-            <div className="text-md font-medium text-gray-500 -mt-4 -mb-2">#{ticket.id}</div>
-            <DialogTitle className="flex items-center gap-x-4">
-              <span className="text-xl font-semibold text-gray-900">{ticket.title}</span>
+        <DialogContent className="max-w-2xl w-[90vw] sm:w-full max-h-[90vh] overflow-y-auto rounded-lg" onOpenAutoFocus={(e) => e.preventDefault()}>
+          <DialogHeader className="text-left space-y-2 border-b border-gray-300 pb-4">
+            <DialogTitle className="flex items-center gap-x-2">
+              <div className="text-xl font-bold">Ticket - {ticket.id}</div>
               <Badge
                 className={`${getBadgeColor(
-                  ticket.status
+                  status
                 )} h-6 px-2 flex items-center justify-center rounded-full whitespace-nowrap text-[10px] uppercase font-bold shrink-0 pointer-events-none`}
               >
-                {ticket.status}
+                {status}
               </Badge>
             </DialogTitle>
+            <DialogTitle className="text-lg">
+              {ticket.concern_type}
+            </DialogTitle>
             <DialogDescription className="text-sm text-gray-600">
-              08:23 am | 09/14/2024
-            </DialogDescription>
-            <DialogDescription className="text-sm text-gray-600">
-              Requestor | <span className="font-medium text-gray-700">Carlos Joaquin Martin</span>
+              {ticket.created_at}
             </DialogDescription>
           </DialogHeader>
-          <Separator />
           <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Category *</label>
-              <p className="bg-gray-100 p-2 rounded mt-1">Infrastructure Issues</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Problem/Concern</label>
-              <p className="bg-gray-100 p-2 rounded mt-1">{ticket.description}</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Location</label>
-              <p className="bg-gray-100 p-2 rounded mt-1">Camla Street Purok 2</p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Assignee</label>
-                <p className="bg-gray-100 p-2 rounded mt-1">Khen Luat</p>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Requestor</label>
-                <p className="bg-gray-100 p-2 rounded mt-1">Carlos Joaquin Martin</p>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Attachment 1</label>
-                <Input id="picture" type="file" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Attachment 2</label>
-                <Input id="picture" type="file" />
-              </div>
-            </div>
+            <TicketContent ticket={ticket} status={status} onStatusChange={handleStatusChange} />
             <div>
               <label className="block text-sm font-medium text-gray-700">Comment</label>
               <textarea
                 className="w-full p-2 border rounded mt-1"
                 placeholder="Add comment or note"
                 rows={3}
-                disabled
               />
+            </div>
+            <div className="flex justify-between">
+              <DrawerClose asChild>
+                <Button variant="outline">Cancel</Button>
+              </DrawerClose>
+              <Button onClick={updateTicketStatus} className="bg-blue-500 text-white px-4 py-2 rounded">
+                Send
+              </Button>
             </div>
           </div>
         </DialogContent>
-        </DialogTitle>
       </Dialog>
     );
   }
 
   return (
     <Drawer open={isOpen} onOpenChange={onClose}>
-      <DrawerContent className="w-full max-h-[100vh]">
-        <DrawerHeader className="text-left">
-          <div className="text-md font-medium text-gray-500 -mt-4 -mb-2">#{ticket.id}</div>
-          <DrawerTitle className="flex items-center justify-between">
-            <span>{ticket.title}</span>
-            <Badge
-              className={`${getBadgeColor(
-                ticket.status
-              )} h-6 px-2 flex items-center justify-center rounded-full whitespace-nowrap text-[10px] uppercase font-bold shrink-0 pointer-events-none`}
-            >
-              {ticket.status}
-            </Badge>
-          </DrawerTitle>
-          <DrawerDescription>08:23 am | 09/14/2024</DrawerDescription>
-          <DrawerDescription>Requestor | Carlos Joaquin Martin </DrawerDescription>
-        </DrawerHeader>
+      <DrawerContent className="w-full max-h-[96dvh]">
+          <DrawerHeader className="text-left space-y-2 border-b border-gray-300 pb-4">
+            <DrawerTitle className="flex items-center gap-x-2">
+              <div className="text-xl font-bold">Ticket - {ticket.id}</div>
+              <Badge
+                className={`${getBadgeColor(
+                  status
+                )} h-6 px-2 flex items-center justify-center rounded-full whitespace-nowrap text-[10px] uppercase font-bold shrink-0 pointer-events-none`}
+              >
+                {status}
+              </Badge>
+            </DrawerTitle>
+            <DrawerTitle className="text-lg">
+              {ticket.concern_type}
+            </DrawerTitle>
+            <DrawerDescription className="text-sm text-gray-600">
+              {ticket.created_at}
+            </DrawerDescription>
+          </DrawerHeader>
         <Separator />
         <div className="space-y-4 p-4 overflow-y-auto">
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Category *</label>
-            <p className="bg-gray-100 p-2 rounded mt-1">Infrastructure Issues</p>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Problem/Concern</label>
-            <p className="bg-gray-100 p-2 rounded mt-1">{ticket.description}</p>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Location</label>
-            <p className="bg-gray-100 p-2 rounded mt-1">Camla Street Purok 2</p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Assignee</label>
-              <p className="bg-gray-100 p-2 rounded mt-1">Khen Luat</p>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Attachment 1</label>
-                <Input id="picture" type="file" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Attachment 2</label>
-                <Input id="picture" type="file" />
-              </div>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Comment</label>
-            <textarea
-              className="w-full p-2 border rounded mt-1"
-              placeholder="Add comment or note"
-              rows={3}
-              disabled
-            />
+          <TicketContent ticket={ticket} status={status} onStatusChange={handleStatusChange} />
+          <div className="flex justify-between">
+            <DrawerClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DrawerClose>
+            <Button onClick={updateTicketStatus} className="bg-blue-500 text-white px-4 py-2 rounded">
+              Send
+            </Button>
           </div>
         </div>
       </DrawerContent>

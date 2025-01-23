@@ -38,7 +38,6 @@ import {
   submitBarangayClearance,
   submitCedula,
   submitBarangayIndigent,
-  submitBarangayProblem,
 } from "@/app/api/tickets/actions";
 import { Loader2 } from "lucide-react";
 
@@ -66,28 +65,24 @@ export default function SubmitTicket() {
     const formData = new FormData(event.currentTarget);
 
     try {
-      if (contentType === "first") {
-        await submitBarangayProblem(formData);
-      } else {
-        switch (concernType) {
-          case "barangay-id":
-            await submitBarangayID(formData);
-            break;
-          case "barangay-cert":
-            await submitBarangayCert(formData);
-            break;
-          case "barangay-clearance":
-            await submitBarangayClearance(formData);
-            break;
-          case "cedula":
-            await submitCedula(formData);
-            break;
-          case "barangay-indigent":
-            await submitBarangayIndigent(formData);
-            break;
-          default:
-            throw new Error("Invalid concern type");
-        }
+      switch (concernType) {
+        case "barangay-id":
+          await submitBarangayID(formData);
+          break;
+        case "barangay-cert":
+          await submitBarangayCert(formData);
+          break;
+        case "barangay-clearance":
+          await submitBarangayClearance(formData);
+          break;
+        case "cedula":
+          await submitCedula(formData);
+          break;
+        case "barangay-indigent":
+          await submitBarangayIndigent(formData);
+          break;
+        default:
+          throw new Error("Invalid concern type");
       }
       resetContent();
     } catch (error) {
@@ -286,7 +281,234 @@ export default function SubmitTicket() {
                   </div>
                 </div>
               )}
-              {/* Repeat similar changes for other concern types */}
+              {concernType === "barangay-cert" && (
+                <div className="h-auto">
+                  <div className="flex flex-row items-center gap-4">
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Last Name</Label>
+                      <Input type="text" name="lastName" disabled={loading} />
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>First Name</Label>
+                      <Input type="text" name="firstName" disabled={loading} />
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Middle Name</Label>
+                      <Input type="text" name="middleName" disabled={loading} />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2 mt-2">
+                    <div className="flex flex-row items-center gap-4">
+                      <div className="grid w-full items-center gap-1.5">
+                        <Label>Age</Label>
+                        <Input type="number" name="age" disabled={loading} />
+                      </div>
+                      <div className="grid w-full items-center gap-1.5">
+                        <Label>Civil Status</Label>
+                        <Input type="text" name="civilStatus" disabled={loading} />
+                      </div>
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Address/Purok #</Label>
+                      <Input type="text" name="address" disabled={loading} />
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Purpose</Label>
+                      <Input type="text" name="purpose" disabled={loading} />
+                    </div>
+                  </div>
+                  <div className="flex justify-end gap-2 mt-4">
+                    <Button
+                      variant="secondary"
+                      onClick={resetContent}
+                      disabled={loading}
+                    >
+                      Reset
+                    </Button>
+                    <Button type="submit" disabled={loading}>
+                      {loading ? (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      ) : null}
+                      {loading ? "Submitting..." : "Submit"}
+                    </Button>
+                  </div>
+                </div>
+              )}
+              {concernType === "barangay-clearance" && (
+                <div className="h-auto">
+                  <div className="flex flex-row items-center gap-4">
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Last Name</Label>
+                      <Input type="text" name="lastName" disabled={loading} />
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>First Name</Label>
+                      <Input type="text" name="firstName" disabled={loading} />
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Middle Name</Label>
+                      <Input type="text" name="middleName" disabled={loading} />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2 mt-2">
+                    <div className="flex flex-row items-center gap-4">
+                      <div className="grid w-full items-center gap-1.5">
+                        <Label>Age</Label>
+                        <Input type="number" name="age" disabled={loading} />
+                      </div>
+                      <div className="grid w-full items-center gap-1.5">
+                        <Label>Status</Label>
+                        <Input type="text" name="status" disabled={loading} />
+                      </div>
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Address/Purok #</Label>
+                      <Input type="text" name="address" disabled={loading} />
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Purpose</Label>
+                      <Input type="text" name="purpose" disabled={loading} />
+                    </div>
+                  </div>
+                  <div className="flex justify-end gap-2 mt-4">
+                    <Button
+                      variant="secondary"
+                      onClick={resetContent}
+                      disabled={loading}
+                    >
+                      Reset
+                    </Button>
+                    <Button type="submit" disabled={loading}>
+                      {loading ? (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      ) : null}
+                      {loading ? "Submitting..." : "Submit"}
+                    </Button>
+                  </div>
+                </div>
+              )}
+              {concernType === "cedula" && (
+                <div className="h-auto">
+                  <div className="flex flex-row items-center gap-4">
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Last Name</Label>
+                      <Input type="text" name="lastName" disabled={loading} />
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>First Name</Label>
+                      <Input type="text" name="firstName" disabled={loading} />
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Middle Name</Label>
+                      <Input type="text" name="middleName" disabled={loading} />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2 mt-2">
+                    <div className="flex flex-row items-center gap-4">
+                      <div className="grid w-full items-center gap-1.5">
+                        <Label>Birthdate</Label>
+                        <TicketDatePicker
+                          onDateChange={(date) => setSelectedDate(date)}
+                        />
+                      </div>
+                      <div className="grid w-full items-center gap-1.5">
+                        <Label>Birthplace</Label>
+                        <Input type="text" name="birthplace" disabled={loading} />
+                      </div>
+                      <div className="grid w-full items-center gap-1.5">
+                        <Label>Age</Label>
+                        <Input type="number" name="age" disabled={loading} />
+                      </div>
+                    </div>
+                    <div className="flex flex-row items-center gap-4">
+                      <div className="grid w-full items-center gap-1.5">
+                        <Label>Height</Label>
+                        <Input type="text" name="height" disabled={loading} />
+                      </div>
+                      <div className="grid w-full items-center gap-1.5">
+                        <Label>Weight</Label>
+                        <Input type="text" name="weight" disabled={loading} />
+                      </div>
+                      <div className="grid w-full items-center gap-1.5">
+                        <Label>Civil Status</Label>
+                        <Input type="text" name="civilStatus" disabled={loading} />
+                      </div>
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Address/Purok #</Label>
+                      <Input type="text" name="address" disabled={loading} />
+                    </div>
+                  </div>
+                  <div className="flex justify-end gap-2 mt-4">
+                    <Button
+                      variant="secondary"
+                      onClick={resetContent}
+                      disabled={loading}
+                    >
+                      Reset
+                    </Button>
+                    <Button type="submit" disabled={loading}>
+                      {loading ? (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      ) : null}
+                      {loading ? "Submitting..." : "Submit"}
+                    </Button>
+                  </div>
+                </div>
+              )}
+              {concernType === "barangay-indigent" && (
+                <div className="h-auto">
+                  <div className="flex flex-row items-center gap-4">
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Last Name</Label>
+                      <Input type="text" name="lastName" disabled={loading} />
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>First Name</Label>
+                      <Input type="text" name="firstName" disabled={loading} />
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Middle Name</Label>
+                      <Input type="text" name="middleName" disabled={loading} />
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2 mt-2">
+                    <div className="flex flex-row items-center gap-4">
+                      <div className="grid w-full items-center gap-1.5">
+                        <Label>Age</Label>
+                        <Input type="number" name="age" disabled={loading} />
+                      </div>
+                      <div className="grid w-full items-center gap-1.5">
+                        <Label>Status</Label>
+                        <Input type="text" name="status" disabled={loading} />
+                      </div>
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Address/Purok #</Label>
+                      <Input type="text" name="address" disabled={loading} />
+                    </div>
+                    <div className="grid w-full items-center gap-1.5">
+                      <Label>Purpose</Label>
+                      <Input type="text" name="purpose" disabled={loading} />
+                    </div>
+                  </div>
+                  <div className="flex justify-end gap-2 mt-4">
+                    <Button
+                      variant="secondary"
+                      onClick={resetContent}
+                      disabled={loading}
+                    >
+                      Reset
+                    </Button>
+                    <Button type="submit" disabled={loading}>
+                      {loading ? (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      ) : null}
+                      {loading ? "Submitting..." : "Submit"}
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
           </form>
         );
