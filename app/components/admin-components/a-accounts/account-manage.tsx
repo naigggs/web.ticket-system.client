@@ -17,7 +17,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 import { PopoverClose } from "@radix-ui/react-popover";
 
 function AccountManage() {
@@ -39,7 +39,7 @@ function AccountManage() {
         );
       }
     }
-  
+
     fetchUserInfo();
   }, []);
 
@@ -52,11 +52,11 @@ function AccountManage() {
         },
         body: JSON.stringify({ userId }),
       });
-  
+
       if (!response.ok) {
         throw new Error("Failed to delete user");
       }
-  
+
       // Remove the user from the local state to update the UI
       setUsers(users.filter((user) => user.user_id !== userId));
     } catch (err) {
@@ -73,10 +73,8 @@ function AccountManage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const filteredUsers = users.filter(
-    (user) =>
-      user.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.last_name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredUsers = users.filter((user) =>
+    user.full_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
@@ -120,8 +118,8 @@ function AccountManage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>First Name</TableHead>
-                <TableHead>Last Name</TableHead>
+                <TableHead>Full Name</TableHead>
+
                 <TableHead>Age</TableHead>
                 <TableHead>Location</TableHead>
                 <TableHead>Actions</TableHead>
@@ -130,8 +128,8 @@ function AccountManage() {
             <TableBody>
               {currentUsers.map((user) => (
                 <TableRow key={user.user_id}>
-                  <TableCell>{user.first_name}</TableCell>
-                  <TableCell>{user.last_name}</TableCell>
+                  <TableCell>{user.full_name}</TableCell>
+
                   <TableCell>{user.age}</TableCell>
                   <TableCell>{user.location}</TableCell>
                   <TableCell>
@@ -139,12 +137,17 @@ function AccountManage() {
                       <ManageModal user={user} />
                       <Popover>
                         <PopoverTrigger asChild>
-                          <Button variant="destructive" size="sm">Delete</Button>
+                          <Button variant="destructive" size="sm">
+                            Delete
+                          </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-60 p-6">
-                          <h3 className="text-md font-semibold text-gray-900">Delete User</h3>
+                          <h3 className="text-md font-semibold text-gray-900">
+                            Delete User
+                          </h3>
                           <div className="text-xs text-gray-600 mb-4">
-                            Are you sure you want to delete this user? This action cannot be undone.
+                            Are you sure you want to delete this user? This
+                            action cannot be undone.
                           </div>
                           <div className="flex justify-between">
                             <Button
@@ -152,13 +155,15 @@ function AccountManage() {
                               size="sm"
                               onClick={() => {
                                 handleDeleteUser(user.user_id);
-                                document.getElementById("popover-trigger")?.click(); // Close popover
+                                document
+                                  .getElementById("popover-trigger")
+                                  ?.click(); // Close popover
                               }}
                             >
                               Confirm Delete
                             </Button>
                             <PopoverClose className="text-xs border p-2 rounded-md">
-                                Cancel
+                              Cancel
                             </PopoverClose>
                           </div>
                         </PopoverContent>

@@ -40,6 +40,8 @@ function AccountRequest() {
     fetchUserRequests();
   }, []);
 
+  console.log(accounts);
+
   const filteredAccounts = accounts.filter((account) =>
     account.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -61,7 +63,7 @@ function AccountRequest() {
     try {
       const formData = new FormData();
       formData.append("email", account.email);
-      formData.append("password", account.password); // Replace with actual logic to generate/set password
+      formData.append("password", account.password);
       formData.append("full_name", account.full_name);
       formData.append("location", account.location);
 

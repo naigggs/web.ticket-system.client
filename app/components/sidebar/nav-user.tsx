@@ -69,14 +69,14 @@ export function NavUser() {
               <Avatar className="h-8 w-8 rounded-lg">
                 {/* <AvatarImage src={user?.avatar} alt={user?.name} /> */}
                 <AvatarFallback className="rounded-lg">
-                 {user?.first_name[0]}{user?.last_name[0]}
+                 {user?.full_name[0]}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 {user ? (
                   <>
                     <span className="truncate font-semibold">
-                      {user.first_name} {user.last_name}
+                      {user.full_name}
                     </span>
                     <span className="truncate text-xs">{user.location}</span>
                   </>
@@ -98,14 +98,14 @@ export function NavUser() {
                 <Avatar className="h-8 w-8 rounded-lg">
                   {/* <AvatarImage src={user?.avatar} alt={user?.name} /> */}
                   <AvatarFallback className="rounded-lg">
-                  {user?.first_name[0]}{user?.last_name[0]}
+                  {user?.full_name[0]}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   {user ? (
                     <>
                       <span className="truncate font-semibold">
-                        {user.first_name} {user.last_name}
+                      {user.full_name}
                       </span>
                       <span className="truncate text-xs">{user.location}</span>
                     </>

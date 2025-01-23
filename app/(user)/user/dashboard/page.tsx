@@ -37,7 +37,7 @@ export default function UserDashboard() {
     <div className="px-4 sm:px-6 lg:px-10 my-6">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl md:text-2xl font-bold text-center">
-          Goodmorning {user?.first_name} {user?.last_name}!
+          Goodmorning {user?.full_name}!
         </h2>
       </div>
 
@@ -62,7 +62,7 @@ export default function UserDashboard() {
           </div>
           <SurveyCard />
         </div>
-        
+
         <div className="flex flex-col gap-3 animate-in fade-in slide-in-from-bottom-8 duration-700">
           <div className="px-4 py-2 bg-yellow-400 rounded-2xl font-bold">
             Charts
