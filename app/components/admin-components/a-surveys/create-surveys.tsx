@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -14,6 +15,7 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
+  DrawerDescription,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -34,10 +36,11 @@ export function CreateSurveys() {
         <DialogTrigger asChild>
           <Button variant="default">Create Survey</Button>
         </DialogTrigger>
-        <DialogContent className="max-w-[60%] lg:max-w-[50%] mmax-h-[80%] overflow-y-auto">
+        <DialogContent className="max-w-[60%] lg:max-w-[50%] max-h-[80%] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Create Survey</DialogTitle>
           </DialogHeader>
+          <DialogDescription/>
           <SurveyForm className="w-full" onSuccess={() => setOpen(false)} />
         </DialogContent>
       </Dialog>
@@ -56,6 +59,7 @@ export function CreateSurveys() {
           <DrawerTitle>Create Survey</DrawerTitle>
         </DrawerHeader>
         <SurveyForm className="px-4 overflow-y-auto" onSuccess={() => setOpen(false)} />
+          <DialogDescription/>
       </DrawerContent>
     </Drawer>
   );

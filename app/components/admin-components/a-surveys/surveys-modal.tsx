@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Survey } from "./types";
 
@@ -54,9 +55,9 @@ export const SurveysModal: React.FC<SurveyDetailModalProps> = ({
               Created on: {new Date(survey.created_at).toLocaleDateString()}
           </span>
         </DialogHeader>
-        <div className="space-y-4">
+        <DialogDescription>
           <p className="text-gray-700">{makeLinksClickable(survey.description)}</p>
-        </div>
+        </DialogDescription>
       </DialogContent>
     </Dialog>
   );
