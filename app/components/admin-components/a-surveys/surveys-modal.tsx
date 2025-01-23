@@ -55,8 +55,8 @@ export const SurveysModal: React.FC<SurveyDetailModalProps> = ({
               Created on: {new Date(survey.created_at).toLocaleDateString()}
           </span>
         </DialogHeader>
-        <DialogDescription>
-          <p className="text-gray-700">{makeLinksClickable(survey.description)}</p>
+        <DialogDescription className="text-gray-700">
+          {makeLinksClickable(survey.description)}
         </DialogDescription>
       </DialogContent>
     </Dialog>
