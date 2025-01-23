@@ -1,12 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Search } from "lucide-react";
+import { Search, Ticket } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { TaskCard } from "./task-card";
 import { TicketModal } from "./ticket-modal";
 import { Tickets } from "./types.js";
 import { createClient } from "@/utils/supabase/client";
+import { TicketDone} from "./ticket-done";
+import { TicketStatus } from "./ticket-status";
 
 export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -32,9 +34,6 @@ export default function DashboardPage() {
     }
   };
 
-
-
-
   useEffect(() => {
     fetchTickets();
     const subscription = supabase
@@ -45,7 +44,7 @@ export default function DashboardPage() {
         (payload) => {
           switch (payload.eventType) {
             case "INSERT":
-              setTickets((prev) => [payload.new as Tickets, ...prev]); 
+              setTickets((prev) => [payload.new as Tickets, ...prev]);
               break;
             case "UPDATE":
               setTickets((prev) =>
@@ -86,7 +85,7 @@ export default function DashboardPage() {
 
   return (
     <div className="mx-auto justify-center px-2 md:px-10 my-6 animate-in fade-in slide-in-from-bottom-8 duration-300">
-      <div className="flex justify-between mb-4">
+      <div className="flex justify-between  mb-4">
         <h2 className="text-xl md:text-2xl flex items-center font-bold text-center">
           Tickets
         </h2>
@@ -100,8 +99,8 @@ export default function DashboardPage() {
           />
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div className="flex flex-col justify-between gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="flex flex-col  gap-3">
           <div className="px-4 py-2 bg-green-300 rounded-2xl font-bold">
             Open
           </div>
@@ -116,7 +115,7 @@ export default function DashboardPage() {
           />
         </div>
 
-        <div className="flex flex-col justify-between gap-3">
+        <div className="flex flex-col  gap-3">
           <div className="px-4 py-2 bg-blue-300 rounded-2xl font-bold">
             In Progress
           </div>
@@ -129,7 +128,7 @@ export default function DashboardPage() {
             onTicketClick={handleTicketClick}
           />
         </div>
-        <div className="flex flex-col justify-between gap-3">
+        <div className="flex flex-col  gap-3">
           <div className="px-4 py-2 bg-red-400 rounded-2xl font-bold">
             On Hold
           </div>
@@ -141,6 +140,13 @@ export default function DashboardPage() {
             status="onhold"
             onTicketClick={handleTicketClick}
           />
+        </div>
+        <div className="flex flex-col  gap-3">
+          <div className="px-4 py-2 bg-yellow-400 rounded-2xl font-bold">
+           Charts
+          </div>
+            <TicketDone />
+            <TicketStatus />
         </div>
       </div>
       <TicketModal
