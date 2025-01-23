@@ -25,31 +25,31 @@ export const data = {
   navMain: [
     {
       title: "Task Board",
-      url: "/staff/dashboard",
+      url: "/admin/dashboard",
       icon: SquareTerminal,
       isActive: true,
     },
     {
       title: "Closed Tickets",
-      url: "/staff/closed",
+      url: "/admin/closed",
       icon: TicketXIcon,
       isActive: true,
     },
     {
       title: "Manage Accounts",
-      url: "/staff/accounts",
+      url: "/admin/accounts",
       icon: UserRoundCog,
       isActive: true,
     },
     {
       title: "Announcements",
-      url: "/staff/announcements",
+      url: "/admin/announcements",
       icon: RadioTower,
       isActive: true,
     },
     {
       title: "Surveys",
-      url: "/staff/surveys",
+      url: "/admin/surveys",
       icon: NotebookPen,
       isActive: true,
     },
