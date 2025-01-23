@@ -55,6 +55,7 @@ export async function signup(formData: FormData) {
   const { data: signUpData, error } = await supabase.auth.admin.createUser({
     email: formData.get("email") as string,
     password: formData.get("password") as string,
+    email_confirm: true,
   });
 
   if (error) {
