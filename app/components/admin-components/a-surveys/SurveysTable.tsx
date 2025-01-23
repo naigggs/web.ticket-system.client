@@ -91,7 +91,7 @@ export default function SurveysTable() {
   };
 
   return (
-    <div className="overflow-hidden">
+    <div>
       <div className="flex flex-row justify-between h-full items-center mb-6 mt-4">
         <h2 className="text-2xl font-semibold ml-4">Surveys</h2>
         <div className="flex flex-row items-center gap-2 p-2">
