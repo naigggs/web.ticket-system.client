@@ -29,7 +29,7 @@ import {
         onPageChange(currentPage + 1);
       }
     };
-  console.log(totalPages)
+    
     return (
       <Pagination>
         <PaginationContent>
