@@ -119,56 +119,65 @@ function AccountRequest() {
           </div>
         </div>
 
-        {/* Table Container */}
-        <div
+        {currentAccounts.length > 0 ? (
+          <div
           className="overflow-x-auto overflow-y-auto flex-1"
           style={{ maxHeight: "calc(88vh - 200px)" }}
-        >
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {currentAccounts.map((account) => (
-                <TableRow key={account.id}>
-                  <TableCell>{account.full_name}</TableCell>
-                  <TableCell>{account.email}</TableCell>
-                  <TableCell>
-                    <div className="flex space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleAccept(account)}
-                      >
-                        Accept
-                      </Button>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => handleDecline(account)} // Call the decline function on click
-                      >
-                        Decline
-                      </Button>
-                    </div>
-                  </TableCell>
+          >
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+              </TableHeader>
+              <TableBody>
+                {currentAccounts.map((account) => (
+                  <TableRow key={account.id}>
+                    <TableCell>{account.full_name}</TableCell>
+                    <TableCell>{account.email}</TableCell>
+                    <TableCell>
+                      <div className="flex space-x-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleAccept(account)}
+                        >
+                          Accept
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => handleDecline(account)} // Call the decline function on click
+                        >
+                          Decline
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            <div className="mt-4">
+              <PaginationAccounts
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+              />
+            </div>
+          </div>
+        ): (
+          <div className="text-xl text-gray-500 h-[200px] flex items-center justify-center">
+            No Pending Requests...
+          </div>
+        )}
+
+        
 
         {/* Pagination */}
-        <div className="mt-4">
-          <PaginationAccounts
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
-        </div>
+ 
+
       </div>
     </div>
   );
