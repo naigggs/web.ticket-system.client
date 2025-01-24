@@ -1,5 +1,10 @@
-import React from "react";
+import DashboardPage from '@/app/components/admin-components/a-dashboard/dashboard-page'
+import React from 'react'
 
-export default function AdminTaskboard() {
-  return <div>hahahaha</div>;
+export default function AdminDashboard() {
+  return (
+    <div>
+      <DashboardPage/>
+    </div>
+  )
 }
