@@ -1,37 +1,44 @@
-"use client";
-
-import React from "react";
 import {
   Pagination,
   PaginationContent,
   PaginationItem,
   PaginationLink,
-  PaginationPrevious,
   PaginationNext,
+  PaginationPrevious,
 } from "@/components/ui/pagination";
 
-interface SurveyPagination {
+interface SurveyPaginationProps {
   currentPage: number;
   totalPages: number;
-  onPageChange: (page: number) => void;
+  onPageChange: (pageNumber: number) => void;
 }
 
-export const SurveyPagination: React.FC<SurveyPagination> = ({
+export const SurveyPagination = ({
   currentPage,
   totalPages,
   onPageChange,
-}) => {
+}: SurveyPaginationProps) => {
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      onPageChange(currentPage - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      onPageChange(currentPage + 1);
+    }
+  };
+
   return (
     <Pagination>
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
             href="#"
-            onClick={(e) => {
-              if (currentPage === 1) e.preventDefault();
-              else onPageChange(currentPage - 1);
-            }}
-            className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+            onClick={handlePrevious}
+            aria-disabled={currentPage === 1}
+            className={currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""}
           />
         </PaginationItem>
         {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
@@ -48,13 +55,9 @@ export const SurveyPagination: React.FC<SurveyPagination> = ({
         <PaginationItem>
           <PaginationNext
             href="#"
-            onClick={(e) => {
-              if (currentPage === totalPages) e.preventDefault();
-              else onPageChange(currentPage + 1);
-            }}
-            className={
-              currentPage === totalPages ? "pointer-events-none opacity-50" : ""
-            }
+            onClick={handleNext}
+            aria-disabled={currentPage === totalPages || totalPages === 0}
+            className={currentPage === totalPages || totalPages === 0 ? "opacity-50 cursor-not-allowed" : ""}
           />
         </PaginationItem>
       </PaginationContent>

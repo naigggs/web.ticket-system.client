@@ -40,7 +40,6 @@ function AccountRequest() {
     fetchUserRequests();
   }, []);
 
-  console.log(accounts);
 
   const filteredAccounts = accounts.filter((account) =>
     account.email.toLowerCase().includes(searchTerm.toLowerCase())

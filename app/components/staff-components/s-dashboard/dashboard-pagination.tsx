@@ -7,17 +7,17 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-interface AnnouncementPaginationProps {
+interface DashboardPaginationProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (pageNumber: number) => void;
 }
 
-export const AnnouncementPagination = ({
+export const DashboardPagination = ({
   currentPage,
   totalPages,
   onPageChange,
-}: AnnouncementPaginationProps) => {
+}: DashboardPaginationProps) => {
   const handlePrevious = () => {
     if (currentPage > 1) {
       onPageChange(currentPage - 1);
@@ -29,7 +29,7 @@ export const AnnouncementPagination = ({
       onPageChange(currentPage + 1);
     }
   };
-  
+
   return (
     <Pagination>
       <PaginationContent>
@@ -41,17 +41,7 @@ export const AnnouncementPagination = ({
             className={currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""}
           />
         </PaginationItem>
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-          <PaginationItem key={page}>
-            <PaginationLink
-              href="#"
-              isActive={page === currentPage}
-              onClick={() => onPageChange(page)}
-            >
-              {page}
-            </PaginationLink>
-          </PaginationItem>
-        ))}
+
         <PaginationItem>
           <PaginationNext
             href="#"

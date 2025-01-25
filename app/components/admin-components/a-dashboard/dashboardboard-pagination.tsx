@@ -29,7 +29,7 @@ import {
         onPageChange(currentPage + 1);
       }
     };
-  
+    
     return (
       <Pagination>
         <PaginationContent>
@@ -46,8 +46,8 @@ import {
             <PaginationNext
               href="#"
               onClick={handleNext}
-              aria-disabled={currentPage === totalPages}
-              className={currentPage === totalPages ? "opacity-50 cursor-not-allowed" : ""}
+              aria-disabled={currentPage === totalPages || totalPages === 0}
+              className={currentPage === totalPages || totalPages === 0 ? "opacity-50 cursor-not-allowed" : ""}
             />
           </PaginationItem>
         </PaginationContent>
