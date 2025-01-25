@@ -65,14 +65,6 @@ export async function updateSession(request: NextRequest) {
     const adminRoutes = ["/admin", "/admin/dashboard"];
     const staffRoutes = ["/staff", "/staff/dashboard"];
 
-    // Redirect staff users to /staff/dashboard
-    if (roles.includes("staff") && !request.nextUrl.pathname.startsWith("/staff")) {
-      const url = request.nextUrl.clone();
-      url.pathname = "/staff/dashboard";
-      return NextResponse.redirect(url);
-    }
-
-    // Prevent user role from accessing admin and staff routes
     if (roles.includes("user")) {
       if (adminRoutes.includes(request.nextUrl.pathname) || staffRoutes.includes(request.nextUrl.pathname)) {
         const url = request.nextUrl.clone();
@@ -81,14 +73,12 @@ export async function updateSession(request: NextRequest) {
       }
     }
 
-    // Prevent non-admin users from accessing admin routes
     if (adminRoutes.includes(request.nextUrl.pathname) && !roles.includes("admin")) {
       const url = request.nextUrl.clone();
       url.pathname = "/auth/forbidden";
       return NextResponse.redirect(url);
     }
 
-    // Prevent non-staff users from accessing staff routes
     if (staffRoutes.includes(request.nextUrl.pathname) && !roles.includes("staff")) {
       const url = request.nextUrl.clone();
       url.pathname = "/auth/forbidden";
