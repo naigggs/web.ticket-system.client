@@ -6,7 +6,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { DashboardPagination } from "./dashboardboard-pagination";
+import { DashboardPagination } from "./dashboard-pagination";
 
 export const TaskCard = ({
   title,
