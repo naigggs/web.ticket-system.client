@@ -28,7 +28,7 @@ export default function DashboardPage() {
 
       const { data, error } = await supabase
         .from("tickets")
-        .select("*")
+        .select(`*, assignee_id(*)`)
         .eq("assignee_id", user.id);
 
       if (error) {

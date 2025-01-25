@@ -23,7 +23,7 @@ export const TaskCard = ({
   isFirstColumn?: boolean;
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const ticketsPerPage = 4
+  const ticketsPerPage = 4;
 
   const indexOfLastTicket = currentPage * ticketsPerPage;
   const indexOfFirstTicket = indexOfLastTicket - ticketsPerPage;
@@ -51,12 +51,12 @@ export const TaskCard = ({
                   {ticket.title ? ticket.title : ticket.concern_type}{" "}
                 </h3>
                 <div className="flex items-center space-x-2">
-                  <span className="text-sm text-gray-500">Status:</span>
-                  <span className="text-sm font-medium">{ticket.status}</span>
-                </div>
-                <div className="flex items-center space-x-2">
                   <span className="text-sm text-gray-500">Assignee:</span>
-                  <span className="text-sm font-medium">{ticket.assignee}</span>
+                  <span className="text-sm font-medium">
+                    {ticket?.assignee_id?.full_name
+                      ? ticket?.assignee_id?.full_name
+                      : "None"}
+                  </span>
                 </div>
               </div>
             </Card>

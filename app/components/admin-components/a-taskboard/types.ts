@@ -8,6 +8,7 @@
 //   };
 
 export type Tickets = {
+  assignee_id: any;
   id: number;
   title: string;
   description: string;

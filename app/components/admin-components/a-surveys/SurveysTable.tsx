@@ -40,8 +40,7 @@ export default function SurveysTable() {
 
   useEffect(() => {
     fetchSurveys();
-
-    // Set up real-time subscription
+    
     const subscription = supabase
       .channel("surveys-changes")
       .on(
@@ -69,13 +68,11 @@ export default function SurveysTable() {
       )
       .subscribe();
 
-    // Cleanup subscription on component unmount
     return () => {
       supabase.removeChannel(subscription);
     };
   }, []);
 
-  // Filter surveys based on search and date
   const filteredSurveys = surveys.filter((survey) => {
     const matchesDate =
       !selectedDate ||

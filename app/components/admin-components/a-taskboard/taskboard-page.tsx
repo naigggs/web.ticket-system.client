@@ -22,7 +22,7 @@ export default function TaskBoardPage() {
   // Fetch tickets from Supabase
   const fetchTickets = async () => {
     try {
-      const { data, error } = await supabase.from("tickets").select("*");
+      const { data, error } = await supabase.from("tickets").select(`*, assignee_id(*)`);
       if (error) {
         throw error;
       }
@@ -33,7 +33,7 @@ export default function TaskBoardPage() {
       );
     }
   };
-
+console.log(tickets)
   useEffect(() => {
     fetchTickets();
     const subscription = supabase
