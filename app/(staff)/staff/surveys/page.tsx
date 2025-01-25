@@ -1,4 +1,4 @@
-import SurveysTable from '@/app/components/admin-components/a-surveys/SurveysTable'
+import SurveysTable from '@/app/components/staff-components/s-surveys/SurveysTable'
 import React from 'react'
 
 function page() {
