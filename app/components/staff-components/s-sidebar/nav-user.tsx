@@ -130,7 +130,6 @@ export function NavUser() {
                 if (error) {
                   console.error("Error logging out:", error.message);
                 } else {
-                  // Redirect to login page or perform other actions after logout
                   window.location.href = "/auth/login";
                 }
               }}
