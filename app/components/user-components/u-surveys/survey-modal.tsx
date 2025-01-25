@@ -37,20 +37,41 @@ export function SurveyModal({ survey, onClose }: ModalProps) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
   if (!survey) return null;
 
+  const makeLinksClickable = (text: string): (string | JSX.Element)[] => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.split(urlRegex).map((part, index) =>
+      urlRegex.test(part) ? (
+        <a
+          key={index}
+          href={part}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-500 hover:underline"
+        >
+          {part}
+        </a>
+      ) : (
+        part
+      )
+    );
+  };
+
   if (isDesktop) {
     return (
       <Dialog open={true} onOpenChange={onClose}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{survey?.title}</DialogTitle>
-            <DialogDescription>{survey?.description}</DialogDescription>
+        <DialogContent className="w-[90%] rounded-lg" onOpenAutoFocus={(e) => e.preventDefault()}>
+          <DialogHeader className="border-b border-gray-300 pb-4">
+            <DialogTitle className="text-2xl font-bold text-left">
+              {survey.title}
+            </DialogTitle>
+            <span className="flex items-center text-gray-600">
+                <Calendar className="h-4 w-4 mr-2" />
+                Created on: {new Date(survey.created_at).toLocaleDateString()}
+            </span>
           </DialogHeader>
-          <div className="font-bold text-md">{survey?.subtitle}</div>
-          <div className="text-sm">{survey?.body}</div>
-          <div className="mt-4 text-gray-500 text-sm flex items-center">
-            <Calendar className="h-4 w-4 mr-1" />
-            {survey?.created_at}
-          </div>
+          <DialogDescription className="text-gray-700">
+            {makeLinksClickable(survey.description)}
+          </DialogDescription>
         </DialogContent>
       </Dialog>
     );
