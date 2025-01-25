@@ -44,7 +44,9 @@ export async function login(formData: FormData) {
 
   if (roleData.role_id === 3) {
     redirect("/admin/dashboard");
-  } else {
+  } else if (roleData.role_id === 2) {
+    redirect("/staff/dashboard");
+  } else if (roleData.role_id === 1) {
     redirect("/user/dashboard");
   }
 }
