@@ -90,6 +90,36 @@ export async function signup(formData: FormData) {
   }
 }
 
+export async function signupStaff(formData: FormData) {
+  const supabase = supabaseAdminClient;
+
+  const { data: signUpData, error } = await supabase.auth.admin.createUser({
+    email: formData.get("email") as string,
+    password: formData.get("password") as string,
+    email_confirm: true,
+  });
+
+  if (error) {
+    console.log("Error creating user:", error);
+  }
+
+  const { error: insertError } = await supabase.from("user-roles").insert({
+    user_id: signUpData.user?.id,
+    role_id: 2,
+  });
+  if (insertError) {
+    console.log("Error updating user status:", insertError);
+  }
+  const { error: insertError2 } = await supabase.from("user-info").insert({
+    user_id: signUpData.user?.id,
+    full_name: formData.get("full_name") as string,
+    location: formData.get("location") as string,
+  });
+  if (insertError2) {
+    console.log("Error updating user status:", insertError2);
+  }
+}
+
 export async function declineUser(formData: FormData) {
   const supabase = supabaseAdminClient;
 
@@ -158,3 +188,4 @@ export async function registerUser(formData: FormData) {
   revalidatePath("/", "layout");
   redirect("/success");
 }
+

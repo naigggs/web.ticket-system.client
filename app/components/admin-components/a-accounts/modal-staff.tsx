@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import { registerUser } from "@/app/api/auth/actions";
+import { signupStaff } from "@/app/api/auth/actions";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 interface ModalStaffProps {
@@ -23,7 +23,7 @@ export function ModalStaff({ isOpen, onClose }: ModalStaffProps) {
     const formData = new FormData(e.currentTarget);
 
     try {
-      await registerUser(formData);
+      await signupStaff(formData);
       onClose(); // Close the modal after successful registration
     } catch (error) {
       console.error("Error registering user:", error);
