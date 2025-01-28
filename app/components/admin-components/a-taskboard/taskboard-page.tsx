@@ -33,7 +33,7 @@ export default function TaskBoardPage() {
       );
     }
   };
-console.log(tickets)
+  
   useEffect(() => {
     fetchTickets();
     const subscription = supabase
