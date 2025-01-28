@@ -4,10 +4,23 @@ import React, { useEffect, useState } from "react";
 import { Calendar, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Surveys } from "../u-surveys/types";
+import { DashboardPagination } from "./dashboard-pagination";
 
 export default function SurveyCard() {
   const [surveys, setSurveys] = useState<Surveys[]>([]);
   const [error, setError] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const surveysPerPage = 5;
+
+  const indexOfLastSurvey = currentPage * surveysPerPage;
+  const indexOfFirstSurvey = indexOfLastSurvey - surveysPerPage;
+  const currentSurvey = surveys.slice(indexOfFirstSurvey, indexOfLastSurvey);
+
+  const totalPages = Math.ceil(surveys.length / surveysPerPage);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
 
   useEffect(() => {
     async function fetchUserSurveys() {
@@ -31,7 +44,7 @@ export default function SurveyCard() {
     
       <ul className="text-gray-500">
         <AnimatePresence>
-          {surveys.slice(0, 5).map((survey, index) => (
+          {currentSurvey.map((survey, index) => (
             <motion.li
               key={survey.id}
               className={`mb-4 ${index === 0 ? "" : ""}`}
@@ -62,6 +75,13 @@ export default function SurveyCard() {
               </div>
             </motion.li>
           ))}
+          <div className="flex justify-center">
+            <DashboardPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </div>
         </AnimatePresence>
       </ul>
 

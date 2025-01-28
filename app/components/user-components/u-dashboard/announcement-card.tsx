@@ -4,10 +4,23 @@ import React, { useEffect, useState } from "react";
 import { Calendar, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Announcements } from "../u-announcements/types";
+import { DashboardPagination } from "./dashboard-pagination";
 
 export default function AnnouncementCard() {
   const [announcements, setAnnouncements] = useState<Announcements[]>([]);
   const [error, setError] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const announcementsPerPage = 5;
+
+  const indexOfLastAnnouncements = currentPage * announcementsPerPage;
+  const indexOfFirstAnnouncements = indexOfLastAnnouncements - announcementsPerPage;
+  const currentAnnouncements = announcements.slice(indexOfFirstAnnouncements, indexOfLastAnnouncements);
+
+  const totalPages = Math.ceil(announcements.length / announcementsPerPage);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
 
   useEffect(() => {
     async function fetchUserAnnouncements() {
@@ -30,7 +43,7 @@ export default function AnnouncementCard() {
   return (
     <ul className="text-gray-500">
       <AnimatePresence>
-        {announcements.slice(0, 5).map((announcement, index) => (
+        {currentAnnouncements.map((announcement, index) => (
           <motion.li
             key={announcement.id}
             className={`mb-4 ${index === 0 ? "" : ""}`}
@@ -61,6 +74,11 @@ export default function AnnouncementCard() {
             </div>
           </motion.li>
         ))}
+          <DashboardPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
       </AnimatePresence>
     </ul>
   );

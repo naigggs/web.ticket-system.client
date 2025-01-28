@@ -5,12 +5,25 @@ import { Calendar, ChevronRight, MapPin } from "lucide-react";
 import { Tickets } from "../u-tickets/types";
 import { motion, AnimatePresence } from "framer-motion";
 import { TicketModal } from "../ticket-modal";
+import { DashboardPagination } from "./dashboard-pagination";
 
 export default function TicketCard() {
   const [tickets, setTickets] = useState<Tickets[]>([]);
   const [error, setError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState<any | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ticketsPerPage = 6;
+
+  const indexOfLastTicket = currentPage * ticketsPerPage;
+  const indexOfFirstTicket = indexOfLastTicket - ticketsPerPage;
+  const currentTickets = tickets.slice(indexOfFirstTicket, indexOfLastTicket);
+
+  const totalPages = Math.ceil(tickets.length / ticketsPerPage);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
 
   useEffect(() => {
     async function fetchUserTickets() {
@@ -44,7 +57,7 @@ export default function TicketCard() {
   return (
     <ul className="text-gray-500">
       <AnimatePresence>
-        {tickets.slice(0, 5).map((ticket, index) => (
+        {currentTickets.map((ticket, index) => (
           <motion.li
             key={ticket.id}
             className={`mb-4 ${index === 0 ? "" : ""}`}
@@ -85,12 +98,19 @@ export default function TicketCard() {
             </div>
           </motion.li>
         ))}
+        <div className="flex justify-center">
+          <DashboardPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </div>
       </AnimatePresence>
       <TicketModal
-              isOpen={isModalOpen}
-              onClose={closeModal}
-              ticket={selectedTicket}
-            />
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        ticket={selectedTicket}
+      />
     </ul>
   );
 }
