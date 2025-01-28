@@ -8,6 +8,7 @@ import { SurveyDatePicker } from "./date-picker-survey";
 import { Input } from "@/components/ui/input";
 import { Surveys } from "./types";
 import { SurveyModal } from "./survey-modal";
+import { SurveyPagination } from "./survey-pagination";
 
 export default function SurveysTable() {
   const [surveys, setSurveys] = useState<Surveys[]>([]);
@@ -17,6 +18,8 @@ export default function SurveysTable() {
   const [selectedSurvey, setSelectedSurvey] = useState<any | null>(
     null
   );
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(6);
 
   useEffect(() => {
     async function fetchUserUnansweredSurveys() {
@@ -47,6 +50,21 @@ export default function SurveysTable() {
     return matchesDate && matchesSearch;
   });
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, selectedDate]);
+
+  // Pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredSurveys.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(filteredSurveys.length / itemsPerPage);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   return (
     <div>
       <div className="flex flex-row justify-between h-full items-center mb-6 mt-4">
@@ -68,7 +86,7 @@ export default function SurveysTable() {
       </div>
       <ul className="text-gray-500">
         <AnimatePresence>
-          {filteredSurveys.map((survey, index) => (
+          {currentItems.map((survey, index) => (
             <motion.li
               key={survey.id}
               className={`border-b py-5 px-5 hover:bg-gray-50 ${
@@ -99,12 +117,20 @@ export default function SurveysTable() {
               </div>
             </motion.li>
           ))}
-        </AnimatePresence>
-      </ul>
-          <SurveyModal
-              survey={selectedSurvey}
-              onClose={() => setSelectedSurvey(null)}
+          <div className="mt-4">
+            <SurveyPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
             />
+          </div>
+        </AnimatePresence>
+        
+      </ul>
+      <SurveyModal
+          survey={selectedSurvey}
+          onClose={() => setSelectedSurvey(null)}
+        />
     </div>
   );
 }
