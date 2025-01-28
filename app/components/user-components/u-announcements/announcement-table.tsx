@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { AnnouncementModal } from "./announcement-modal";
 import { Button } from "@/components/ui/button";
 import { Announcements } from "./types";
+import { AnnouncementPagination } from "./announcement-pagination";
 
 export default function AnnouncementsTable() {
   const [announcements, setAnnouncements] = useState<Announcements[]>([]);
@@ -17,6 +18,8 @@ export default function AnnouncementsTable() {
   const [selectedAnnouncement, setSelectedAnnouncement] = useState<any | null>(
     null
   );
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(6);
   
    useEffect(() => {
       async function fetchAnnouncements() {
@@ -49,6 +52,21 @@ export default function AnnouncementsTable() {
     return matchesDate && matchesSearch;
   });
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, selectedDate]);
+
+  // Pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredAnnouncements.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(filteredAnnouncements.length / itemsPerPage);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   return (
     <div>
       <div className="flex flex-row justify-between h-full items-center mb-6 mt-4">
@@ -69,7 +87,7 @@ export default function AnnouncementsTable() {
       </div>
       <ul className="text-gray-500">
         <AnimatePresence>
-          {filteredAnnouncements.map((announcement, index) => (
+          {currentItems.map((announcement, index) => (
             <motion.li
               key={announcement.id}
               className={`border-b py-5 px-5 hover:bg-gray-50 cursor-pointer ${
@@ -99,6 +117,13 @@ export default function AnnouncementsTable() {
               </div>
             </motion.li>
           ))}
+          <div className="mt-4">
+            <AnnouncementPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </div>
         </AnimatePresence>
       </ul>
       <AnnouncementModal
