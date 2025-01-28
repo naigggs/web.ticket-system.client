@@ -1,19 +1,12 @@
 import { useState } from "react";
-import { ChevronRight } from "lucide-react";
 import {
   Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
 } from "@/components/ui/card";
 import { DashboardPagination } from "./dashboard-pagination";
 
 export const TaskCard = ({
-  title,
   tickets,
   onTicketClick,
-  isLastColumn,
-  isFirstColumn,
 }: {
   title: string;
   tickets: any[];
