@@ -16,6 +16,7 @@ import SubmitTicket from "./submit-ticket";
 import { Tickets } from "./types.js";
 import { TicketModal } from "../ticket-modal";
 import { createClient } from "@/utils/supabase/client";
+import { TicketPagination } from "./ticket-pagination";
 
 export default function TicketsTable() {
   const [tickets, setTickets] = useState<Tickets[]>([]);
@@ -25,6 +26,8 @@ export default function TicketsTable() {
   const [search, setSearch] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTicket, setSelectedTicket] = useState<any | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(7);
 
   const supabase = createClient();
 
@@ -86,9 +89,12 @@ export default function TicketsTable() {
       ticket.ticket_status.toLowerCase() === filter.toLowerCase();
     const matchesDate =
       !selectedDate ||
-      new Date(ticket.created_at).toDateString() ===
-        selectedDate.toDateString();
-    return matchesStatus && matchesDate;
+      new Date(ticket.created_at).toDateString() === selectedDate.toDateString();
+    const matchesSearch =
+      !search ||
+      ticket.title?.toLowerCase().includes(search.toLowerCase()) || 
+      ticket.concern_type?.toLowerCase().includes(search.toLowerCase()); 
+    return matchesStatus && matchesDate && matchesSearch;
   });
 
   const handleTicketClick = (ticket: Tickets) => {
@@ -100,6 +106,21 @@ export default function TicketsTable() {
     setIsModalOpen(false);
     setSelectedTicket(null);
   };
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter, selectedDate, search]);
+  
+    // Pagination logic
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filteredTickets.slice(indexOfFirstItem, indexOfLastItem);
+  
+    const totalPages = Math.ceil(filteredTickets.length / itemsPerPage);
+  
+    const handlePageChange = (page: number) => {
+      setCurrentPage(page);
+    };
 
   return (
     <div>
@@ -145,7 +166,7 @@ export default function TicketsTable() {
       </div>
       <ul className="text-gray-500">
         <AnimatePresence>
-          {filteredTickets.map((ticket, index) => (
+          {currentItems.map((ticket, index) => (
             <motion.li
               key={ticket.id}
               className={`border-b py-5 md:px-2 px-5 hover:bg-gray-50 ${
@@ -186,6 +207,13 @@ export default function TicketsTable() {
               </div>
             </motion.li>
           ))}
+          <div className="mt-4">
+            <TicketPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </div>
         </AnimatePresence>
       </ul>
       <TicketModal
