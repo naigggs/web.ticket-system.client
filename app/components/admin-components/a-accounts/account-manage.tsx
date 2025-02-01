@@ -130,7 +130,7 @@ function AccountManage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Full Name</TableHead>
-                <TableHead>Location</TableHead>
+                <TableHead>Address</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
