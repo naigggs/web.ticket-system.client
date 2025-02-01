@@ -20,11 +20,13 @@ import {
 } from "@/components/ui/popover";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { ModalStaff } from "./modal-staff";
+import { useToast } from "@/hooks/use-toast";
 
 function AccountManage() {
   const [users, setUsers] = useState<UserInfo[]>([]);
   const [error, setError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const toast = useToast();
 
   useEffect(() => {
     async function fetchUserInfo() {
@@ -58,6 +60,11 @@ function AccountManage() {
       if (!response.ok) {
         throw new Error("Failed to delete user");
       }
+
+      toast.toast({
+        variant: "destructive",
+        title: "Account has been deleted!",
+      })
 
       // Remove the user from the local state to update the UI
       setUsers(users.filter((user) => user.user_id !== userId));

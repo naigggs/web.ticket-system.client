@@ -13,6 +13,8 @@ import { Input } from "@/components/ui/input";
 import { PaginationAccounts } from "./account-pagination";
 import { signup, declineUser } from "@/app/api/auth/actions";
 import { Accounts } from "./types";
+import { RequestModal } from "./request-modal";
+import { useToast } from "@/hooks/use-toast";
 
 function AccountRequest() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -20,6 +22,10 @@ function AccountRequest() {
   const [error, setError] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+  const [selectedAccount, setSelectedAccount] = useState<Accounts | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { toast } = useToast()
+
 
   useEffect(() => {
     async function fetchUserRequests() {
@@ -67,7 +73,11 @@ function AccountRequest() {
       formData.append("location", account.location);
 
       await signup(formData);
-      alert("Account successfully created!");
+
+      toast({
+        title: "Account successfully created!",
+        className: "bg-green-500 text-white",
+      })
 
       // Optionally remove the accepted account from the table
       setAccounts((prevAccounts) =>
@@ -84,8 +94,11 @@ function AccountRequest() {
       const formData = new FormData();
       formData.append("email", account.email);
 
-      await declineUser(formData); // Call the imported declineUser function
-      alert("Account has been declined!");
+      await declineUser(formData);
+      toast({
+        variant: "destructive",
+        title: "Account has been declined!",
+      })
 
       // Optionally remove the declined account from the table
       setAccounts((prevAccounts) =>
@@ -141,16 +154,12 @@ function AccountRequest() {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => handleAccept(account)}
+                          onClick={() => {
+                            setSelectedAccount(account);
+                            setIsModalOpen(true);
+                          }}
                         >
-                          Accept
-                        </Button>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => handleDecline(account)} // Call the decline function on click
-                        >
-                          Decline
+                          View Details
                         </Button>
                       </div>
                     </TableCell>
@@ -165,18 +174,21 @@ function AccountRequest() {
               onPageChange={handlePageChange}
               />
             </div>
+            {selectedAccount && (
+              <RequestModal 
+                account={selectedAccount} 
+                open={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+                handleDecline={handleDecline}
+                handleAccept={handleAccept}
+              />
+            )}
           </div>
         ): (
           <div className="text-xl text-gray-500 h-[200px] flex items-center justify-center">
             No Pending Requests...
           </div>
         )}
-
-        
-
-        {/* Pagination */}
- 
-
       </div>
     </div>
   );
