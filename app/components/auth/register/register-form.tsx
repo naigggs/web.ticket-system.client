@@ -75,16 +75,16 @@ export function RegisterForm({
           />
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="location">Location</Label>
+          <Label htmlFor="location">Address</Label>
           <Input id="location" name="location" type="text" required />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div className="grid gap-2">
-            <Label htmlFor="document1">Upload Document 1</Label>
+            <Label htmlFor="document1">Upload Barangay ID (Front)</Label>
             <Input id="document1" name="document1" type="file" required />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="document2">Upload Document 2</Label>
+            <Label htmlFor="document2">Upload Barangay ID (Back)</Label>
             <Input id="document2" name="document2" type="file" required />
           </div>
         </div>
