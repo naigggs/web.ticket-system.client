@@ -27,6 +27,7 @@ import { createClient } from "@/utils/supabase/client";
 import { TicketStatus } from "@/app/api/tickets/types";
 import { TicketContent } from "../ticket-content";
 import { addComment } from "@/app/api/tickets/comments/actions";
+import { assignTicket } from "@/app/api/tickets/actions";
 
 interface TicketModalProps {
   isOpen: boolean;
@@ -86,6 +87,7 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
       onClose();
     }
   };
+
 
   const handleCommentSubmit = async () => {
     if (!ticket) return;
@@ -157,7 +159,6 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
                 <Button variant="outline">Cancel</Button>
               </DrawerClose>
               <div className="flex gap-2">
-                <Button variant={"outline"}>Assign to Me</Button>
                 <Button onClick={updateTicketStatus}>Update Status</Button>
                 <Button onClick={handleCommentSubmit}>Send</Button>
               </div>

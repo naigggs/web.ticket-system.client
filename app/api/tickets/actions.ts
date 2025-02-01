@@ -255,3 +255,20 @@ export async function submitBarangayProblem(formData: FormData) {
     throw error;
   }
 }
+
+export async function assignTicket(ticketId: number) {
+  const supabase = await createClient();
+  const headersList = await headers();
+  const userId = headersList.get("user-id");
+  
+  const { error } = await supabase
+    .from("tickets")
+    .update({ assignee_id: userId })
+    .eq("id", ticketId);
+
+  if (error) {
+    console.error("Error assigning ticket:", error);
+    throw error;
+  }
+}
+

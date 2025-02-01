@@ -1,12 +1,10 @@
-import { useState } from "react";
+'use client'
+
+import { useEffect, useState } from "react";
 import { ChevronRight } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { TaskBoardPagination } from "./taskboard-pagination";
+import { createClient } from "@/utils/supabase/client"; // Make sure to import your Supabase client
 
 export const TaskCard = ({
   title,
@@ -24,12 +22,43 @@ export const TaskCard = ({
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const ticketsPerPage = 4;
+  const [realTimeTickets, setRealTimeTickets] = useState(tickets);
+  const supabase = createClient();
+
+  useEffect(() => {
+    setRealTimeTickets(tickets); // Initialize state with initial tickets
+  }, [tickets]);
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("realtime-tickets")
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "tickets",
+        },
+        (payload) => {
+          setRealTimeTickets((prevTickets) =>
+            prevTickets.map((ticket) =>
+              ticket.id === payload.new.id ? payload.new : ticket
+            )
+          );
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   const indexOfLastTicket = currentPage * ticketsPerPage;
   const indexOfFirstTicket = indexOfLastTicket - ticketsPerPage;
-  const currentTickets = tickets.slice(indexOfFirstTicket, indexOfLastTicket);
+  const currentTickets = realTimeTickets.slice(indexOfFirstTicket, indexOfLastTicket);
 
-  const totalPages = Math.ceil(tickets.length / ticketsPerPage);
+  const totalPages = Math.ceil(realTimeTickets.length / ticketsPerPage);
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);

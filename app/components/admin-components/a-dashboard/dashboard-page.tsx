@@ -58,7 +58,7 @@ export default function DashboardPage() {
               setTickets((prev) =>
                 prev.map((ticket) =>
                   ticket.id === payload.new.id
-                    ? (payload.new as Tickets)
+                    ? { ...ticket, ...payload.new }
                     : ticket
                 )
               );

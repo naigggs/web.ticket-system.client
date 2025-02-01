@@ -22,7 +22,7 @@ export default function TaskBoardPage() {
   // Fetch tickets from Supabase
   const fetchTickets = async () => {
     try {
-      const { data, error } = await supabase.from("tickets").select(`*, assignee_id(*)`);
+      const { data, error } = await supabase.from("tickets").select(`*, assignee_id(*)`).order("created_at", { ascending: false });
       if (error) {
         throw error;
       }
@@ -46,13 +46,13 @@ export default function TaskBoardPage() {
             case "INSERT":
               setTickets((prev) => [payload.new as Tickets, ...prev]);
               break;
-            case "UPDATE":
-              setTickets((prev) =>
-                prev.map((ticket) =>
-                  ticket.id === payload.new.id
-                    ? (payload.new as Tickets)
-                    : ticket
-                )
+              case "UPDATE":
+                setTickets((prev) =>
+                  prev.map((ticket) =>
+                    ticket.id === payload.new.id
+                      ? { ...ticket, ...payload.new }
+                      : ticket
+                  )
               );
               break;
             case "DELETE":

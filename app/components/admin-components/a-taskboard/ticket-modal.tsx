@@ -27,6 +27,7 @@ import { createClient } from "@/utils/supabase/client";
 import { TicketStatus } from "@/app/api/tickets/types";
 import { TicketContent } from "../ticket-content";
 import { addComment } from "@/app/api/tickets/comments/actions";
+import { assignTicket } from "@/app/api/tickets/actions";
 
 interface TicketModalProps {
   isOpen: boolean;
@@ -111,6 +112,17 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
     }
   };
 
+  const handleAssignToMe = async () => {
+    if (!ticket) return;
+
+    try {
+      await assignTicket(ticket.id);
+      onClose();
+    } catch (error) {
+      console.error("Error assigning ticket:", error);
+    }
+  };
+
   if (!ticket) return null;
 
   if (isDesktop) {
@@ -157,7 +169,12 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
                 <Button variant="outline">Cancel</Button>
               </DrawerClose>
               <div className="flex gap-2">
-                <Button variant={"outline"}>Assign to Me</Button>
+                {!ticket?.assignee_id ? (
+                  <Button onClick={handleAssignToMe} variant={"outline"}>
+                    Assign to Me
+                  </Button>
+                ) : null}
+
                 <Button onClick={updateTicketStatus}>Update Status</Button>
                 <Button onClick={handleCommentSubmit}>Send</Button>
               </div>
@@ -167,7 +184,9 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
               {comments.map((comment, index) => (
                 <div key={index} className="mt-2 p-2 border rounded">
                   <p className="text-sm text-gray-600">{comment.comment}</p>
-                  <p className="text-xs text-gray-400">{comment.user_id.first_name} {comment.user_id.last_name}</p> 
+                  <p className="text-xs text-gray-400">
+                    {comment.user_id.first_name} {comment.user_id.last_name}
+                  </p>
                   <p className="text-xs text-gray-400">{comment.created_at}</p>
                 </div>
               ))}
