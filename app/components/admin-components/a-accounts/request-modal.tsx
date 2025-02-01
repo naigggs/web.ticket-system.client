@@ -25,8 +25,8 @@ import { Accounts } from "./types";
 
 interface RequestModalProps {
     account: Accounts;
-    open: boolean;  // Add this
-    onClose: () => void;  // Add this
+    open: boolean; 
+    onClose: () => void;  
     handleDecline: (account: Accounts) => void; 
     handleAccept: (account: Accounts) => void; 
 }
