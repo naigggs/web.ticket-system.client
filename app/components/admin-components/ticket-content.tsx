@@ -396,10 +396,9 @@ export function TicketContent({ ticket, status, onStatusChange }: TicketContentP
                 </span>
               </div>
             
-              {/* Location Section */}
               <div className="flex flex-row gap-4 items-center mb-2">
                 <div className="grid w-full items-center">
-                  <Label className="text-sm font-medium text-gray-700 mb-1">Location</Label>
+                  <Label className="text-sm font-medium text-gray-700 mb-1">Address/Purok #</Label>
                   <span className="bg-gray-50 p-2 rounded-md border border-gray-300">
                     {ticket.location}
                   </span>
