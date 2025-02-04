@@ -53,7 +53,7 @@ export function ManageModal({ user }: UserDetailViewProps) {
           <DialogHeader>
             <DialogTitle>User Details</DialogTitle>
             <DialogDescription>
-              Detailed information about the user.
+              Created at: {new Date(user.created_at).toLocaleDateString()}
             </DialogDescription>
           </DialogHeader>
           <UserDetailForm user={user} />
@@ -105,18 +105,6 @@ function UserDetailForm({
             {user.full_name}
           </span>
         </div>
-
-        {/* <div className="grid w-auto items-center mb-4">
-          <Label
-            className="text-sm font-medium text-gray-700 mb-1"
-            htmlFor="age"
-          >
-            Age
-          </Label>
-          <div className="bg-gray-50 p-2 rounded-md border border-gray-300 pr-4">
-            {user.age}
-          </div>
-        </div> */}
       </div>
 
       <div className="flex flex-row gap-4">
@@ -125,26 +113,10 @@ function UserDetailForm({
             className="text-sm font-medium text-gray-700 mb-1"
             htmlFor="location"
           >
-            Location
+            Address
           </Label>
           <span className="bg-gray-50 p-2 rounded-md border border-gray-300 block">
             {user.location}
-          </span>
-        </div>
-
-        <div className="grid w-auto items-center mb-4">
-          <Label
-            className="text-sm font-medium text-gray-700 mb-1"
-            htmlFor="created_at"
-          >
-            Created At
-          </Label>
-          <span className="bg-gray-50 p-2 rounded-md border border-gray-300 whitespace-nowrap">
-            {new Date(user.created_at).toLocaleDateString("en-US", {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            })}
           </span>
         </div>
       </div>
@@ -155,7 +127,7 @@ function UserDetailForm({
           className="text-sm font-medium text-gray-700 mb-1"
           htmlFor="document_1"
         >
-          Document 1
+          Front ID
         </Label>
         <img
           src={user.document_1}
@@ -170,7 +142,7 @@ function UserDetailForm({
           className="text-sm font-medium text-gray-700 mb-1"
           htmlFor="document_2"
         >
-          Document 2
+          Back ID
         </Label>
         <img
           src={user.document_2}
