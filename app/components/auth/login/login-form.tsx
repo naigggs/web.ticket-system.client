@@ -25,7 +25,7 @@ export function LoginForm({
         toast({
           title: "Login Success!",
           description: "You have successfully logged in.",
-          className: "bg-green-500 text-white", // Tailwind CSS example for green background and white text
+          className: "bg-green-500 text-white",
         });
     } catch (error) {
       console.error("Login failed:", error);

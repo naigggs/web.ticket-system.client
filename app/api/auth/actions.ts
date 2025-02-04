@@ -69,24 +69,22 @@ export async function signup(formData: FormData) {
       status: "Accepted",
     })
     .eq("email", signUpData.user?.email);
-  if (updateError) {
-    console.log("Error updating user status:", updateError);
-  }
+
 
   const { error: insertError } = await supabase.from("user-roles").insert({
     user_id: signUpData.user?.id,
     role_id: 1,
   });
-  if (insertError) {
-    console.log("Error updating user status:", updateError);
-  }
+
   const { error: insertError2 } = await supabase.from("user-info").insert({
     user_id: signUpData.user?.id,
     full_name: formData.get("full_name") as string,
     location: formData.get("location") as string,
+    document_1: formData.get("document_1") as string,
+    document_2: formData.get("document_2") as string,
   });
   if (insertError2) {
-    console.log("Error updating user status:", updateError);
+    console.log("Error updating user status:", insertError2);
   }
 }
 

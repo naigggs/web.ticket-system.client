@@ -71,6 +71,8 @@ function AccountRequest() {
       formData.append("password", account.password);
       formData.append("full_name", account.full_name);
       formData.append("location", account.location);
+      formData.append("document_1", account.document_1);
+      formData.append("document_2", account.document_2);
 
       await signup(formData);
 
