@@ -99,6 +99,14 @@ function AccountManage() {
     }
   };
 
+  const handleUpdateUser = (updatedUser: UserInfo) => {
+    setUsers((prevUsers) =>
+      prevUsers.map((user) =>
+        user.user_id === updatedUser.user_id ? updatedUser : user
+      )
+    );
+  };
+
   return (
     <div className="">
       <div className="border border-gray-300 p-4 rounded-lg h-auto flex flex-col">
@@ -141,7 +149,7 @@ function AccountManage() {
                   <TableCell>{user.location}</TableCell>
                   <TableCell>
                     <div className="flex space-x-2">
-                      <ManageModal user={user} />
+                      <ManageModal user={user} onUpdate={handleUpdateUser} />
                       <Popover>
                         <PopoverTrigger asChild>
                           <Button variant="destructive" size="sm">
