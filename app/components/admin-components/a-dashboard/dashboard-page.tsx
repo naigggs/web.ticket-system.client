@@ -51,14 +51,11 @@ export default function DashboardPage() {
         { event: "*", schema: "public", table: "tickets" },
         (payload) => {
           switch (payload.eventType) {
-            case "INSERT":
-              setTickets((prev) => [payload.new as Tickets, ...prev]);
-              break;
             case "UPDATE":
               setTickets((prev) =>
                 prev.map((ticket) =>
                   ticket.id === payload.new.id
-                    ? { ...ticket, ...payload.new }
+                    ? { ...ticket, ...payload.new, assignee_id: ticket.assignee_id }
                     : ticket
                 )
               );

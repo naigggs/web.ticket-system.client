@@ -7,7 +7,7 @@ import {
   SidebarProvider,
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/app/components/admin-components/a-sidebar/app-sidebar";
-import Header from "../components/header/header";
+import Header from "../components/admin-components/a-header/header";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 

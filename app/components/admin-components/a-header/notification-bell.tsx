@@ -38,52 +38,24 @@ const NotificationBell = () => {
 
   // Subscribe to ticket updates
   useEffect(() => {
-    const subscriptionTickets = supabase
+    const subscription = supabase
       .channel('public:tickets')
       .on(
       'postgres_changes',
-      { event: 'UPDATE', schema: 'public', table: 'tickets' },
+      { event: 'INSERT', schema: 'public', table: 'tickets' },
       (payload) => {
-        const updatedTicket = payload.new;
-        const oldTicket = payload.old;
-
-        if (updatedTicket.ticket_status !== oldTicket.ticket_status) {
-        const newNotification = {
-          id: `${updatedTicket.id}-${Date.now()}`,
-          message: `Ticket - ${updatedTicket.id} status changed to ${updatedTicket.ticket_status}`,
-          read: false,
-        };
-
-        // Add new notification and keep only the latest 5
-        setNotifications((prev) => {
-          const updatedNotifications = [newNotification, ...prev].slice(0, 5);
-          return updatedNotifications;
-        });
-
-        // Update unread count
-        setUnreadCount((prev) => prev + 1);
-        }
-      }
-      )
-      .subscribe();
-
-    const subscriptionAnnouncements = supabase
-      .channel('public:announcements')
-      .on(
-      'postgres_changes',
-      { event: 'INSERT', schema: 'public', table: 'announcements' },
-      (payload) => {
-        const newAnnouncement = payload.new;
+        const newTicket = payload.new;
 
         const newNotification = {
-        id: `${newAnnouncement.id}-${Date.now()}`,
-        message: `New announcement: ${newAnnouncement.title}`,
+        id: `${newTicket.id}-${Date.now()}`,
+        message: `New ticket created: Ticket - ${newTicket.id}`,
         read: false,
         };
 
         // Add new notification and keep only the latest 5
         setNotifications((prev) => {
         const updatedNotifications = [newNotification, ...prev].slice(0, 5);
+        localStorage.setItem('notifications', JSON.stringify(updatedNotifications));
         return updatedNotifications;
         });
 
@@ -93,37 +65,9 @@ const NotificationBell = () => {
       )
       .subscribe();
 
-    const subscriptionSurveys = supabase
-      .channel('public:surveys')
-      .on(
-      'postgres_changes',
-      { event: 'INSERT', schema: 'public', table: 'surveys' },
-      (payload) => {
-        const newSurvey = payload.new;
-
-        const newNotification = {
-        id: `${newSurvey.id}-${Date.now()}`,
-        message: `New survey available: ${newSurvey.title}`,
-        read: false,
-        };
-
-        // Add new notification and keep only the latest 5
-        setNotifications((prev) => {
-        const updatedNotifications = [newNotification, ...prev].slice(0, 5);
-        return updatedNotifications;
-        });
-
-        // Update unread count
-        setUnreadCount((prev) => prev + 1);
-      }
-      )
-      .subscribe();
-
-    // Cleanup subscriptions on unmount
+    // Cleanup subscription on unmount
     return () => {
-      supabase.removeChannel(subscriptionTickets);
-      supabase.removeChannel(subscriptionAnnouncements);
-      supabase.removeChannel(subscriptionSurveys);
+      supabase.removeChannel(subscription);
     };
   }, []);
 
