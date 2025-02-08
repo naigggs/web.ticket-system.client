@@ -11,7 +11,6 @@ interface AddCommentParams {
 export async function addComment({ ticket_id, comment }: AddCommentParams) {
   const supabase = await createClient();
   const headersList = await headers();
-  console.log(ticket_id, comment);
   const userId = headersList.get("user-id");
   const { data, error } = await supabase
     .from("ticket-comments")

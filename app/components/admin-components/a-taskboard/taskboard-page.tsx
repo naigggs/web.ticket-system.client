@@ -7,7 +7,7 @@ import { TaskCard } from "./task-card";
 import { TicketModal } from "./ticket-modal";
 import { Tickets } from "./types.js";
 import { createClient } from "@/utils/supabase/client";
-import { TicketDone} from "./ticket-done";
+import { TicketDone } from "./ticket-done";
 import { TicketStatus } from "./ticket-status";
 
 export default function TaskBoardPage() {
@@ -22,7 +22,10 @@ export default function TaskBoardPage() {
   // Fetch tickets from Supabase
   const fetchTickets = async () => {
     try {
-      const { data, error } = await supabase.from("tickets").select(`*, assignee_id(*)`).order("created_at", { ascending: false });
+      const { data, error } = await supabase
+        .from("tickets")
+        .select(`*, assignee_id(*)`)
+        .order("created_at", { ascending: false });
       if (error) {
         throw error;
       }
@@ -33,7 +36,7 @@ export default function TaskBoardPage() {
       );
     }
   };
-  
+
   useEffect(() => {
     fetchTickets();
     const subscription = supabase
@@ -46,13 +49,17 @@ export default function TaskBoardPage() {
             case "INSERT":
               setTickets((prev) => [payload.new as Tickets, ...prev]);
               break;
-              case "UPDATE":
-                setTickets((prev) =>
-                  prev.map((ticket) =>
-                    ticket.id === payload.new.id
-                      ? { ...ticket, ...payload.new }
-                      : ticket
-                  )
+            case "UPDATE":
+              setTickets((prev) =>
+                prev.map((ticket) =>
+                  ticket.id === payload.new.id
+                    ? {
+                        ...ticket,
+                        ...payload.new,
+                        assignee_id: ticket.assignee_id,
+                      }
+                    : ticket
+                )
               );
               break;
             case "DELETE":
@@ -143,10 +150,10 @@ export default function TaskBoardPage() {
         </div>
         <div className="flex flex-col  gap-3">
           <div className="px-4 py-2 bg-yellow-400 rounded-2xl font-bold">
-           Charts
+            Charts
           </div>
-            <TicketDone />
-            <TicketStatus />
+          <TicketDone />
+          <TicketStatus />
         </div>
       </div>
       <TicketModal

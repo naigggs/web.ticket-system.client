@@ -21,11 +21,11 @@ import {
 } from "@/components/ui/drawer";
 import { Separator } from "@/components/ui/separator";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { getBadgeColor } from "../badge-color";
+import { getBadgeColor } from "../../admin-components/badge-color.jsx";
 import { Tickets } from "./types.js";
 import { createClient } from "@/utils/supabase/client";
 import { TicketStatus } from "@/app/api/tickets/types";
-import { TicketContent } from "../ticket-content";
+import { TicketContent } from "../../admin-components/ticket-content";
 import { addComment } from "@/app/api/tickets/comments/actions";
 
 interface TicketModalProps {
@@ -41,31 +41,52 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
   const [error, setError] = useState("");
   const supabase = createClient();
 
-  const fetchComments = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("ticket-comments")
-        .select("*, user_id(*)")
-
-        .eq("ticket_id", ticket?.id);
-
-      if (error) {
-        throw error;
+const fetchComments = async () => {
+      if (!ticket) return;
+  
+      try {
+        const { data, error } = await supabase
+          .from("ticket-comments")
+          .select("*, user_id(*)")
+          .eq("ticket_id", ticket.id)
+          .order("created_at", { ascending: false });
+  
+        if (error) {
+          throw error;
+        }
+        setComments(data || []);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "An unknown error occurred"
+        );
       }
-      setComments(data || []);
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "An unknown error occurred"
-      );
-    }
-  };
-
-  useEffect(() => {
-    fetchComments();
-    if (ticket) {
-      setStatus(ticket.ticket_status);
-    }
-  }, [ticket]);
+    };
+  
+    useEffect(() => {
+      if (ticket) {
+        fetchComments();
+  
+        // Subscribe to real-time updates
+        const subscription = supabase
+          .channel("ticket-comments")
+          .on(
+            "postgres_changes",
+            { event: "INSERT", schema: "public", table: "ticket-comments" },
+            (payload) => {
+              console.log("Payload received:", payload);
+              if (payload.new.ticket_id === ticket.id) {
+                setComments((prevComments) => [payload.new, ...prevComments]);
+              }
+            }
+          )
+          .subscribe();
+  
+        // Cleanup subscription when the component unmounts
+        return () => {
+          supabase.removeChannel(subscription);
+        };
+      }
+    }, [ticket]);
 
   const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedStatus = event.target.value as TicketStatus;

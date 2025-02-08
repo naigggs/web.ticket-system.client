@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { createClient } from '@/utils/supabase/client';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { useEffect, useState } from "react";
+import { createClient } from "@/utils/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
-import { Bell } from 'lucide-react';
+} from "@/components/ui/popover";
+import { Bell } from "lucide-react";
 
 type Notification = {
   id: any;
@@ -24,98 +24,137 @@ const NotificationBell = () => {
 
   useEffect(() => {
     const savedNotifications = JSON.parse(
-      localStorage.getItem('notifications') || '[]'
+      localStorage.getItem("notifications") || "[]"
     );
     setNotifications(savedNotifications);
 
-    const unread = savedNotifications.filter((n: Notification) => !n.read).length;
+    const unread = savedNotifications.filter(
+      (n: Notification) => !n.read
+    ).length;
     setUnreadCount(unread);
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('notifications', JSON.stringify(notifications));
+    localStorage.setItem("notifications", JSON.stringify(notifications));
   }, [notifications]);
+
+  // Function to fetch user info
+  const fetchUserInfo = async (userId: string) => {
+    const { data, error } = await supabase
+      .from("user-info")
+      .select("full_name")
+      .eq("user_id", userId)
+      .single();
+
+    if (error) {
+      console.error("Error fetching user info:", error);
+      return null;
+    }
+
+    console.log("User Info:", data);
+
+    return data?.full_name || "Unknown User";
+  };
 
   // Subscribe to ticket updates
   useEffect(() => {
     const subscriptionTickets = supabase
-      .channel('public:tickets')
+      .channel("public:tickets")
       .on(
-      'postgres_changes',
-      { event: 'UPDATE', schema: 'public', table: 'tickets' },
-      (payload) => {
-        const updatedTicket = payload.new;
-        const oldTicket = payload.old;
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "tickets" },
+        async (payload) => {
+          const updatedTicket = payload.new;
+          const oldTicket = payload.old;
 
-        if (updatedTicket.ticket_status !== oldTicket.ticket_status) {
-        const newNotification = {
-          id: `${updatedTicket.id}-${Date.now()}`,
-          message: `Ticket - ${updatedTicket.id} status changed to ${updatedTicket.ticket_status}`,
-          read: false,
-        };
+          let newNotification = null;
+          console.log("Payload:", payload);
+          console.log("Updated Ticket:", updatedTicket);
+          console.log("Old Ticket:", oldTicket);
 
-        // Add new notification and keep only the latest 5
-        setNotifications((prev) => {
-          const updatedNotifications = [newNotification, ...prev].slice(0, 5);
-          return updatedNotifications;
-        });
+          if (updatedTicket.ticket_status !== oldTicket.ticket_status) {
+            newNotification = {
+              id: `${updatedTicket.id}-${Date.now()}`,
+              message: `Ticket - ${updatedTicket.id} status changed from ${oldTicket.ticket_status} to ${updatedTicket.ticket_status}`,
+              read: false,
+            };
+          } else if (updatedTicket.assignee_id !== oldTicket.assignee_id) {
+            const oldAssigneeName = await fetchUserInfo(oldTicket.assignee_id);
+            const newAssigneeName = await fetchUserInfo(updatedTicket.assignee_id);
 
-        // Update unread count
-        setUnreadCount((prev) => prev + 1);
+            newNotification = {
+              id: `${updatedTicket.id}-${Date.now()}`,
+              message: `Ticket - ${updatedTicket.id} has been assigned to ${newAssigneeName}`,
+              read: false,
+            };
+          }
+
+          if (newNotification) {
+            // Add new notification and keep only the latest 5
+            setNotifications((prev) => {
+              const updatedNotifications = [newNotification, ...prev].slice(
+                0,
+                5
+              );
+              return updatedNotifications;
+            });
+
+            // Update unread count
+            setUnreadCount((prev) => prev + 1);
+          }
         }
-      }
       )
       .subscribe();
 
     const subscriptionAnnouncements = supabase
-      .channel('public:announcements')
+      .channel("public:announcements")
       .on(
-      'postgres_changes',
-      { event: 'INSERT', schema: 'public', table: 'announcements' },
-      (payload) => {
-        const newAnnouncement = payload.new;
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "announcements" },
+        (payload) => {
+          const newAnnouncement = payload.new;
 
-        const newNotification = {
-        id: `${newAnnouncement.id}-${Date.now()}`,
-        message: `New announcement: ${newAnnouncement.title}`,
-        read: false,
-        };
+          const newNotification = {
+            id: `${newAnnouncement.id}-${Date.now()}`,
+            message: `New announcement: ${newAnnouncement.title}`,
+            read: false,
+          };
 
-        // Add new notification and keep only the latest 5
-        setNotifications((prev) => {
-        const updatedNotifications = [newNotification, ...prev].slice(0, 5);
-        return updatedNotifications;
-        });
+          // Add new notification and keep only the latest 5
+          setNotifications((prev) => {
+            const updatedNotifications = [newNotification, ...prev].slice(0, 5);
+            return updatedNotifications;
+          });
 
-        // Update unread count
-        setUnreadCount((prev) => prev + 1);
-      }
+          // Update unread count
+          setUnreadCount((prev) => prev + 1);
+        }
       )
       .subscribe();
 
     const subscriptionSurveys = supabase
-      .channel('public:surveys')
+      .channel("public:surveys")
       .on(
-      'postgres_changes',
-      { event: 'INSERT', schema: 'public', table: 'surveys' },
-      (payload) => {
-        const newSurvey = payload.new;
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "surveys" },
+        (payload) => {
+          const newSurvey = payload.new;
 
-        const newNotification = {
-        id: `${newSurvey.id}-${Date.now()}`,
-        message: `New survey available: ${newSurvey.title}`,
-        read: false,
-        };
+          const newNotification = {
+            id: `${newSurvey.id}-${Date.now()}`,
+            message: `New survey available: ${newSurvey.title}`,
+            read: false,
+          };
 
-        // Add new notification and keep only the latest 5
-        setNotifications((prev) => {
-        const updatedNotifications = [newNotification, ...prev].slice(0, 5);
-        return updatedNotifications;
-        });
+          // Add new notification and keep only the latest 5
+          setNotifications((prev) => {
+            const updatedNotifications = [newNotification, ...prev].slice(0, 5);
+            return updatedNotifications;
+          });
 
-        // Update unread count
-        setUnreadCount((prev) => prev + 1);
-      }
+          // Update unread count
+          setUnreadCount((prev) => prev + 1);
+        }
       )
       .subscribe();
 
@@ -138,11 +177,7 @@ const NotificationBell = () => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="relative rounded-full"
-        >
+        <Button variant="ghost" size="icon" className="relative rounded-full">
           <Bell className="h-5 w-5" />
           {unreadCount > 0 && (
             <Badge className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center">
@@ -161,7 +196,7 @@ const NotificationBell = () => {
                   key={notif.id}
                   onMouseEnter={() => handleNotificationHover(notif.id)}
                   className={`p-2 rounded-md hover:bg-gray-100 transition-colors ${
-                    notif.read ? 'bg-gray-50' : 'bg-white'
+                    notif.read ? "bg-gray-50" : "bg-white"
                   }`}
                 >
                   {notif.message}

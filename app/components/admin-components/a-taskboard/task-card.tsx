@@ -26,7 +26,7 @@ export const TaskCard = ({
   const supabase = createClient();
 
   useEffect(() => {
-    setRealTimeTickets(tickets); // Initialize state with initial tickets
+    setRealTimeTickets(tickets);
   }, [tickets]);
 
   useEffect(() => {
@@ -39,10 +39,19 @@ export const TaskCard = ({
           schema: "public",
           table: "tickets",
         },
-        (payload) => {
+        async (payload) => {
+          const updatedTicket = payload.new;
+          if (updatedTicket.assignee_id) {
+            const { data: assignee } = await supabase
+              .from("user-info")
+              .select("full_name")
+              .eq("user_id", updatedTicket.assignee_id)
+              .single();
+            updatedTicket.assignee_id = assignee;
+          }
           setRealTimeTickets((prevTickets) =>
             prevTickets.map((ticket) =>
-              ticket.id === payload.new.id ? payload.new : ticket
+              ticket.id === updatedTicket.id ? updatedTicket : ticket
             )
           );
         }
