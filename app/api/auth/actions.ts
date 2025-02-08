@@ -88,7 +88,7 @@ export async function signup(formData: FormData) {
   }
 }
 
-export async function signupStaff(formData: FormData) {
+export async function   signupStaff(formData: FormData) {
   const supabase = supabaseAdminClient;
 
   const { data: signUpData, error } = await supabase.auth.admin.createUser({
@@ -108,9 +108,12 @@ export async function signupStaff(formData: FormData) {
   if (insertError) {
     console.log("Error updating user status:", insertError);
   }
+
+  const full_name = `${formData.get("first_name")} ${formData.get("last_name")}`;
+
   const { error: insertError2 } = await supabase.from("user-info").insert({
     user_id: signUpData.user?.id,
-    full_name: formData.get("full_name") as string,
+    full_name: full_name as string,
     location: formData.get("location") as string,
   });
   if (insertError2) {
