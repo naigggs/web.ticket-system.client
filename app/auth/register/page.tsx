@@ -1,6 +1,7 @@
-import { GalleryVerticalEnd } from "lucide-react"
+import { GalleryVerticalEnd } from "lucide-react";
 
-import { RegisterForm } from "@/app/components/auth/register/register-form"
+import { RegisterForm } from "@/app/components/auth/register/register-form";
+import Image from "next/image";
 
 export default function RegisterPage() {
   return (
@@ -8,10 +9,10 @@ export default function RegisterPage() {
       <div className="flex flex-col gap-4 p-6 md:p-10">
         <div className="flex justify-center gap-2 md:justify-start">
           <a href="#" className="flex items-center gap-2 font-medium">
-            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <GalleryVerticalEnd className="size-4" />
+            <div>
+              <Image src="/logo.png" alt="Logo" width={30} height={30} />
             </div>
-            Ticket System
+            Manibaug Porac
           </a>
         </div>
         <div className="flex flex-1 items-center justify-center">
@@ -20,13 +21,11 @@ export default function RegisterPage() {
           </div>
         </div>
       </div>
-      <div className="relative hidden bg-muted lg:block">
-        <img
-          src="https://placehold.co/1000x2000"
-          alt="Image"
-          className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-        />
+      <div className="relative hidden  bg-muted lg:block">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <Image src="/logo.png" alt="Logo" width={500} height={500} />
+        </div>
       </div>
     </div>
-  )
+  );
 }
