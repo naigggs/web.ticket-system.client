@@ -6,7 +6,7 @@ import {
   SidebarProvider,
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/app/components/staff-components/s-sidebar/app-sidebar";
-import Header from "../components/header/header";
+import Header from "../components/admin-components/a-header/header";
 
 const inter = Inter({
   variable: "--font-inter",

@@ -62,6 +62,38 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
     }
   };
 
+  const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedStatus = event.target.value as TicketStatus;
+    setStatus(selectedStatus);
+  };
+
+  const updateTicketStatus = async () => {
+    if (!ticket) return;
+
+    const { data, error } = await supabase
+      .from("tickets")
+      .update({ ticket_status: status })
+      .eq("id", ticket.id);
+
+    if (error) {
+      console.error("Error updating ticket status:", error);
+    } else {
+      onClose();
+    }
+  };
+
+  const handleAssignToMe = async () => {
+    if (!ticket) return;
+
+    try {
+      await assignTicket(ticket.id);
+      onClose();
+    } catch (error) {
+      console.error("Error assigning ticket:", error);
+    }
+  };
+
+
   useEffect(() => {
     if (ticket) {
       fetchComments();
@@ -153,7 +185,16 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
             <DrawerClose asChild>
               <Button variant="outline">Cancel</Button>
             </DrawerClose>
-            <Button onClick={handleCommentSubmit}>Send</Button>
+            <div className="flex gap-2">
+                {!ticket?.assignee_id ? (
+                  <Button onClick={handleAssignToMe} variant={"outline"}>
+                    Assign to Me
+                  </Button>
+                ) : null}
+
+                <Button onClick={updateTicketStatus}>Update Status</Button>
+                <Button onClick={handleCommentSubmit}>Send</Button>
+              </div>
           </div>
           <div>
             <h3 className="text-lg font-semibold">Comments</h3>
