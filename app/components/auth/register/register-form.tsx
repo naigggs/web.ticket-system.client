@@ -6,12 +6,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { registerUser } from "@/app/api/auth/actions";
+import { useToast } from "@/hooks/use-toast";
 
 export function RegisterForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"form">) {
   const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -25,6 +27,11 @@ export function RegisterForm({
       console.error("Error registering user:", error);
     } finally {
       setLoading(false);
+      toast({
+        title: "Signup Request Sent Successfully!",
+        description: "Please wait for our staff to confirm your registration.",
+        className: "bg-green-500 text-white",
+      });
     }
   };
 
