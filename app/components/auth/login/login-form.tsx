@@ -14,7 +14,6 @@ export function LoginForm({
 }: React.ComponentPropsWithoutRef<"form">) {
   const router = useRouter();
   const { toast } = useToast();
-  
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -22,11 +21,11 @@ export function LoginForm({
     const formData = new FormData(event.currentTarget);
     try {
       await login(formData);
-        toast({
-          title: "Login Success!",
-          description: "You have successfully logged in.",
-          className: "bg-green-500 text-white",
-        });
+      toast({
+        title: "Login Success!",
+        description: "You have successfully logged in.",
+        className: "bg-green-500 text-white",
+      });
     } catch (error) {
       console.error("Login failed:", error);
       toast({
@@ -62,12 +61,6 @@ export function LoginForm({
         <div className="grid gap-2">
           <div className="flex items-center">
             <Label htmlFor="password">Password</Label>
-            <a
-              href="#"
-              className="ml-auto text-sm underline-offset-4 hover:underline"
-            >
-              Forgot your password?
-            </a>
           </div>
           <Input id="password" name="password" type="password" required />
         </div>
