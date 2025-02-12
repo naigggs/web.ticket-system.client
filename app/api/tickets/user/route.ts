@@ -7,15 +7,8 @@ interface Ticket {
   [key: string]: any;
 }
 
-interface RouteParams {
-  params: {
-    userId: string;
-  };
-}
-
 export async function GET(
-  req: Request,
-  { params }: RouteParams
+  req: Request
 ): Promise<Response> {
   const supabase = await createClient();
   const userId = req.headers.get("user-id");
