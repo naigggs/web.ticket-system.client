@@ -9,6 +9,7 @@ import { Tickets } from "./types.js";
 import { createClient } from "@/utils/supabase/client";
 import { TicketDone } from "./ticket-done";
 import { TicketStatus } from "./ticket-status";
+import { TicketConcern } from "./ticket-concern";
 
 export default function TaskBoardPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -154,6 +155,7 @@ export default function TaskBoardPage() {
           </div>
           <TicketDone />
           <TicketStatus />
+          <TicketConcern/>
         </div>
       </div>
       <TicketModal
