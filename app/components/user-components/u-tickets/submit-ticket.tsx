@@ -41,6 +41,7 @@ import {
   submitBarangayProblem,
 } from "@/app/api/tickets/actions";
 import { Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 type ContentType = "first" | "second" | null;
 
@@ -50,6 +51,8 @@ export default function SubmitTicket() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [loading, setLoading] = useState(false); // Loading state
   const isDesktop = useMediaQuery("(min-width: 768px)");
+  const { toast } = useToast()
+
 
   const handleButtonClick = (type: ContentType) => {
     setContentType(type);
@@ -94,6 +97,10 @@ export default function SubmitTicket() {
       console.error("Error submitting ticket:", error);
     } finally {
       setLoading(false); // Set loading to false
+      toast({
+        title: "Ticket successfully created!",
+        className: "bg-green-500 text-white",
+      })
     }
   };
 

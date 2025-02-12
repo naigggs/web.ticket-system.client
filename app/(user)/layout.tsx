@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Poppins, Inter } from "next/font/google";
 import "@/app/shared/css/globals.css";
+import { Toaster } from "@/components/ui/toaster";
 import {
   SidebarInset,
   SidebarProvider,
@@ -39,6 +40,7 @@ export default function UserLayout({
           <SidebarInset>
             <Header />
             {children}
+            <Toaster/>
           </SidebarInset>
         </SidebarProvider>
       </body>
