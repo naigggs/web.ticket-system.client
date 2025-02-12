@@ -71,11 +71,10 @@ const NotificationBell = () => {
 
   console.log("User:", user);
 
-  const localStorageUserId = localStorage.getItem("user_id");
-
   // Subscribe to ticket updates
   useEffect(() => {
     fetchUserId();
+    const localStorageUserId = localStorage.getItem("user_id");
     const subscriptionTickets = supabase
       .channel("public:tickets")
       .on(
