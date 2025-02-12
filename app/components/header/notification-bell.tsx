@@ -20,6 +20,7 @@ type Notification = {
 const NotificationBell = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [user, setUser] = useState<any>("");
   const supabase = createClient();
 
   useEffect(() => {
@@ -56,51 +57,78 @@ const NotificationBell = () => {
     return data?.full_name || "Unknown User";
   };
 
+  const fetchUserId = async () => {
+    const { data, error } = await supabase.auth.getUser();
+    if (error) {
+      console.error("Error fetching user:", error);
+      return;
+    }
+
+    const userId = data?.user.id;
+    setUser(userId);
+    localStorage.setItem("user_id", userId);
+  };
+
+  console.log("User:", user);
+
+  const localStorageUserId = localStorage.getItem("user_id");
+
   // Subscribe to ticket updates
   useEffect(() => {
+    fetchUserId();
     const subscriptionTickets = supabase
       .channel("public:tickets")
       .on(
         "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "tickets" },
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "tickets",
+        },
         async (payload) => {
           const updatedTicket = payload.new;
           const oldTicket = payload.old;
 
-          let newNotification = null;
-          console.log("Payload:", payload);
-          console.log("Updated Ticket:", updatedTicket);
-          console.log("Old Ticket:", oldTicket);
+          if (localStorageUserId === updatedTicket.user_id) {
+            let newNotification = null;
+            console.log("Payload:", payload);
+            console.log("Updated Ticket:", updatedTicket);
+            console.log("Old Ticket:", oldTicket);
 
-          if (updatedTicket.ticket_status !== oldTicket.ticket_status) {
-            newNotification = {
-              id: `${updatedTicket.id}-${Date.now()}`,
-              message: `Ticket - ${updatedTicket.id} status changed from ${oldTicket.ticket_status} to ${updatedTicket.ticket_status}`,
-              read: false,
-            };
-          } else if (updatedTicket.assignee_id !== oldTicket.assignee_id) {
-            const oldAssigneeName = await fetchUserInfo(oldTicket.assignee_id);
-            const newAssigneeName = await fetchUserInfo(updatedTicket.assignee_id);
-
-            newNotification = {
-              id: `${updatedTicket.id}-${Date.now()}`,
-              message: `Ticket - ${updatedTicket.id} has been assigned to ${newAssigneeName}`,
-              read: false,
-            };
-          }
-
-          if (newNotification) {
-            // Add new notification and keep only the latest 5
-            setNotifications((prev) => {
-              const updatedNotifications = [newNotification, ...prev].slice(
-                0,
-                5
+            if (updatedTicket.ticket_status !== oldTicket.ticket_status) {
+              newNotification = {
+                id: `${updatedTicket.id}-${Date.now()}`,
+                message: `Ticket - ${updatedTicket.id} status changed from ${oldTicket.ticket_status} to ${updatedTicket.ticket_status}`,
+                read: false,
+              };
+            } else if (updatedTicket.assignee_id !== oldTicket.assignee_id) {
+              const oldAssigneeName = await fetchUserInfo(
+                oldTicket.assignee_id
               );
-              return updatedNotifications;
-            });
+              const newAssigneeName = await fetchUserInfo(
+                updatedTicket.assignee_id
+              );
 
-            // Update unread count
-            setUnreadCount((prev) => prev + 1);
+              newNotification = {
+                id: `${updatedTicket.id}-${Date.now()}`,
+                message: `Ticket - ${updatedTicket.id} has been assigned to ${newAssigneeName}`,
+                read: false,
+              };
+            }
+
+            if (newNotification) {
+              // Add new notification and keep only the latest 5
+              setNotifications((prev) => {
+                const updatedNotifications = [newNotification, ...prev].slice(
+                  0,
+                  5
+                );
+                return updatedNotifications;
+              });
+
+              // Update unread count
+              setUnreadCount((prev) => prev + 1);
+            }
           }
         }
       )
