@@ -131,15 +131,15 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
               <div className="text-xl font-bold">Ticket - {ticket.id}</div>
               <Badge
                 className={`${getBadgeColor(
-                  status
+                  ticket.ticket_status
                 )} h-6 px-2 flex items-center justify-center rounded-full whitespace-nowrap text-[10px] uppercase font-bold shrink-0 pointer-events-none`}
               >
-                {status}
+                {ticket.ticket_status}
               </Badge>
             </DialogTitle>
             <DialogTitle className="text-lg">{ticket.concern_type}</DialogTitle>
             <DialogDescription className="text-sm text-gray-600">
-              {ticket.created_at}
+              {new Date(ticket.created_at).toLocaleDateString()}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
