@@ -6,6 +6,8 @@ import { Tickets } from "../u-tickets/types";
 import { motion, AnimatePresence } from "framer-motion";
 import { TicketModal } from "../ticket-modal";
 import { DashboardPagination } from "./dashboard-pagination";
+import { getBadgeColor } from "../../admin-components/badge-color";
+import { Badge } from "@/components/ui/badge";
 
 export default function TicketCard() {
   const [tickets, setTickets] = useState<Tickets[]>([]);
@@ -76,23 +78,19 @@ export default function TicketCard() {
               </div>
               <div className="flex flex-row gap-3 mt-2">
                 <div>
-                  <span className="text-gray-400 text-sm flex flex-row items-center">
-                    <MapPin className="h-3.5 -mt-0.5 w-auto mr-1" />
-                    {ticket.location || ticket.address}
+                  <span className="text-gray-400 text-sm flex flex-row items-center mt-0.5">
+                    <Calendar className="h-3.5 -mt-0.5 w-auto mr-1" />
+                    {new Date(ticket.created_at).toLocaleDateString()}
                   </span>
                 </div>
                 <div>
-                  <span className="text-gray-400 text-sm flex flex-row items-center">
-                    <Calendar className="h-3.5 -mt-0.5 w-auto mr-1" />
-                    {new Date(ticket.created_at).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
-                  </span>
-                </div>
-                <div className="text-xs bg-blue-200 text-blue-800 px-2 py-[2px] uppercase font-semibold inline-flex rounded-full">
-                  {ticket.ticket_status}
+                  <Badge
+                    className={`${getBadgeColor(
+                      ticket.ticket_status
+                    )} h-6 px-2 flex items-center justify-center rounded-full whitespace-nowrap text-[10px] uppercase font-bold shrink-0 pointer-events-none`}
+                  >
+                    {ticket.ticket_status}
+                  </Badge>
                 </div>
               </div>
             </div>
