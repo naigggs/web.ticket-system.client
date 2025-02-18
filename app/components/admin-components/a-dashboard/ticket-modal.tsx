@@ -33,9 +33,10 @@ interface TicketModalProps {
   isOpen: boolean;
   onClose: () => void;
   ticket: Tickets | null;
+  onStatusChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
-export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
+export function TicketModal({ isOpen, onClose, ticket, onStatusChange }: TicketModalProps) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const [status, setStatus] = useState<TicketStatus>("Open");
   const [comments, setComments] = useState<any[]>([]);
@@ -146,17 +147,23 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
           <DialogHeader className="text-left space-y-2 border-b border-gray-300 pb-4">
             <DialogTitle className="flex items-center gap-x-2">
               <div className="text-xl font-bold">Ticket - {ticket.id}</div>
-              <Badge
-                className={`${getBadgeColor(
-                  status
-                )} h-6 px-2 flex items-center justify-center rounded-full whitespace-nowrap text-[10px] uppercase font-bold shrink-0 pointer-events-none`}
-              >
-                {status}
-              </Badge>
             </DialogTitle>
-            <DialogTitle className="text-lg">{ticket.concern_type}</DialogTitle>
-            <DialogDescription className="text-sm text-gray-600">
-              {ticket.created_at}
+            <DialogTitle className="text-xl">{ticket.concern_type}</DialogTitle>
+            <DialogDescription className="text-md text-gray-600">
+              {ticket.submitted_by} | {new Date(ticket.created_at).toLocaleDateString()}
+            </DialogDescription>
+            <DialogDescription className="space-x-2">
+              <select
+                value={status}
+                onChange={handleStatusChange}
+                className="w-auto bg-gray-50 h-9 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="Open">Open</option>
+                <option value="In Progress">In Progress</option>
+                <option value="On Hold">On Hold</option>
+                <option value="Resolved">Resolved</option>
+              </select>
+              <Button onClick={updateTicketStatus}>Update Status</Button>
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
@@ -179,10 +186,7 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
               <DrawerClose asChild>
                 <Button variant="outline">Cancel</Button>
               </DrawerClose>
-              <div className="flex gap-2">
-                <Button onClick={updateTicketStatus}>Update Status</Button>
-                <Button onClick={handleCommentSubmit}>Send</Button>
-              </div>
+              <Button onClick={handleCommentSubmit}>Send</Button>
             </div>
             <div>
               <h3 className="text-lg font-semibold">Comments</h3>
@@ -205,18 +209,23 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
       <DrawerContent className="w-full max-h-[96dvh]">
         <DrawerHeader className="text-left space-y-2 border-b border-gray-300 pb-4">
           <DrawerTitle className="flex items-center gap-x-2">
-            <div className="text-xl font-bold">Ticket - {ticket.id}</div>
-            <Badge
-              className={`${getBadgeColor(
-                status
-              )} h-6 px-2 flex items-center justify-center rounded-full whitespace-nowrap text-[10px] uppercase font-bold shrink-0 pointer-events-none`}
-            >
-              {status}
-            </Badge>
+            <div className="text-xl font-bold">Ticket - {ticket.id} | {ticket.concern_type} </div>
           </DrawerTitle>
-          <DrawerTitle className="text-lg">{ticket.concern_type}</DrawerTitle>
-          <DrawerDescription className="text-sm text-gray-600">
-            {ticket.created_at}
+          <DrawerDescription className="text-md text-gray-600">
+            {ticket.submitted_by} | {new Date(ticket.created_at).toLocaleDateString()}
+          </DrawerDescription>
+          <DrawerDescription className="space-x-2">
+            <select
+              value={status}
+              onChange={handleStatusChange}
+              className="w-auto bg-gray-50 h-9 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="Open">Open</option>
+              <option value="In Progress">In Progress</option>
+              <option value="On Hold">On Hold</option>
+              <option value="Resolved">Resolved</option>
+            </select>
+            <Button onClick={updateTicketStatus}>Update Status</Button>
           </DrawerDescription>
         </DrawerHeader>
         <Separator />
