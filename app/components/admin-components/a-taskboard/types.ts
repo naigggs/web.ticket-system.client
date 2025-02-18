@@ -30,6 +30,7 @@ export type Tickets = {
   contact_person_name: string;
   contact_person_number: string;
   purpose: string;
+  submitted_by: string;
 };
 
 export interface TicketDatePickerProps {
