@@ -77,20 +77,6 @@ export function TicketContent({ ticket, status, onStatusChange }: TicketContentP
                       {ticket.address}
                     </span>
                   </div>
-  
-                  <div className="w-full">
-                    <Label className="text-sm font-medium text-gray-700 mb-1">Status</Label>
-                    <select
-                      value={status}
-                      onChange={onStatusChange}
-                      className="w-full bg-gray-50 h-10 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="Open">Open</option>
-                      <option value="In Progress">In Progress</option>
-                      <option value="On Hold">On Hold</option>
-                      <option value="Closed">Closed</option>
-                    </select>
-                  </div>
                 </div>
             
                 {/* Divider with Text */}
@@ -163,21 +149,6 @@ export function TicketContent({ ticket, status, onStatusChange }: TicketContentP
                       {ticket.address}
                     </span>
                   </div>
-                  <div className="w-full">
-                    <Label className="font-medium text-gray-700">Status</Label>
-                    <div className="w-full p-2 border border-gray-300 rounded-md bg-gray-50">
-                      <select
-                        value={status}
-                        onChange={onStatusChange}
-                        className="w-full bg-gray-50"
-                      >
-                        <option value="Open">Open</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="On Hold">On Hold</option>
-                        <option value="Closed">Closed</option>
-                      </select>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -205,21 +176,6 @@ export function TicketContent({ ticket, status, onStatusChange }: TicketContentP
                 <Label className="font-medium text-gray-700">Purpose</Label>
                 <div className="w-full p-2 border border-gray-300 rounded-md bg-gray-50">
                   <span className="text-md text-gray-700">{ticket.purpose}</span>
-                </div>
-              </div>
-              <div className="grid w-full items-center gap-1.5">
-                <Label className="font-medium text-gray-700">Status</Label>
-                <div className="w-full p-2 border border-gray-300 rounded-md bg-gray-50">
-                  <select
-                    value={status}
-                    onChange={onStatusChange}
-                    className="w-full bg-gray-50"
-                  >
-                    <option value="Open">Open</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="On Hold">On Hold</option>
-                    <option value="Closed">Closed</option>
-                  </select>
                 </div>
               </div>
             </div>
@@ -297,20 +253,6 @@ export function TicketContent({ ticket, status, onStatusChange }: TicketContentP
                       {ticket.address}
                     </span>
                   </div>
-  
-                  <div className="w-full">
-                    <Label className="text-sm font-medium text-gray-700 mb-1">Status</Label>
-                    <select
-                      value={status}
-                      onChange={onStatusChange}
-                      className="w-full bg-gray-50 h-10 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="Open">Open</option>
-                      <option value="In Progress">In Progress</option>
-                      <option value="On Hold">On Hold</option>
-                      <option value="Closed">Closed</option>
-                    </select>
-                  </div>
                 </div>
               </div>
             </div>
@@ -355,22 +297,6 @@ export function TicketContent({ ticket, status, onStatusChange }: TicketContentP
                       {ticket.address}
                     </span>
                   </div>
-  
-                  <div className="grid w-full items-center gap-1.5">
-                    <Label className="font-medium text-gray-700">Status</Label>
-                    <div className="w-full p-2 border border-gray-300 rounded-md bg-gray-50">
-                      <select
-                        value={status}
-                        onChange={onStatusChange}
-                        className="w-full bg-gray-50"
-                      >
-                        <option value="Open">Open</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="On Hold">On Hold</option>
-                        <option value="Closed">Closed</option>
-                      </select>
-                    </div>
-                  </div>
                 </div>
   
               </div>
@@ -402,21 +328,6 @@ export function TicketContent({ ticket, status, onStatusChange }: TicketContentP
                   <span className="bg-gray-50 p-2 rounded-md border border-gray-300">
                     {ticket.location}
                   </span>
-                </div>
-                <div className="w-full items-center gap-1.5">
-                  <Label className="font-medium text-gray-700">Status</Label>
-                  <div className="w-full p-2 border border-gray-300 rounded-md bg-gray-50">
-                    <select
-                      value={status}
-                      onChange={onStatusChange}
-                      className="w-full bg-gray-50"
-                    >
-                      <option value="Open">Open</option>
-                      <option value="In Progress">In Progress</option>
-                      <option value="On Hold">On Hold</option>
-                      <option value="Closed">Closed</option>
-                    </select>
-                  </div>
                 </div>
               </div>
             
