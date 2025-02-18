@@ -95,7 +95,7 @@ export default function TaskBoardPage() {
     <div className="mx-auto justify-center px-2 md:px-10 my-6 animate-in fade-in slide-in-from-bottom-8 duration-300">
       <div className="flex justify-between  mb-4">
         <h2 className="text-xl md:text-2xl flex items-center font-bold text-center">
-          Tickets
+          Tickets Taskboard
         </h2>
         <div className="relative w-40 md:w-64 h-10">
           <Input
