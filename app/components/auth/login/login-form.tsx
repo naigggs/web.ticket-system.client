@@ -69,6 +69,12 @@ export function LoginForm({
         </Button>
       </div>
       <div className="text-center text-sm">
+        Sign in through {" "}
+        <a href="/auth/otp" className="underline underline-offset-4">
+          OTP
+        </a>
+      </div>
+      <div className="text-center text-sm">
         Don&apos;t have an account?{" "}
         <a href="/auth/register" className="underline underline-offset-4">
           Sign up

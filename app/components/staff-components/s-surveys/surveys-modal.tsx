@@ -45,7 +45,7 @@ export const SurveysModal: React.FC<SurveyDetailModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[90%] rounded-lg" onOpenAutoFocus={(e) => e.preventDefault()}>
+      <DialogContent className="w-[95%] sm:max-w-[50%] max-h-[90vh] overflow-y-auto rounded-lg" onOpenAutoFocus={(e) => e.preventDefault()}>
         <DialogHeader className="border-b border-gray-300 pb-4">
           <DialogTitle className="text-2xl font-bold text-left">
             {survey.title}

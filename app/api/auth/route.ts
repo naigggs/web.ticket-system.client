@@ -5,7 +5,6 @@ export async function GET(req: Request) {
   const supabase = supabaseAdminClient;
 
   const { data: { users }, error } = await supabase.auth.admin.listUsers()
-  console.log(users)
 
   if (error) {
     return new Response(JSON.stringify({ error: error.message }), {
