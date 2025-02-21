@@ -226,12 +226,12 @@ export default function SubmitTicket() {
                     </div>
                     <div className="flex flex-row items-center gap-4">
                       <div className="grid w-full items-center gap-1.5">
-                        <Label>Height</Label>
-                        <Input type="text" name="height" disabled={loading} />
+                        <Label>Height in CM</Label>
+                        <Input type="number" name="height" disabled={loading} />
                       </div>
                       <div className="grid w-full items-center gap-1.5">
-                        <Label>Weight</Label>
-                        <Input type="text" name="weight" disabled={loading} />
+                        <Label>Weight in KG</Label>
+                        <Input type="number" name="weight" disabled={loading} />
                       </div>
                       <div className="grid w-full items-center gap-1.5">
                         <Label>Civil Status</Label>
@@ -434,12 +434,12 @@ export default function SubmitTicket() {
                     </div>
                     <div className="flex flex-row items-center gap-4">
                       <div className="grid w-full items-center gap-1.5">
-                        <Label>Height</Label>
-                        <Input type="text" name="height" disabled={loading} />
+                        <Label>Height in CM</Label>
+                        <Input type="number" name="height" disabled={loading} />
                       </div>
                       <div className="grid w-full items-center gap-1.5">
-                        <Label>Weight</Label>
-                        <Input type="text" name="weight" disabled={loading} />
+                        <Label>Weight in KG</Label>
+                        <Input type="number" name="weight" disabled={loading} />
                       </div>
                       <div className="grid w-full items-center gap-1.5">
                         <Label>Civil Status</Label>
