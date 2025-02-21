@@ -1,16 +1,16 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { ClosedTable  } from "./closed-table";
 import { ClosedModal } from "./closed-modal";
 import { Tickets } from "../a-taskboard/types";
 import { createClient } from "@/utils/supabase/client";
+import { ResolvedTable } from "./resolved-table";
 
 
 export default function ClosedPage() {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [resolvedSearchQuery, setResolvedSearchQuery] = useState("");
+  const [closedSearchQuery, setClosedSearchQuery] = useState("");
   const [selectedTicket, setSelectedTicket] = useState<Tickets | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tickets, setTickets] = useState<Tickets[]>([]);
@@ -21,7 +21,9 @@ export default function ClosedPage() {
   // fetch tickets from supabase
   const fetchTickets = async () => {
     try {
-      const { data, error } = await supabase.from("tickets").select("*");
+      const { data, error } = await supabase.from("tickets").select("*")
+      .order("created_at", { ascending: false });
+
       if (error) {
         throw error;
       }
@@ -71,8 +73,14 @@ export default function ClosedPage() {
     };
   }, []);
 
-  const filteredTickets = tickets.filter((ticket) =>
-    ticket.id?.toString().includes(searchQuery)
+  const closedTickets = tickets.filter((ticket) => 
+    ticket.ticket_status === "Closed" &&
+    ticket.id.toString().includes(closedSearchQuery)
+  );
+
+  const resolvedTickets = tickets.filter((ticket) => 
+    ticket.ticket_status === "Resolved" &&
+    ticket.id.toString().includes(resolvedSearchQuery)
   );
 
   const handleTicketClick = (ticket: Tickets) => {
@@ -89,16 +97,25 @@ export default function ClosedPage() {
     <div className="mx-auto justify-center px-2 md:px-10 my-6 animate-in fade-in slide-in-from-bottom-8 duration-300">
 
       <div>
+        <ResolvedTable
+          title="Resolved"
+          tickets={resolvedTickets}
+          status="onhold"
+          onTicketClick={handleTicketClick}
+          searchQuery={resolvedSearchQuery}
+          setSearchQuery={setResolvedSearchQuery}
+          />
+      </div>
+
+      <div>
         <ClosedTable
-            title="Closed"
-            tickets={filteredTickets.filter(
-                (ticket) => ticket.ticket_status === "Closed"
-            )}
-            status="onhold"
-            onTicketClick={handleTicketClick}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            />
+          title="Closed"
+          tickets={closedTickets}
+          status="onhold"
+          onTicketClick={handleTicketClick}
+          searchQuery={closedSearchQuery}
+          setSearchQuery={setClosedSearchQuery}
+          />
       </div>
 
       <ClosedModal
