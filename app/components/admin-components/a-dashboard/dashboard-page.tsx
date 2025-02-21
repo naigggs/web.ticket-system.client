@@ -29,6 +29,7 @@ export default function DashboardPage() {
       const { data, error } = await supabase
         .from("tickets")
         .select(`*, assignee_id(*)`)
+        .order("created_at", { ascending: false })
         .eq("assignee_id", user.id);
 
       if (error) {
@@ -158,6 +159,8 @@ export default function DashboardPage() {
         isOpen={isModalOpen}
         onClose={closeModal}
         ticket={selectedTicket}
+        onStatusChange={(event) => {
+        }}
       />
     </div>
   );
