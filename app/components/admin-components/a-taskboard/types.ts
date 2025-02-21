@@ -15,7 +15,7 @@ export type Tickets = {
   status: string
   location: string;
   created_at: string;
-  ticket_status: "Open" | "In Progress" | "Closed" | "On Hold";
+  ticket_status: "Open" | "In Progress" | "Closed" | "On Hold" | "Resolved";
   address: string;
   concern_type: string;
   attachment_1: string;
