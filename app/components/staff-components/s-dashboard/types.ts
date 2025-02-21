@@ -31,6 +31,7 @@ export type Tickets = {
   purpose: string;
   assginee_id: string;
   assignee_id: number;
+  submitted_by: string;
 };
 
 export interface TicketDatePickerProps {

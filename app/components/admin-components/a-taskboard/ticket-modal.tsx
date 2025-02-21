@@ -160,22 +160,24 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
               {status}
             </Badge>
           </DialogTitle>
-          <DialogTitle className="text-xl">{ticket.concern_type}</DialogTitle>
+          <DialogTitle className="flex items-center justify-between">
+            <div className="text-xl">{ticket.concern_type}</div>
+            <div className="flex items-center gap-2 text-base font-normal">
+              <select
+                value={status}
+                onChange={handleStatusChange}
+                className="w-auto bg-gray-50 h-9 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="Open">Open</option>
+                <option value="In Progress">In Progress</option>
+                <option value="On Hold">On Hold</option>
+                <option value="Resolved">Resolved</option>
+              </select>
+              <Button onClick={updateTicketStatus}>Update Status</Button>
+            </div>
+          </DialogTitle>
           <DialogDescription className="text-md text-gray-600">
             {ticket.submitted_by} | {new Date(ticket.created_at).toLocaleDateString()}
-          </DialogDescription>
-          <DialogDescription className="space-x-2">
-            <select
-              value={status}
-              onChange={handleStatusChange}
-              className="w-auto bg-gray-50 h-9 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="Open">Open</option>
-              <option value="In Progress">In Progress</option>
-              <option value="On Hold">On Hold</option>
-              <option value="Resolved">Resolved</option>
-            </select>
-            <Button onClick={updateTicketStatus}>Update Status</Button>
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4">

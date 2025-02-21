@@ -148,11 +148,9 @@ export function TicketModal({ isOpen, onClose, ticket, onStatusChange }: TicketM
             <DialogTitle className="flex items-center gap-x-2">
               <div className="text-xl font-bold">Ticket - {ticket.id}</div>
             </DialogTitle>
-            <DialogTitle className="text-xl">{ticket.concern_type}</DialogTitle>
-            <DialogDescription className="text-md text-gray-600">
-              {ticket.submitted_by} | {new Date(ticket.created_at).toLocaleDateString()}
-            </DialogDescription>
-            <DialogDescription className="space-x-2">
+            <DialogTitle className="flex items-center justify-between">
+            <div className="text-xl">{ticket.concern_type}</div>
+            <div className="flex items-center gap-2 text-base font-normal">
               <select
                 value={status}
                 onChange={handleStatusChange}
@@ -164,7 +162,12 @@ export function TicketModal({ isOpen, onClose, ticket, onStatusChange }: TicketM
                 <option value="Resolved">Resolved</option>
               </select>
               <Button onClick={updateTicketStatus}>Update Status</Button>
+            </div>
+          </DialogTitle>
+            <DialogDescription className="text-md text-gray-600">
+              {ticket.submitted_by} | {new Date(ticket.created_at).toLocaleDateString()}
             </DialogDescription>
+            
           </DialogHeader>
           <div className="space-y-4">
             <TicketContent
