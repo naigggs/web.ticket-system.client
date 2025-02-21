@@ -17,6 +17,8 @@ import { Tickets } from "./types.js";
 import { TicketModal } from "../ticket-modal";
 import { createClient } from "@/utils/supabase/client";
 import { TicketPagination } from "./ticket-pagination";
+import { Badge } from "@/components/ui/badge";
+import { getBadgeColor } from "../../admin-components/badge-color";
 
 export default function TicketsTable() {
   const [tickets, setTickets] = useState<Tickets[]>([]);
@@ -183,8 +185,14 @@ export default function TicketsTable() {
                   ticket - {ticket.id} ||{" "}
                   {ticket.title ? ticket.title : ticket.concern_type}
                 </div>
-                <div className="text-sm bg-blue-200 text-blue-800 px-3 py-1 uppercase font-semibold inline-flex rounded-full">
-                  {ticket.ticket_status}
+                <div>
+                  <Badge
+                    className={`${getBadgeColor(
+                      ticket.ticket_status
+                    )} h-6 px-2 flex items-center justify-center rounded-full whitespace-nowrap text-[10px] uppercase font-bold shrink-0 pointer-events-none`}
+                  >
+                    {ticket.ticket_status}
+                  </Badge>
                 </div>
               </div>
               <div className="flex flex-row gap-3">
