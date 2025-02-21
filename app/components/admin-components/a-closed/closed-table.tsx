@@ -57,7 +57,7 @@ export const ClosedTable = ({
     <div className="flex flex-col h-auto">
       <div className="flex flex-row justify-between p-4">
         <div>
-          <h2 className="text-xl md:text-2xl font-semibold mb-2">{title} tickets</h2>
+          <h2 className="text-xl md:text-2xl font-semibold mb-2">{title} Tickets</h2>
         </div>
         <div className="relative w-40 md:w-64 h-10">
           <Input
@@ -79,7 +79,7 @@ export const ClosedTable = ({
             <TableHeader>
               <TableRow>
                 <TableHead className="text-xs md:text-sm">ID</TableHead>
-                <TableHead className="text-xs md:text-sm">Title</TableHead>
+                <TableHead className="text-xs md:text-sm">Type</TableHead>
                 <TableHead className="text-xs md:text-sm">Status</TableHead>
                 <TableHead className="text-xs md:text-sm">Created At</TableHead>
               </TableRow>
@@ -95,7 +95,7 @@ export const ClosedTable = ({
                     {ticket.id}
                   </TableCell>
                   <TableCell className="font-medium text-xs md:text-sm">
-                    {ticket.title}
+                    {ticket.concern_type}
                   </TableCell>
                   <TableCell>
                     <Badge
@@ -109,7 +109,7 @@ export const ClosedTable = ({
                   <TableCell>
                     <div className="text-gray-400 text-xs md:text-sm flex items-center">
                       <Calendar className="h-3.5 w-3.5 mr-1.5" />
-                      {ticket.created_at}
+                      {new Date(ticket.created_at).toLocaleDateString()}
                     </div>
                   </TableCell>
                 </TableRow>
