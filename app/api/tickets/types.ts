@@ -20,4 +20,4 @@ export type FormData = {
   attachment2?: File;
 };
 
-export type TicketStatus = "Open" | "In Progress" | "Closed" | "On Hold";
+export type TicketStatus = "Open" | "In Progress" | "Closed" | "On Hold" | "Resolved";
