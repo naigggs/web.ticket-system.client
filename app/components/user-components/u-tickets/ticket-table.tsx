@@ -158,6 +158,7 @@ export default function TicketsTable() {
                 <SelectItem value="closed">Closed</SelectItem>
                 <SelectItem value="in progress">In Progress</SelectItem>
                 <SelectItem value="on hold">On Hold</SelectItem>
+                <SelectItem value="resolved">Resolved</SelectItem>
               </SelectContent>
             </Select>
           </div>
