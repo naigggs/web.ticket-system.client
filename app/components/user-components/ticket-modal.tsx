@@ -19,6 +19,12 @@ import {
   DrawerClose,
   DrawerFooter,
 } from "@/components/ui/drawer";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { PopoverClose } from "@radix-ui/react-popover";
 import { Separator } from "@/components/ui/separator";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { getBadgeColor } from "@/app/components/admin-components/badge-color";
@@ -117,6 +123,21 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
     }
   };
 
+  const updateTicketStatus = async () => {
+    if (!ticket) return;
+  
+    const { data, error } = await supabase
+      .from("tickets")
+      .update({ ticket_status: "Closed" })
+      .eq("id", ticket.id);
+  
+    if (error) {
+      console.error("Error updating ticket status:", error.message);
+    } else {
+      onClose();
+    }
+  };
+
   if (!ticket) return null;
 
   if (isDesktop) {
@@ -141,6 +162,36 @@ export function TicketModal({ isOpen, onClose, ticket }: TicketModalProps) {
             <DialogDescription className="text-sm text-gray-600">
               {new Date(ticket.created_at).toLocaleDateString()}
             </DialogDescription>
+            {ticket.ticket_status === "Resolved" ?
+              <DialogDescription>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button>
+                      Acknowledge
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-60 p-6">
+                    <h3 className="text-md font-semibold text-gray-900">
+                      Close Ticket
+                    </h3>
+                    <div className="text-xs text-gray-600 mb-4">
+                      Are you sure you want to close this ticket?
+                    </div>
+                    <div className="flex justify-between">
+                      <Button
+                        size="sm"
+                        onClick={updateTicketStatus}
+                      >
+                        Confirm
+                      </Button>
+                      <PopoverClose className="text-xs border p-2 rounded-md">
+                        Cancel
+                      </PopoverClose>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </DialogDescription> : null
+            } 
           </DialogHeader>
           <div className="space-y-4">
             <TicketContent
