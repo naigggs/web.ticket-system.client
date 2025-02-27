@@ -12,12 +12,6 @@ import { Tickets } from "../a-taskboard/types";
 import { createClient } from "@/utils/supabase/client";
 import { TicketStatus } from "@/app/api/tickets/types";
 import { TicketContent } from "../ticket-content";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { PopoverClose } from "@radix-ui/react-popover";
 import { Calendar } from "lucide-react";
 
 interface ClosedModalProps {
@@ -49,7 +43,7 @@ export function ClosedModal({ isOpen, onClose, ticket }: ClosedModalProps) {
   
     const { data, error } = await supabase
       .from("tickets")
-      .update({ ticket_status: "Closed" })
+      .update({ ticket_status: status })
       .eq("id", ticket.id);
   
     if (error) {
@@ -81,56 +75,25 @@ export function ClosedModal({ isOpen, onClose, ticket }: ClosedModalProps) {
               <Calendar className="h-4 w-4 mr-1.5 -mt-[2px]" />
               {new Date(ticket.created_at).toLocaleDateString()}
             </DialogDescription>
-            {ticket.ticket_status === "Resolved" ? 
-              <DialogDescription>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button>
-                      Acknowledge
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-60 p-6">
-                    <h3 className="text-md font-semibold text-gray-900">
-                      Close Ticket
-                    </h3>
-                    <div className="text-xs text-gray-600 mb-4">
-                      Are you sure you want to close this ticket?
-                    </div>
-                    <div className="flex justify-between">
-                      <Button
-                        size="sm"
-                        onClick={updateTicketStatus}
-                      >
-                        Confirm
-                      </Button>
-                      <PopoverClose className="text-xs border p-2 rounded-md">
-                        Cancel
-                      </PopoverClose>
-                    </div>
-                  </PopoverContent>
-                </Popover>
-              </DialogDescription> : null
-            } 
-
           </DialogHeader>
           <div className="space-y-4">
             <TicketContent ticket={ticket} status={status} onStatusChange={handleStatusChange} />
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium text-gray-700">Comment</label>
               <textarea
                 className="w-full p-2 border rounded mt-1"
                 placeholder="Add comment or note"
                 rows={3}
               />
-            </div>
-            <div className="flex justify-between">
+            </div> */}
+            {/* <div className="flex justify-between">
               <DrawerClose asChild>
                 <Button variant="outline">Cancel</Button>
               </DrawerClose>
               <Button onClick={updateTicketStatus} className="bg-blue-500 text-white px-4 py-2 rounded">
                 Send
               </Button>
-            </div>
+            </div> */}
           </div>
         </DialogContent>
       </Dialog>
@@ -158,48 +121,18 @@ export function ClosedModal({ isOpen, onClose, ticket }: ClosedModalProps) {
               <Calendar className="h-4 w-4 mr-1.5 -mt-[2px]" />
               {new Date(ticket.created_at).toLocaleDateString()}
             </DrawerDescription>
-            {ticket.ticket_status === "Resolved" ? 
-              <DrawerDescription>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button>
-                      Acknowledge
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-60 p-6">
-                    <h3 className="text-md font-semibold text-gray-900">
-                      Close Ticket
-                    </h3>
-                    <div className="text-xs text-gray-600 mb-4">
-                      Are you sure you want to close this ticket?
-                    </div>
-                    <div className="flex justify-between">
-                      <Button
-                        size="sm"
-                        onClick={updateTicketStatus}
-                      >
-                        Confirm
-                      </Button>
-                      <PopoverClose className="text-xs border p-2 rounded-md">
-                        Cancel
-                      </PopoverClose>
-                    </div>
-                  </PopoverContent>
-                </Popover>
-              </DrawerDescription> : null
-            } 
           </DrawerHeader>
         <Separator />
         <div className="space-y-4 p-4 overflow-y-auto">
           <TicketContent ticket={ticket} status={status} onStatusChange={handleStatusChange} />
-          <div className="flex justify-between">
+          {/* <div className="flex justify-between">
             <DrawerClose asChild>
               <Button variant="outline">Cancel</Button>
             </DrawerClose>
             <Button onClick={updateTicketStatus} className="bg-blue-500 text-white px-4 py-2 rounded">
               Send
             </Button>
-          </div>
+          </div> */}
         </div>
       </DrawerContent>
     </Drawer>
