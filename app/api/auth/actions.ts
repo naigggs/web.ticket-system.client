@@ -145,7 +145,6 @@ export async function registerUser(formData: FormData) {
     firstName: formData.get("firstName") as string,
     lastName: formData.get("lastName") as string,
     email: formData.get("email") as string,
-    password: formData.get("password") as string,
     location: formData.get("location") as string,
     document1: formData.get("document1") as File,
     document2: formData.get("document2") as File,
@@ -178,7 +177,6 @@ export async function registerUser(formData: FormData) {
   const { error } = await supabase.from("user-sign-up").insert({
     full_name: `${data.firstName} ${data.lastName}`,
     email: data.email,
-    password: data.password,
     location: data.location,
     document_1: document1Url.data.publicUrl,
     document_2: document2Url.data.publicUrl,
