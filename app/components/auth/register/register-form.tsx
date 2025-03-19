@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -24,15 +24,29 @@ export function RegisterForm({
 
     try {
       await registerUser(formData);
-    } catch (error) {
-      console.error("Error registering user:", error);
-    } finally {
-      setLoading(false);
       toast({
         title: "Signup Request Sent Successfully!",
         description: "Please wait for our staff to confirm your registration.",
         className: "bg-green-500 text-white",
       });
+      // Redirect to login page after successful registration
+      window.location.href = "/auth/login";
+    } catch (error) {
+      console.error("Error registering user:", error);
+      console.log(error);
+      if (
+        error instanceof Error &&
+        error.message === "Email is already registered"
+      ) {
+        toast({
+          variant: "destructive",
+          title: "Registration Failed",
+          description:
+            "This email is already registered. Please use a different email.",
+        });
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -52,7 +66,12 @@ export function RegisterForm({
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-2">
                     <Label htmlFor="firstName">First Name</Label>
-                    <Input id="firstName" name="firstName" type="text" required />
+                    <Input
+                      id="firstName"
+                      name="firstName"
+                      type="text"
+                      required
+                    />
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="lastName">Last Name</Label>
@@ -75,12 +94,24 @@ export function RegisterForm({
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-2">
-                    <Label htmlFor="document1">Upload Barangay ID (Front)</Label>
-                    <Input id="document1" name="document1" type="file" required />
+                    <Label htmlFor="document1">
+                      Upload Barangay ID (Front)
+                    </Label>
+                    <Input
+                      id="document1"
+                      name="document1"
+                      type="file"
+                      required
+                    />
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="document2">Upload Barangay ID (Back)</Label>
-                    <Input id="document2" name="document2" type="file" required />
+                    <Input
+                      id="document2"
+                      name="document2"
+                      type="file"
+                      required
+                    />
                   </div>
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
@@ -109,7 +140,8 @@ export function RegisterForm({
         </CardContent>
       </Card>
       <div className="text-balance text-center text-xs text-muted-foreground">
-        By clicking continue, you agree to our Terms of Service and Privacy Policy.
+        By clicking continue, you agree to our Terms of Service and Privacy
+        Policy.
       </div>
     </div>
   );

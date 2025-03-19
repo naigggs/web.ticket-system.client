@@ -3,8 +3,22 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription, DrawerClose, DrawerFooter } from "@/components/ui/drawer";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerDescription,
+  DrawerClose,
+  DrawerFooter,
+} from "@/components/ui/drawer";
 import { Separator } from "@/components/ui/separator";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { getBadgeColor } from "../badge-color";
@@ -40,12 +54,12 @@ export function ClosedModal({ isOpen, onClose, ticket }: ClosedModalProps) {
 
   const updateTicketStatus = async () => {
     if (!ticket) return;
-  
+
     const { data, error } = await supabase
       .from("tickets")
       .update({ ticket_status: status })
       .eq("id", ticket.id);
-  
+
     if (error) {
       console.error("Error updating ticket status:", error.message);
     } else {
@@ -56,9 +70,12 @@ export function ClosedModal({ isOpen, onClose, ticket }: ClosedModalProps) {
   if (isDesktop) {
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-2xl w-[90vw] sm:w-full max-h-[90vh] overflow-y-auto rounded-lg" onOpenAutoFocus={(e) => e.preventDefault()}>
+        <DialogContent
+          className="max-w-2xl w-[90vw] sm:w-full max-h-[90vh] overflow-y-auto rounded-lg"
+          onOpenAutoFocus={(e) => e.preventDefault()}
+        >
           <DialogHeader className="text-left space-y-2 border-b border-gray-300 pb-4">
-            <DialogTitle className="flex items-center gap-x-2">
+            <DialogTitle className="flex items-center gap-x-2 ">
               <div className="text-xl font-bold">Ticket - {ticket.id}</div>
               <Badge
                 className={`${getBadgeColor(
@@ -67,19 +84,39 @@ export function ClosedModal({ isOpen, onClose, ticket }: ClosedModalProps) {
               >
                 {status}
               </Badge>
+              <div>
+                <div className="flex items-center gap-2 text-base font-normal ml-48">
+                  <select
+                    value={status}
+                    onChange={handleStatusChange}
+                    className="w-auto bg-gray-50 h-9 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="Open">Open</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="On Hold">On Hold</option>
+                    <option value="Closed">Closed</option>
+                    <option value="Resolved">Resolved</option>
+                  </select>
+                  <Button onClick={updateTicketStatus}>Update Status</Button>
+                </div>
+              </div>
             </DialogTitle>
-            <DialogTitle className="text-lg">
-              {ticket.concern_type}
-            </DialogTitle>
+            <DialogTitle className="text-lg">{ticket.concern_type}</DialogTitle>
             <DialogDescription className="text-md text-gray-600 flex flex-row items-center">
               <Calendar className="h-4 w-4 mr-1.5 -mt-[2px]" />
               {new Date(ticket.created_at).toLocaleDateString()}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
-            <TicketContent ticket={ticket} status={status} onStatusChange={handleStatusChange} />
+            <TicketContent
+              ticket={ticket}
+              status={status}
+              onStatusChange={handleStatusChange}
+            />
             {/* <div>
-              <label className="block text-sm font-medium text-gray-700">Comment</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Comment
+              </label>
               <textarea
                 className="w-full p-2 border rounded mt-1"
                 placeholder="Add comment or note"
@@ -90,7 +127,10 @@ export function ClosedModal({ isOpen, onClose, ticket }: ClosedModalProps) {
               <DrawerClose asChild>
                 <Button variant="outline">Cancel</Button>
               </DrawerClose>
-              <Button onClick={updateTicketStatus} className="bg-blue-500 text-white px-4 py-2 rounded">
+              <Button
+                onClick={updateTicketStatus}
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+              >
                 Send
               </Button>
             </div> */}
@@ -103,28 +143,30 @@ export function ClosedModal({ isOpen, onClose, ticket }: ClosedModalProps) {
   return (
     <Drawer open={isOpen} onOpenChange={onClose}>
       <DrawerContent className="w-full max-h-[96dvh]">
-          <DrawerHeader className="text-left space-y-2 border-b border-gray-300 pb-4">
-            <DrawerTitle className="flex items-center gap-x-2">
-              <div className="text-xl font-bold">Ticket - {ticket.id}</div>
-              <Badge
-                className={`${getBadgeColor(
-                  status
-                )} h-6 px-2 flex items-center justify-center rounded-full whitespace-nowrap text-[10px] uppercase font-bold shrink-0 pointer-events-none`}
-              >
-                {status}
-              </Badge>
-            </DrawerTitle>
-            <DrawerTitle className="text-lg">
-              {ticket.concern_type}
-            </DrawerTitle>
-            <DrawerDescription className="text-md text-gray-600 flex flex-row items-center">
-              <Calendar className="h-4 w-4 mr-1.5 -mt-[2px]" />
-              {new Date(ticket.created_at).toLocaleDateString()}
-            </DrawerDescription>
-          </DrawerHeader>
+        <DrawerHeader className="text-left space-y-2 border-b border-gray-300 pb-4">
+          <DrawerTitle className="flex items-center gap-x-2">
+            <div className="text-xl font-bold">Ticket - {ticket.id}</div>
+            <Badge
+              className={`${getBadgeColor(
+                status
+              )} h-6 px-2 flex items-center justify-center rounded-full whitespace-nowrap text-[10px] uppercase font-bold shrink-0 pointer-events-none`}
+            >
+              {status}
+            </Badge>
+          </DrawerTitle>
+          <DrawerTitle className="text-lg">{ticket.concern_type}</DrawerTitle>
+          <DrawerDescription className="text-md text-gray-600 flex flex-row items-center">
+            <Calendar className="h-4 w-4 mr-1.5 -mt-[2px]" />
+            {new Date(ticket.created_at).toLocaleDateString()}
+          </DrawerDescription>
+        </DrawerHeader>
         <Separator />
         <div className="space-y-4 p-4 overflow-y-auto">
-          <TicketContent ticket={ticket} status={status} onStatusChange={handleStatusChange} />
+          <TicketContent
+            ticket={ticket}
+            status={status}
+            onStatusChange={handleStatusChange}
+          />
           {/* <div className="flex justify-between">
             <DrawerClose asChild>
               <Button variant="outline">Cancel</Button>

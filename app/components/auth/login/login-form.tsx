@@ -97,7 +97,8 @@ export function LoginForm({
         </CardContent>
       </Card>
       <div className="text-balance text-center text-xs text-muted-foreground">
-        By clicking continue, you agree to our Terms of Service and Privacy Policy.
+        By clicking continue, you agree to our Terms of Service and Privacy
+        Policy.
       </div>
     </div>
   );
