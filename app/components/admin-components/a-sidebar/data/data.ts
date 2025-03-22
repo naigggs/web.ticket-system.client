@@ -7,7 +7,8 @@ import {
   UserRoundCog,
   Ticket,
   TicketXIcon,
-  ClipboardType
+  ClipboardType,
+  ChartArea,
 } from "lucide-react";
 
 export const data = {
@@ -37,11 +38,18 @@ export const data = {
       isActive: true,
     },
     {
+      title: "Analytics",
+      url: "/admin/analytics",
+      icon: ChartArea,
+      isActive: true,
+    },
+    {
       title: "Closed Tickets",
       url: "/admin/closed",
       icon: TicketXIcon,
       isActive: true,
     },
+
     {
       title: "Manage Accounts",
       url: "/admin/accounts",
@@ -54,11 +62,11 @@ export const data = {
       icon: RadioTower,
       isActive: true,
     },
-    {
-      title: "Surveys",
-      url: "/admin/surveys",
-      icon: NotebookPen,
-      isActive: true,
-    },
+    // {
+    //   title: "Surveys",
+    //   url: "/admin/surveys",
+    //   icon: NotebookPen,
+    //   isActive: true,
+    // },
   ],
 };

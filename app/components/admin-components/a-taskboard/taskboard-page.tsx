@@ -7,9 +7,6 @@ import { TaskCard } from "./task-card";
 import { TicketModal } from "./ticket-modal";
 import { Tickets } from "./types.js";
 import { createClient } from "@/utils/supabase/client";
-import { TicketDone } from "./ticket-done";
-import { TicketStatus } from "./ticket-status";
-import { TicketConcern } from "./ticket-concern";
 
 export default function TaskBoardPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -149,13 +146,20 @@ export default function TaskBoardPage() {
             onTicketClick={handleTicketClick}
           />
         </div>
+
         <div className="flex flex-col  gap-3">
-          <div className="px-4 py-2 bg-yellow-400 rounded-2xl font-bold">
-            Charts
+          <div className="px-4 py-2 bg-purple-300 rounded-2xl font-bold">
+            Resolved
           </div>
-          <TicketDone />
-          <TicketStatus />
-          <TicketConcern/>
+          <TaskCard
+            title="Resolved"
+            tickets={filteredTickets.filter(
+              (ticket) => ticket.ticket_status === "Resolved"
+            )}
+            status="resolved"
+            onTicketClick={handleTicketClick}
+            isFirstColumn
+          />
         </div>
       </div>
       <TicketModal

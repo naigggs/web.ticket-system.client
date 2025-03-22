@@ -7,7 +7,7 @@ import {
   UserRoundCog,
   Ticket,
   TicketXIcon,
-  ClipboardType
+  ClipboardType,
 } from "lucide-react";
 
 export const data = {
@@ -48,11 +48,11 @@ export const data = {
       icon: RadioTower,
       isActive: true,
     },
-    {
-      title: "Surveys",
-      url: "/staff/surveys",
-      icon: NotebookPen,
-      isActive: true,
-    },
+    // {
+    //   title: "Surveys",
+    //   url: "/staff/surveys",
+    //   icon: NotebookPen,
+    //   isActive: true,
+    // },
   ],
 };

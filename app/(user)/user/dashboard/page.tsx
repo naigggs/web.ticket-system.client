@@ -56,12 +56,12 @@ export default function UserDashboard() {
           <AnnouncementCard />
         </div>
 
-        <div className="flex flex-col gap-3 animate-in fade-in slide-in-from-bottom-8 duration-700">
+        {/* <div className="flex flex-col gap-3 animate-in fade-in slide-in-from-bottom-8 duration-700">
           <div className="px-4 py-2 bg-red-400 rounded-2xl font-bold">
             Surveys
           </div>
           <SurveyCard />
-        </div>
+        </div> */}
 
         <div className="flex flex-col gap-3 animate-in fade-in slide-in-from-bottom-8 duration-700">
           <div className="px-4 py-2 bg-yellow-400 rounded-2xl font-bold">

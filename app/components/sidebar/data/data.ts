@@ -3,7 +3,7 @@ import {
   SquareTerminal,
   TicketPlus,
   RadioTower,
-  NotebookPen
+  NotebookPen,
 } from "lucide-react";
 
 export const data = {
@@ -38,11 +38,11 @@ export const data = {
       icon: RadioTower,
       isActive: true,
     },
-    {
-      title: "Surveys",
-      url: "/user/surveys",
-      icon: NotebookPen,
-      isActive: true,
-    },
+    // {
+    //   title: "Surveys",
+    //   url: "/user/surveys",
+    //   icon: NotebookPen,
+    //   isActive: true,
+    // },
   ],
 };
